@@ -1,0 +1,49 @@
+// Vercel Serverless Function — 处理配对数据的读写
+// 依赖：@supabase/supabase-js（在 package.json 中声明）
+
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
+
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.status(200).end();
+
+  const { method, query, body } = req;
+
+  // POST /api/pair — 保存答案
+  if (method === 'POST') {
+    const { code, role, scores } = typeof body === 'string' ? JSON.parse(body) : body;
+    if (!code || !role || !scores) return res.status(400).json({ error: 'missing fields' });
+
+    const { error } = await supabase.from('pairs').upsert(
+      { code, role, scores, created_at: new Date().toISOString() },
+      { onConflict: 'code,role' }
+    );
+    if (error) return res.status(500).json({ error: error.message });
+    return res.status(200).json({ ok: true });
+  }
+
+  // GET /api/pair?code=XXXXX&role=A|B — 读取答案
+  if (method === 'GET') {
+    const { code, role } = query;
+    if (!code || !role) return res.status(400).json({ error: 'missing fields' });
+
+    const { data, error } = await supabase
+      .from('pairs')
+      .select('scores')
+      .eq('code', code)
+      .eq('role', role)
+      .single();
+
+    if (error || !data) return res.status(404).json({ found: false });
+    return res.status(200).json({ found: true, scores: data.scores });
+  }
+
+  return res.status(405).json({ error: 'method not allowed' });
+}
