@@ -80,8 +80,7 @@ export default async function handler(req, res) {
                     .insert({
                         code: newCode,
                         user1_name: nickname,
-                        status: 'waiting',
-                        created_at: new Date().toISOString()
+                        status: 'waiting'
                     });
 
                 if (error) {
