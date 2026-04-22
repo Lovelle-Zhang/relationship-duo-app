@@ -3,10 +3,10 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-// 从环境变量读取 Supabase 配置
+// 直接写入凭证（临时方案）
 const supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_KEY
+    'https://esfuazchkbbtccxtamwp.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVzZnVhemNoa2JidGNjeHRhbXdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3OTg2ODUsImV4cCI6MjA5MjM3NDY4NX0.xV6Vvv4P0W4ky853yC9OvqOaSAyDErZVTM9UfCUidpQ'
 );
 
 // 生成 6 位随机配对码
@@ -84,7 +84,7 @@ export default async function handler(req, res) {
                     });
 
                 if (error) {
-                    return res.status(500).json({ error: '创建失败' });
+                    return res.status(500).json({ error: '创建失败', detail: error.message });
                 }
 
                 return res.json({ code: newCode });
