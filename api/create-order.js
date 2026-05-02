@@ -62,6 +62,7 @@ function wxRequest(method, path, data) {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0',
         'Authorization': getAuthHeader(method, path, body),
         'Content-Length': Buffer.byteLength(body)
       }
