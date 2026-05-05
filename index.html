@@ -1732,6 +1732,17 @@ const ins=document.getElementById('tab-insight');
     ins.innerHTML = generatePremiumInsight(sA, sB);
   }else{
     ins.innerHTML=h;
+    if(window._unlockPollTimer) clearInterval(window._unlockPollTimer);
+    window._unlockPollTimer = setInterval(async()=>{
+      try{
+        const isUnlocked = await checkUnlocked(C);
+        if(isUnlocked){
+          clearInterval(window._unlockPollTimer);
+          document.getElementById('tab-insight').innerHTML = generatePremiumInsight(sA, sB);
+          showToast('已解锁完整频率报告 ✨');
+        }
+      }catch(e){}
+    }, 5000);
   }
 show('result');
 }
