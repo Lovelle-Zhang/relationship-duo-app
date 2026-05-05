@@ -1735,8 +1735,8 @@ const grid=f=>DIMS.map((_,i)=>pt(100*f,i).join(',')).join(' ');
 let h='';
 [.25,.5,.75,1].forEach(f=>h+='<polygon points="'+grid(f)+'" fill="none" stroke="rgba(90,122,90,.12)" stroke-width="1"/>');
 DIMS.forEach((_,i)=>{const[x,y]=pt(100,i);h+='<line x1="'+cx+'" y1="'+cy+'" x2="'+x+'" y2="'+y+'" stroke="rgba(90,122,90,.1)" stroke-width="1"/>'});
-h+='<polygon points="'+poly(sB)+'" fill="rgba(122,90,122,.15)" stroke="#7a5a7a" stroke-width="2" stroke-linejoin="round"/>';
-h+='<polygon points="'+poly(sA)+'" fill="rgba(90,122,90,.18)" stroke="#5a7a5a" stroke-width="2" stroke-linejoin="round"/>';
+h+='<polygon points="'+poly(sB)+'" fill="rgba(122,90,122,.1)" stroke="#7a5a7a" stroke-width="2.5" stroke-linejoin="round"/>';
+h+='<polygon points="'+poly(sA)+'" fill="rgba(90,122,90,.12)" stroke="#5a7a5a" stroke-width="2.5" stroke-linejoin="round"/>';
 DIMS.forEach((d,i)=>{
   const a=ang(i),ld=r*1.18;
   const x=cx+ld*Math.cos(a);
