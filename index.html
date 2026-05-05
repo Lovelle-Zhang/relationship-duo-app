@@ -37,8 +37,8 @@ to{stroke-dashoffset:0}}
 .divider{display:flex;align-items:center;gap:10px;margin-bottom:20px}
 .div-line{flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(90,122,90,.2),transparent)}
 .div-dot{font-size:.65rem;color:#5a7a5a;opacity:.5}
-.btn-main{display:block;width:100%;padding:16px 0;background:linear-gradient(135deg,#4a7a5a,#5a6a8a);border:none;border-radius:14px;color:#fff;font-family:'Noto Serif SC',serif;font-size:1rem;font-weight:600;letter-spacing:.12em;cursor:pointer;box-shadow:0 8px 28px rgba(90,122,90,.28);margin-bottom:16px;transition:box-shadow .2s,opacity .1s}
-.btn-main:hover{box-shadow:0 12px 36px rgba(90,122,90,.35)}.btn-main:active{transform:scale(.97)}
+.btn-main{display:block;width:100%;padding:16px 0;background:linear-gradient(135deg,#4a7a5a,#5a6a8a);border:none;border-radius:14px;color:#fff;font-family:'Noto Serif SC',serif;font-size:1rem;font-weight:600;letter-spacing:.12em;cursor:pointer;box-shadow:0 8px 28px rgba(90,122,90,.28);margin-bottom:16px;transition:opacity .15s}
+
 .hint{font-size:.72rem;color:var(--faint);text-align:center;letter-spacing:.06em}
 .or-row{display:flex;align-items:center;gap:10px;margin-bottom:16px}
 .or-line{flex:1;height:1px;background:rgba(90,122,90,.12)}
@@ -67,7 +67,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 .slider-num.purple{color:#7a5a7a}
 .slider-unit{font-size:1rem;color:var(--mid);font-weight:300}
 .opt-list{display:flex;flex-direction:column;gap:9px;margin-bottom:8px}
-.opt{display:flex;align-items:center;gap:13px;padding:13px 16px;background:rgba(255,255,255,.7);border:1.5px solid rgba(90,122,90,.12);border-radius:10px;cursor:pointer;text-align:left;font-family:'Noto Serif SC',serif;animation:optIn .35s ease both;width:100%;transition:border-color .2s,background .2s}
+.opt{display:flex;align-items:center;gap:13px;padding:13px 16px;background:rgba(255,255,255,.7);border:1.5px solid rgba(90,122,90,.12);border-radius:10px;cursor:pointer;text-align:left;font-family:'Noto Serif SC',serif;animation:optIn .35s ease both;width:100%;transition:border-color .2s}
 .opt:hover{border-color:rgba(90,122,90,.3)}
 .opt.sel-a{background:rgba(235,248,240,.95);border-color:rgba(90,122,90,.5);transform:translateX(4px)}
 .opt.sel-b{background:rgba(243,238,250,.95);border-color:rgba(122,90,122,.5);transform:translateX(4px)}
@@ -79,8 +79,8 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 .opt.sel-b .opt-txt{color:#7a5a7a}
 .nav-row{display:flex;gap:10px;margin-top:24px}
 .btn-back{padding:12px 18px;background:transparent;border:1.5px solid rgba(90,122,90,.2);border-radius:8px;color:var(--faint);font-family:'Noto Serif SC',serif;font-size:.85rem;cursor:pointer}
-.btn-next{flex:1;padding:14px 0;border:none;border-radius:8px;color:#fff;font-family:'Noto Serif SC',serif;font-size:.8rem;font-weight:500;letter-spacing:0.02em;font-weight:600;cursor:pointer;box-shadow:0 6px 20px rgba(90,122,90,.25);transition:box-shadow .2s,opacity .1s}
-.btn-next:active{transform:scale(.97)}.btn-next:disabled{opacity:.6;cursor:not-allowed}
+.btn-next{flex:1;padding:14px 0;border:none;border-radius:8px;color:#fff;font-family:'Noto Serif SC',serif;font-size:.8rem;font-weight:500;letter-spacing:0.02em;font-weight:600;cursor:pointer;box-shadow:0 6px 20px rgba(90,122,90,.25);transition:opacity .15s}
+.btn-next:disabled{opacity:.6;cursor:not-allowed}
 .btn-next.rose{background:linear-gradient(135deg,#4a7a5a,#6a7a6a)}
 .btn-next.purple{background:linear-gradient(135deg,#a07ed0,#7a5a7a)}
 .ml-auto{margin-left:auto}
@@ -173,7 +173,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 
 /* 选项卡片hover效果 */
 .opt{transition:all .25s cubic-bezier(.4,0,.2,1)}
-.opt:hover{background:rgba(255,255,255,.9);border-color:rgba(90,122,90,.25)}
+
 
 /* 标签页下划线动画 */
 .tabs{position:relative}
@@ -245,7 +245,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 
 /* 选项卡片 hover 效果 */
 .opt{transition:all .25s cubic-bezier(.4,0,.2,1)}
-.opt:hover{background:rgba(255,255,255,.9);border-color:rgba(90,122,90,.25)}
+
 
 /* 标签页下划线动画 */
 /* 标签页下划线 - 已统一到 .tab.active::after */
@@ -1223,7 +1223,7 @@ p {
 .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(42,34,42,.88);color:rgba(255,255,255,.92);padding:10px 20px;border-radius:99px;font-size:.82rem;letter-spacing:0.02em;pointer-events:none;opacity:0;transition:all .3s;z-index:9999;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 /* 全局按钮按压感 */
-button:not(:disabled):active{transform:scale(.97);transition:transform .1s}
+
 button:focus{outline:none!important;box-shadow:none!important}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
