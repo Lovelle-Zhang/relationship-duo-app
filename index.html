@@ -1757,7 +1757,7 @@ document.getElementById('tab-'+n).style.display='block';
 
 function drawRadar(sA,sB,sz){
 const svg=document.getElementById('radar');
-svg.setAttribute('viewBox','0 0 '+sz+' '+sz);
+const pad=22;svg.setAttribute('viewBox',(-pad)+' '+(-pad)+' '+(sz+pad*2)+' '+(sz+pad*2));
 svg.style.height=sz+'px';
 svg.style.overflow='visible';
 const cx=sz/2,cy=sz/2,r=sz*.32,n=DIMS.length;
@@ -1771,7 +1771,7 @@ DIMS.forEach((_,i)=>{const[x,y]=pt(100,i);h+='<line x1="'+cx+'" y1="'+cy+'" x2="
 h+='<polygon points="'+poly(sB)+'" fill="rgba(122,90,122,.1)" stroke="#7a5a7a" stroke-width="2.5" stroke-linejoin="round"/>';
 h+='<polygon points="'+poly(sA)+'" fill="rgba(90,122,90,.12)" stroke="#5a7a5a" stroke-width="2.5" stroke-linejoin="round"/>';
 DIMS.forEach((d,i)=>{
-  const a=ang(i),ld=r*1.18;
+  const a=ang(i),ld=r*1.12;
   const x=cx+ld*Math.cos(a);
   const y=cy+ld*Math.sin(a);
   const anchor=Math.abs(Math.cos(a))<0.1?'middle':(Math.cos(a)>0?'start':'end');
