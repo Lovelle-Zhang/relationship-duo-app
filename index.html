@@ -7,9 +7,9 @@
 <link rel="icon" type="image/png" href="images/lin-watermark-green.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@300;400;600&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--rose:#5a7a5a;--coral:#5a7a5a;--purple:#7a5a7a;--ink:#2e1f1f;--mid:#6d8a6d;--faint:#b8938a}
@@ -27,7 +27,7 @@ body::after{width:220px;height:180px;bottom:30px;left:-50px;background:radial-gr
 @keyframes heartbeat{0%,100%{transform:scale(1)}15%{transform:scale(1.1)}30%{transform:scale(1)}45%{transform:scale(1.05)}}
 @keyframes optIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
 @keyframes svgSpin{from{stroke-dashoffset:176}to{stroke-dashoffset:0}}
-@keyframes svgSpin{from{stroke-dashoffset:176}to{stroke-dashoffset:0}}
+to{stroke-dashoffset:0}}
 .flower-wrap{width:80px;height:80px;margin:0 auto 20px;position:relative;display:flex;align-items:center;justify-content:center}
 .flower-glow{position:absolute;inset:-12px;border-radius:50%;background:radial-gradient(circle,rgba(90,122,90,.2),transparent 70%);animation:glowPulse 3s ease-in-out infinite}
 .flower-emoji{font-size:52px;display:block;animation:floatBob 4s ease-in-out infinite;position:relative;z-index:1}
@@ -1217,6 +1217,10 @@ p {
   padding: 16px 0 !important;
 }
 @keyframes ripple{0%{transform:scale(.8);opacity:.8}100%{transform:scale(1);opacity:0}}
+
+/* ── toast 通知 ── */
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(42,34,42,.88);color:rgba(255,255,255,.92);padding:10px 20px;border-radius:99px;font-size:.82rem;letter-spacing:0.02em;pointer-events:none;opacity:0;transition:all .3s;z-index:9999;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1339,7 +1343,7 @@ p {
 
 <!-- 总分卡片 -->
 <div class="score-card" style="background:rgba(255,255,255,.85);backdrop-filter:blur(20px);border:1px solid rgba(0,0,0,.04);border-radius:16px;padding:32px 24px;margin-bottom:20px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,.05)">
-  <div class="score-label" style="font-size:.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(0,0,0,.4);margin-bottom:12px">RELATIONSHIP TEMPERATURE</div>
+  <div class="score-label" style="font-size:.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(0,0,0,.4);margin-bottom:12px">关 系 温 度</div>
   <div id="rs" style="font-size:3.5rem;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-0.03em;background:linear-gradient(135deg,#5a7a5a,#7a5a7a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin:12px 0">0</div>
   <div id="rb" style="font-size:.88rem;color:#666;margin-top:8px;letter-spacing:-0.005em"></div>
 </div>
@@ -1363,7 +1367,7 @@ p {
   
   <!-- 成长卡片 -->
   <div style="background:linear-gradient(to bottom,rgba(255,255,255,.95),rgba(255,255,255,.85));border:1px solid rgba(0,0,0,.05);border-radius:12px;padding:32px 24px;margin-top:28px">
-    <div style="font-size:.85rem;color:#666;text-align:center;margin-bottom:28px;letter-spacing:-0.01em">你们各自的温度</div>
+    <div style="font-size:.78rem;color:rgba(0,0,0,.35);text-align:center;margin-bottom:28px;letter-spacing:0.08em;text-transform:uppercase">各 自 的 温 度</div>
     
     <div style="display:flex;gap:28px;align-items:center;justify-content:center">
       <div style="text-align:center">
@@ -1454,60 +1458,7 @@ p {
 </div>
 
 <!-- 给你们的话 -->
-<div id="tab-insight" style="display:none" style="display:none;padding:20px 0">
-  <div class="locked" style="text-align:center;padding:8px 0 24px">
-
-  <!-- 情绪钩子 -->
-  <div style="margin-bottom:28px">
-    <div style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:600;color:#3a2a3a;line-height:1.6;margin-bottom:10px">你们之间有一个盲区<br>你们可能从未正视过</div>
-    <div style="font-size:.78rem;color:rgba(90,70,90,.5);letter-spacing:0.03em">基于你们各自的作答，系统发现了一些细节</div>
-  </div>
-
-  <!-- 半遮半掩的预览卡片 -->
-  <div style="position:relative;margin-bottom:24px">
-
-    <!-- 卡片1：可见 -->
-    <div style="background:rgba(255,255,255,.9);border:1px solid rgba(122,90,122,.12);border-radius:12px;padding:16px 18px;margin-bottom:10px;text-align:left">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-        <div style="width:6px;height:6px;border-radius:50%;background:#e68c3c;flex-shrink:0"></div>
-        <span style="font-size:.82rem;font-weight:600;color:#3a2a3a">你们在「情绪支持」上相差 38 分</span>
-      </div>
-      <div style="font-size:.76rem;color:#888;line-height:1.6">一方觉得已经够了，另一方却在默默等待更多——这个差距往往是争吵的起点</div>
-    </div>
-
-    <!-- 卡片2：半模糊 -->
-    <div style="background:rgba(255,255,255,.9);border:1px solid rgba(122,90,122,.12);border-radius:12px;padding:16px 18px;margin-bottom:10px;text-align:left;position:relative;overflow:hidden">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-        <div style="width:6px;height:6px;border-radius:50%;background:#5a7a5a;flex-shrink:0"></div>
-        <span style="font-size:.82rem;font-weight:600;color:#3a2a3a">最值得先改善的一件事</span>
-      </div>
-      <div style="font-size:.76rem;color:#888;line-height:1.6;filter:blur(3px);user-select:none">投入产出分析显示，如果你们先从这一个维度开始，关系质量提升速度会快 3 倍……</div>
-      <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(247,243,250,.95));border-radius:12px"></div>
-    </div>
-
-    <!-- 卡片3：完全锁住 -->
-    <div style="background:rgba(255,255,255,.7);border:1px solid rgba(122,90,122,.08);border-radius:12px;padding:16px 18px;text-align:left;position:relative;overflow:hidden;filter:blur(1px)">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-        <div style="width:6px;height:6px;border-radius:50%;background:#7a5a7a;flex-shrink:0"></div>
-        <span style="font-size:.82rem;font-weight:600;color:#3a2a3a">1年内分手概率预测</span>
-      </div>
-      <div style="font-size:.76rem;color:#888;line-height:1.6;filter:blur(4px);user-select:none">根据你们在七个维度的得分分布，结合 12,847 对情侣的追踪数据……</div>
-    </div>
-
-    <!-- 锁图标遮罩 -->
-    <div style="position:absolute;bottom:12px;right:16px;width:32px;height:32px;background:rgba(122,90,122,.12);border-radius:50%;display:flex;align-items:center;justify-content:center">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7a5a7a" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-    </div>
-  </div>
-
-  <!-- 社会证明 -->
-  <div style="font-size:.72rem;color:rgba(90,70,90,.4);margin-bottom:20px;letter-spacing:0.02em">这份报告只属于你们两人 · 不会有第二份一样的</div>
-
-  <!-- 主按钮 -->
-  <button class="unlock-btn" onclick="alert('付费功能开发中')" style="width:100%;padding:16px;background:linear-gradient(135deg,#6a5a7a,#7a5a7a);border:none;border-radius:14px;color:white;font-size:.9rem;font-weight:500;cursor:pointer;box-shadow:0 8px 28px rgba(122,90,122,.3);letter-spacing:0.04em;transition:all .2s">看看我们的报告 ¥29</button>
-  <div style="font-size:.68rem;color:rgba(90,70,90,.35);margin-top:10px">一次性付费 · 永久保存</div>
-
-</div>
+<div id="tab-insight" style="display:none;width:100%"></div>
 
 <!-- 底部按钮 -->
 <div style="margin-top:32px;text-align:center">
@@ -1531,7 +1482,7 @@ const QS=[
 {t:"choice",text:"上次认真表达爱意或感谢是多久前？",opts:[["今天或昨天",100],["这周以内",72],["这个月以内",40],["记不清了",8]]},
 {t:"slider",text:"你对这段关系的满意度？",sub:"直觉打分，不用想太多",min:0,max:100,step:1,unit:"%",def:0,fn:v=>v}
 ];
-const PROF=[[88,"灵魂伴侣","💍","#5a7a5a","一辈子 ♾️","在最关键的每一个维度你们都做到了，这不靠运气，靠的是两个人持续用心的选择。","偶尔停下来，认真告诉对方：有你在，我觉得很幸运。"],[73,"深度伴侣","🌸","#5a7a5a","20–40 年","扎实的情感基础，沟通质量和相互支持都处于很好的水准。","定期问对方：最近有什么想说但还没说的？"],[55,"稳定伴侣","🌻","#d4844a","10–20 年","稳定基础不错，但新鲜感、深度对话、情感表达都可以再多一点。","这个月约一次「假装第一次约会」。"],[38,"磨合中","🌤️","#b07830","5–10 年","核心议题还有明显提升空间。现在投入，收益很大。","选一个一直回避的话题，这周聊一次。"],[0,"需要重建","🌱","#8a6a3a","需要努力","距离大于连结，多个维度都在发出需要关注的信号。","今天就做一件小事：告诉对方你欣赏 TA 的一点。"]];
+const PROF=[[88,"灵魂伴侣","","#5a7a5a","一辈子 ♾️","在最关键的每一个维度你们都做到了，这不靠运气，靠的是两个人持续用心的选择。","偶尔停下来，认真告诉对方：有你在，我觉得很幸运。"],[73,"深度伴侣","","#5a7a5a","20–40 年","扎实的情感基础，沟通质量和相互支持都处于很好的水准。","定期问对方：最近有什么想说但还没说的？"],[55,"稳定伴侣","","#d4844a","10–20 年","稳定基础不错，但新鲜感、深度对话、情感表达都可以再多一点。","这个月约一次「假装第一次约会」。"],[38,"磨合中","","#b07830","5–10 年","核心议题还有明显提升空间。现在投入，收益很大。","选一个一直回避的话题，这周聊一次。"],[0,"需要重建","","#8a6a3a","需要努力","距离大于连结，多个维度都在发出需要关注的信号。","今天就做一件小事：告诉对方你欣赏 TA 的一点。"]];
 const TIPS={"深度沟通":"试试每周定一个「无手机聊天时间」，哪怕15分钟。","修复能力":"下次争吵后，先说「我感到…」而不是「你总是…」。","共同体验":"这个月一起做一件从没做过的事。","价值契合":"各自写下「五年后理想生活」，然后互相分享。","情绪支持":"在对方低落时先问「你需要倾听还是建议？」","爱意表达":"今天认真告诉对方你欣赏 TA 的一点。","整体满意":"聊聊：这段关系里最需要改善什么？"};
 
 function gp(s){const p=PROF.find(x=>s>=x[0])||PROF[4];return{level:p[1],emoji:p[2],color:p[3],dur:p[4],ana:p[5],adv:p[6]}}
@@ -1654,8 +1605,8 @@ renderResult(unlocked);
 }
 }
 
-function copyCode(){navigator.clipboard.writeText(C).then(()=>alert('邀请码已复制：'+C))}
-function copyLink(){navigator.clipboard.writeText(location.origin+location.pathname+'?code='+C).then(()=>alert('链接已复制！'))}
+function copyCode(){navigator.clipboard.writeText(C).then(()=>showToast('邀请码已复制'))}
+function copyLink(){navigator.clipboard.writeText(location.origin+location.pathname+'?code='+C).then(()=>showToast('链接已复制，发给 TA 吧'))}
 
 function renderResult(unlocked){
 const sA=R==='A'?myS:theirS,sB=R==='A'?theirS:myS;
@@ -1690,7 +1641,7 @@ DIMS.forEach((dim,i)=>{
   
   // 深林进度条
   compareHTML+='<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">';
-  compareHTML+='<div style="width:50px;font-size:.75rem;color:#666">深林</div>';
+  compareHTML+='<div style="width:50px;font-size:.75rem;color:#666">'+(R==="A"?"你":"TA")+'</div>';
   compareHTML+='<div style="flex:1;height:8px;background:rgba(0,0,0,.04);border-radius:4px;overflow:hidden">';
   compareHTML+='<div style="height:100%;background:#5a7a5a;width:'+a+'%;border-radius:4px"></div>';
   compareHTML+='</div>';
@@ -1699,7 +1650,7 @@ DIMS.forEach((dim,i)=>{
   
   // 幽兰进度条
   compareHTML+='<div style="display:flex;align-items:center;gap:10px">';
-  compareHTML+='<div style="width:50px;font-size:.75rem;color:#666">幽兰</div>';
+  compareHTML+='<div style="width:50px;font-size:.75rem;color:#666">'+(R==="A"?"TA":"你")+'</div>';
   compareHTML+='<div style="flex:1;height:8px;background:rgba(0,0,0,.04);border-radius:4px;overflow:hidden">';
   compareHTML+='<div style="height:100%;background:#7a5a7a;width:'+b+'%;border-radius:4px"></div>';
   compareHTML+='</div>';
@@ -1712,32 +1663,50 @@ cmp.innerHTML=compareHTML;
 const ins=document.getElementById('tab-insight');
   
   // 生成解锁页面内容（和预览版格式一致）
-  let h = '<div class="locked" style="text-align:center;padding:40px 20px">';
-  h += '<div class="lock-icon" style="width:56px;height:56px;margin:0 auto 20px;background:rgba(0,0,0,.04);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:rgba(0,0,0,.2)">🔒</div>';
-  h += '<div class="locked-title" style="font-size:1.15rem;font-weight:600;color:#2a2a2a;margin-bottom:12px;letter-spacing:-0.015em">解锁完整洞察</div>';
-  h += '<div class="locked-desc" style="font-size:.88rem;color:#666;line-height:1.8;margin-bottom:28px">';
-  h += '基于 12,847 对情侣数据的关系模型<br>为你们定制的成长建议';
-  h += '</div>';
-  
-  h += '<div class="preview-box" style="background:rgba(90,122,90,.04);border:1px solid rgba(90,122,90,.12);border-radius:12px;padding:20px 18px;margin-bottom:16px;text-align:left">';
-  h += '<h4 style="font-size:.88rem;color:#5a7a5a;margin-bottom:8px;font-weight:600"><span style="display:inline-block;width:14px;height:14px;background:#e68c3c;border-radius:50%;margin-right:6px;vertical-align:middle;position:relative;top:-1px"></span>关系盲区诊断</h4>';
-  h += '<p style="font-size:.82rem;color:#666;line-height:1.7">这些维度上你们的认知差异明显，需要重点关注...</p>';
-  h += '</div>';
-  
-  h += '<div class="preview-box" style="background:rgba(90,122,90,.04);border:1px solid rgba(90,122,90,.12);border-radius:12px;padding:20px 18px;margin-bottom:16px;text-align:left">';
-  h += '<h4 style="font-size:.88rem;color:#5a7a5a;margin-bottom:8px;font-weight:600"><span style="display:inline-block;width:14px;height:14px;background:#5a7a5a;border-radius:3px;margin-right:6px;vertical-align:middle;position:relative;top:-1px"></span>快速提升策略</h4>';
-  h += '<p style="font-size:.82rem;color:#666;line-height:1.7">投入产出比分析显示，优先改善「价值契合」效果最好...</p>';
-  h += '</div>';
-  
-  h += '<div class="preview-box" style="background:rgba(90,122,90,.04);border:1px solid rgba(90,122,90,.12);border-radius:12px;padding:20px 18px;margin-bottom:16px;text-align:left">';
-  h += '<h4 style="font-size:.88rem;color:#5a7a5a;margin-bottom:8px;font-weight:600"><span style="display:inline-block;width:14px;height:14px;background:#7a5a7a;border-radius:50%;margin-right:6px;vertical-align:middle;position:relative;top:-1px"></span>关系稳定性预测</h4>';
-  h += '<p style="font-size:.82rem;color:#666;line-height:1.7">基于追踪数据的分析模型：1年内分手概率、3年关系质量趋势...</p>';
-  h += '</div>';
-  
-  h += '<button class="unlock-btn" onclick="alert(\'付费功能开发中\')" style="width:100%;padding:14px;background:linear-gradient(135deg,#5a7a5a,#7a5a7a);border:none;border-radius:8px;color:white;font-size:.88rem;font-weight:500;cursor:pointer;box-shadow:0 4px 12px rgba(90,122,90,.2);margin-top:24px;transition:transform .2s">¥29 解锁完整洞察</button>';
-  h += '</div>';
-  
-  // 检查是否已解锁
+  // 找最大差距维度
+  const _gaps=DIMS.map((d,idx)=>({dim:d,gap:Math.abs(sA[idx]-sB[idx]),a:sA[idx],b:sB[idx]})).sort((x,y)=>y.gap-x.gap);
+  const _bg=_gaps[0],_nameA=R==='A'?'你':'TA',_nameB=R==='A'?'TA':'你';
+  let h='<div style="text-align:center;padding:8px 0 28px">';
+  h+='<div style="margin-bottom:28px">';
+  h+='<div style="font-family:\'Playfair Display\',serif;font-size:1.2rem;font-weight:600;color:#3a2a3a;line-height:1.6;margin-bottom:8px">你们之间有一个盲区<br>你们可能从未正视过</div>';
+  h+='<div style="font-size:.75rem;color:rgba(90,70,90,.45);letter-spacing:0.03em">基于你们各自的作答，系统发现了一些细节</div>';
+  h+='</div>';
+  h+='<div style="position:relative;margin-bottom:24px">';
+  // 卡片1：真实差距数据，可见
+  h+='<div style="background:rgba(255,255,255,.92);border:1px solid rgba(122,90,122,.12);border-radius:12px;padding:16px 18px;margin-bottom:10px;text-align:left">';
+  h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
+  h+='<div style="width:6px;height:6px;border-radius:50%;background:#e68c3c;flex-shrink:0"></div>';
+  h+='<span style="font-size:.82rem;font-weight:600;color:#3a2a3a">你们在「'+_bg.dim+'」上相差 '+_bg.gap+' 分</span>';
+  h+='</div>';
+  h+='<div style="font-size:.76rem;color:#888;line-height:1.65">'+_nameA+' 给了 '+_bg.a+' 分，'+_nameB+' 给了 '+_bg.b+' 分——这个差距往往是摩擦的起点</div>';
+  h+='</div>';
+  // 卡片2：半模糊
+  h+='<div style="background:rgba(255,255,255,.92);border:1px solid rgba(122,90,122,.12);border-radius:12px;padding:16px 18px;margin-bottom:10px;text-align:left;position:relative;overflow:hidden">';
+  h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
+  h+='<div style="width:6px;height:6px;border-radius:50%;background:#5a7a5a;flex-shrink:0"></div>';
+  h+='<span style="font-size:.82rem;font-weight:600;color:#3a2a3a">最值得先改善的一件事</span>';
+  h+='</div>';
+  h+='<div style="font-size:.76rem;color:#888;line-height:1.65;filter:blur(3px);user-select:none">投入产出分析显示，如果你们先从这一个维度开始改变，关系质量提升速度会快 3 倍……</div>';
+  h+='<div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(247,243,250,.95));border-radius:12px"></div>';
+  h+='</div>';
+  // 卡片3：完全锁
+  h+='<div style="background:rgba(255,255,255,.7);border:1px solid rgba(122,90,122,.08);border-radius:12px;padding:16px 18px;text-align:left;position:relative;overflow:hidden">';
+  h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
+  h+='<div style="width:6px;height:6px;border-radius:50%;background:#7a5a7a;flex-shrink:0"></div>';
+  h+='<span style="font-size:.82rem;font-weight:600;color:#3a2a3a;filter:blur(1px)">一年内关系预测</span>';
+  h+='</div>';
+  h+='<div style="font-size:.76rem;color:#888;line-height:1.65;filter:blur(4px);user-select:none">根据你们在七个维度的得分分布，结合 12,847 对情侣的追踪数据……</div>';
+  h+='</div>';
+  // 锁图标
+  h+='<div style="position:absolute;bottom:12px;right:16px;width:32px;height:32px;background:rgba(122,90,122,.1);border-radius:50%;display:flex;align-items:center;justify-content:center">';
+  h+='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7a5a7a" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+  h+='</div>';
+  h+='</div>';
+  h+='<div style="font-size:.72rem;color:rgba(90,70,90,.38);margin-bottom:20px;letter-spacing:0.02em">这份报告只属于你们两人 · 不会有第二份一样的</div>';
+  h+='<button class="unlock-btn" onclick="alert(\'付费功能开发中\')" style="width:100%;padding:16px;background:linear-gradient(135deg,#6a5a7a,#7a5a7a);border:none;border-radius:14px;color:white;font-size:.9rem;font-weight:500;cursor:pointer;box-shadow:0 8px 28px rgba(122,90,122,.28);letter-spacing:0.04em">看看我们的报告 ¥29</button>';
+  h+='<div style="font-size:.68rem;color:rgba(90,70,90,.32);margin-top:10px">一次性付费 · 永久保存</div>';
+  h+='</div>';
+    // 检查是否已解锁
   if(unlocked){
     ins.innerHTML = generatePremiumInsight(sA, sB);
   }else{
@@ -2404,6 +2373,14 @@ if (window.location.search.includes('test=1')) {
     setTimeout(()=>renderResult(false),100);
   }
 })();
+</script>
+<div class="toast" id="toast"></div>
+<script>
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
 </script>
 </body>
 </html>
