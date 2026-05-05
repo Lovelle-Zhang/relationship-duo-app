@@ -4,7 +4,7 @@ const https = require('https');
 const CONFIG = {
   MCHID: process.env.WX_MCHID || '1741858680',
   SERIAL_NO: process.env.WX_SERIAL_NO || '18ABFE506C033FF75448A0E02D16A46E1A1C5A6A',
-  PRIVATE_KEY: process.env.WX_PRIVATE_KEY
+  PRIVATE_KEY: process.env.WX_PRIVATE_KEY ? process.env.WX_PRIVATE_KEY.replace(/\\n/g, '\n') : undefined
 };
 
 function sign(method, url, timestamp, nonce, body) {
