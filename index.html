@@ -1216,6 +1216,7 @@ p {
   box-sizing: border-box !important;
   padding: 16px 0 !important;
 }
+@keyframes orbitSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes ripple{0%{transform:scale(.8);opacity:.8}100%{transform:scale(1);opacity:0}}
 
 /* ── toast 通知 ── */
@@ -1308,12 +1309,20 @@ p {
 
 <div id="waiting" class="screen hidden" style="text-align:center;padding:40px 20px">
 <div style="margin-bottom:40px;display:flex;justify-content:center;align-items:center">
-  <div style="position:relative;width:120px;height:120px;display:flex;align-items:center;justify-content:center">
-    <div style="position:absolute;width:120px;height:120px;border-radius:50%;border:1px solid rgba(90,122,90,.25);animation:ripple 3s ease-out infinite"></div>
-    <div style="position:absolute;width:80px;height:80px;border-radius:50%;border:1px solid rgba(90,122,90,.35);animation:ripple 3s ease-out infinite;animation-delay:.8s"></div>
-    <div style="position:absolute;width:44px;height:44px;border-radius:50%;border:1px solid rgba(90,122,90,.5);animation:ripple 3s ease-out infinite;animation-delay:1.6s"></div>
-    <div style="width:10px;height:10px;border-radius:50%;background:#5a7a5a;opacity:.7;animation:glowPulse 2s ease-in-out infinite"></div>
-  </div>
+  <svg width="120" height="120" viewBox="0 0 120 120" style="overflow:visible">
+    <!-- 轨道 -->
+    <circle cx="60" cy="60" r="36" fill="none" stroke="rgba(90,122,90,.08)" stroke-width="1"/>
+    <!-- 连线（随轨道旋转） -->
+    <g style="transform-origin:60px 60px;animation:orbitSpin 4s linear infinite">
+      <line x1="24" y1="60" x2="96" y2="60" stroke="rgba(110,90,130,.12)" stroke-width="1"/>
+      <!-- 绿点（你） -->
+      <circle cx="24" cy="60" r="7" fill="#5a7a5a" opacity=".85"/>
+      <!-- 紫点（TA） -->
+      <circle cx="96" cy="60" r="7" fill="#7a5a7a" opacity=".85"/>
+    </g>
+    <!-- 中心点 -->
+    <circle cx="60" cy="60" r="3" fill="rgba(110,90,130,.25)"/>
+  </svg>
 </div>
 <h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:400;color:var(--ink);margin-bottom:10px;letter-spacing:0.02em">正在等待另一半抵达</h2>
 <p style="font-size:.78rem;color:var(--faint);margin-bottom:32px;letter-spacing:0.04em">把邀请码发给 TA，TA 完成后自动跳转</p>
