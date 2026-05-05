@@ -1292,7 +1292,7 @@ button:focus{outline:none!important;box-shadow:none!important}
 </p>
 <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;font-size:.72rem;color:rgba(122,82,82,.5)">
   <span style="color:#5a7a5a">✓</span>
-  <span>基于 Gottman 研究所 40 年数据</span>
+  <span>频率测量，不是算命</span>
 </div>
 </div>
 
@@ -1345,9 +1345,9 @@ button:focus{outline:none!important;box-shadow:none!important}
 
 <div style="max-width:420px;margin:0 auto;padding:24px;background:rgba(255,255,255,.5);border-radius:16px;text-align:left">
   <p style="font-size:.9rem;font-weight:600;color:var(--ink);margin-bottom:16px">等 TA 的时候——</p>
-  <p style="font-size:.85rem;color:var(--mid);line-height:1.8;margin-bottom:12px">· <b>爱语不同，努力白费</b>：你们是否在用对方听不懂的方式爱着彼此？</p>
-  <p style="font-size:.85rem;color:var(--mid);line-height:1.8;margin-bottom:12px">· <b>6 秒拥抱</b>：Gottman 说，这是维持亲密感最低成本的方式</p>
-  <p style="font-size:.85rem;color:var(--mid);line-height:1.8">· <b>吵完别拖</b>：24 小时内和解，比一周后的道歉有效 3 倍</p>
+  <p style="font-size:.85rem;color:var(--mid);line-height:1.8;margin-bottom:12px">· <b>频率不是对错</b>：每个人都有自己的情感节奏，差异本身不是问题</p>
+  <p style="font-size:.85rem;color:var(--mid);line-height:1.8;margin-bottom:12px">· <b>被看见，才能同频</b>：说出你真正需要的，比猜测对方的想法更有效</p>
+  <p style="font-size:.85rem;color:var(--mid);line-height:1.8">· <b>调频需要时间</b>：两个人的节奏对齐，是持续发生的过程，不是一次谈话</p>
 </div>
 </div></div>
 
@@ -2378,13 +2378,6 @@ function showTestResult() {
   myS = [78, 85, 72, 88, 58, 82, 76];
   theirS = [82, 88, 88, 79, 96, 85, 80];
   renderResult(false);
-}
-
-// URL参数检测 - 如果有?test=1 自动显示测试结果
-if (window.location.search.includes('test=1')) {
-  window.addEventListener('load', () => {
-    setTimeout(showTestResult, 500);
-  });
 }
 
 // ?test=1 快速预览结果页
