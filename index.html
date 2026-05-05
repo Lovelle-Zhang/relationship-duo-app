@@ -1492,7 +1492,7 @@ async function checkUnlocked(code){
   return d.length>0 && d[0].unlocked;
 }
 
-let R,C,qi=0,ans=[],sv=0,myS,theirS,pollTimer;
+let R,C,qi=0,ans=[],sv=0,myS,theirS,pollTimer,myName='',theirName='';
 
 function show(id){['intro','quiz','waiting','result'].forEach(s=>document.getElementById(s).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');if(id==='result'){document.body.classList.add('has-result')}else{document.body.classList.remove('has-result')}}
 function err(m){const e=document.getElementById('err');e.textContent=m;setTimeout(()=>e.textContent='',3000)}
