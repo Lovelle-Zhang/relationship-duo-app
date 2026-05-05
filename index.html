@@ -25,6 +25,7 @@ body::after{width:220px;height:180px;bottom:30px;left:-50px;background:radial-gr
 @keyframes glowPulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:.9;transform:scale(1.08)}}
 @keyframes heartbeat{0%,100%{transform:scale(1)}15%{transform:scale(1.1)}30%{transform:scale(1)}45%{transform:scale(1.05)}}
 @keyframes optIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+@keyframes svgSpin{from{stroke-dashoffset:176}to{stroke-dashoffset:0}}
 .flower-wrap{width:80px;height:80px;margin:0 auto 20px;position:relative;display:flex;align-items:center;justify-content:center}
 .flower-glow{position:absolute;inset:-12px;border-radius:50%;background:radial-gradient(circle,rgba(90,122,90,.2),transparent 70%);animation:glowPulse 3s ease-in-out infinite}
 .flower-emoji{font-size:52px;display:block;animation:floatBob 4s ease-in-out infinite;position:relative;z-index:1}
@@ -1259,7 +1260,15 @@ p {
 </div>
 
 <div id="waiting" class="screen hidden" style="text-align:center;padding:40px 20px">
-<div style="font-size:64px;margin-bottom:40px;animation:floatBob 3s ease-in-out infinite">⏳</div>
+<div style="margin-bottom:40px;display:flex;justify-content:center;animation:floatBob 3s ease-in-out infinite">
+<svg width="64" height="64" viewBox="0 0 64 64">
+  <circle cx="32" cy="32" r="28" fill="none" stroke="rgba(90,122,90,.15)" stroke-width="3"/>
+  <circle cx="32" cy="32" r="28" fill="none" stroke="#5a7a5a" stroke-width="3"
+    stroke-dasharray="176" stroke-dashoffset="44" stroke-linecap="round"
+    style="animation:svgSpin 2s linear infinite;transform-origin:32px 32px"/>
+  <circle cx="32" cy="32" r="5" fill="#5a7a5a" style="animation:glowPulse 2s ease-in-out infinite"/>
+</svg>
+</div>
 <h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--ink);margin-bottom:12px">等待TA完成</h2>
 <p style="font-size:.8rem;font-weight:500;letter-spacing:0.02em;color:var(--mid);margin-bottom:32px">把邀请码发给TA</p>
 
@@ -1434,7 +1443,7 @@ p {
 <!-- 底部按钮 -->
 <div style="margin-top:32px;text-align:center">
   <p style="font-size:.9rem;color:var(--mid);margin-bottom:16px">保存这段关系的记录</p>
-  <button onclick="downloadPoster()" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#4a90e2,#357abd);border:none;border-radius:8px;color:white;font-size:.8rem;font-weight:500;letter-spacing:0.02em;cursor:pointer;font-family:inherit;box-shadow:0 4px 12px rgba(74,144,226,.2)">下载专属海报</button>
+  <button onclick="downloadPoster()" style="display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#5a7a5a,#7a5a7a);border:none;border-radius:8px;color:white;font-size:.8rem;font-weight:500;letter-spacing:0.02em;cursor:pointer;font-family:inherit;box-shadow:0 4px 12px rgba(90,122,90,.25)">下载专属海报</button>
   <button onclick="location.reload()" style="display:block;margin:16px auto 0;padding:10px 24px;background:transparent;border:1.5px solid rgba(90,122,90,.3);border-radius:8px;color:var(--mid);font-size:.8rem;font-weight:500;letter-spacing:0.02em;cursor:pointer;font-family:inherit">重新开始</button>
 </div>
 
@@ -1591,7 +1600,7 @@ const ti=setInterval(()=>{
     el.style.animation='scoreReveal 0.5s cubic-bezier(0.34,1.56,0.64,1)';
   }
 },35);
-document.getElementById('rb').textContent='你们正在一起生长，已经 '+pct+'%';
+document.getElementById('rb').textContent=pct>=80?'比 '+pct+'% 的情侣更有深度':pct>=60?'你们有很好的成长空间':'每一步努力都在让关系更好';
 document.getElementById('pa-e').textContent='木';document.getElementById('pa-l').textContent='深林';document.getElementById('pa-s').textContent=tA;
 document.getElementById('pb-e').textContent='兰';document.getElementById('pb-l').textContent='幽兰';document.getElementById('pb-s').textContent=tB;
 drawRadar(sA,sB,280);
