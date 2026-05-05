@@ -1302,17 +1302,17 @@ p {
 <div style="padding:20px 0">
 
 <!-- 总分卡片 -->
-<div class="score-card" style="background:rgba(255,255,255,.85);backdrop-filter:blur(20px);border:1px solid rgba(0,0,0,.04);border-radius:16px;padding:40px 28px;margin-bottom:24px;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.06)">
+<div class="score-card" style="background:rgba(255,255,255,.85);backdrop-filter:blur(20px);border:1px solid rgba(0,0,0,.04);border-radius:16px;padding:32px 24px;margin-bottom:20px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,.05)">
   <div class="score-label" style="font-size:.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(0,0,0,.4);margin-bottom:12px">Relationship Temperature</div>
   <div id="rs" style="font-size:3.5rem;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-0.03em;background:linear-gradient(135deg,#5a7a5a,#7a5a7a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin:12px 0">0</div>
   <div id="rb" style="font-size:.88rem;color:#666;margin-top:8px;letter-spacing:-0.005em"></div>
 </div>
 
 <!-- 标签页 -->
-<div style="display:flex;gap:4px;border-bottom:1px solid rgba(0,0,0,.06);margin:24px 0">
-  <button class="tab active" onclick="switchTab('radar')" style="flex:1;padding:12px;font-size:.75rem;font-weight:500;color:#999;text-align:center;border:none;background:none;cursor:pointer;transition:color .2s;position:relative">七个维度</button>
-  <button class="tab" onclick="switchTab('compare')" style="flex:1;padding:12px;font-size:.75rem;font-weight:500;color:#999;text-align:center;border:none;background:none;cursor:pointer;transition:color .2s;position:relative">你和TA的差异</button>
-  <button class="tab" onclick="switchTab('insight')" style="flex:1;padding:12px;font-size:.75rem;font-weight:500;color:#999;text-align:center;border:none;background:none;cursor:pointer;transition:color .2s;position:relative">给你们的话</button>
+<div style="display:flex;gap:0;border-bottom:1px solid rgba(0,0,0,.06);margin:24px 0">
+  <button class="tab active" onclick="switchTab('radar')" style="flex:1;padding:10px 4px;font-size:.72rem;font-weight:500;color:#999;text-align:center;border:none;background:none;cursor:pointer;transition:color .2s;position:relative;white-space:nowrap">七个维度</button>
+  <button class="tab" onclick="switchTab('compare')" style="flex:1;padding:12px;font-size:.75rem;font-weight:500;color:#999;text-align:center;border:none;background:none;cursor:pointer;transition:color .2s;position:relative">差异对比</button>
+  <button class="tab" onclick="switchTab('insight')" style="flex:1;padding:10px 4px;font-size:.72rem;font-weight:500;color:#999;text-align:center;border:none;background:none;cursor:pointer;transition:color .2s;position:relative;white-space:nowrap">给你们的话</button>
 </div>
 
 <!-- 七个维度 -->
@@ -1348,7 +1348,7 @@ p {
 </div>
 
 <!-- 你和TA的差异 -->
-<div id="tab-compare" style="display:none;padding:0 16px">
+<div id="tab-compare" style="display:none">
   <!-- 默认示例内容 - JavaScript会替换这些 -->
   
   <!-- 差异小 -->
@@ -1418,7 +1418,7 @@ p {
 </div>
 
 <!-- 给你们的话 -->
-<div id="tab-insight" style="display:none;padding:20px 0">
+<div id="tab-insight" style="overflow:hidden" style="display:none;padding:20px 0">
   <div class="locked" style="text-align:center;padding:40px 20px">
     <div class="lock-icon" style="width:56px;height:56px;margin:0 auto 20px;background:rgba(0,0,0,.04);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:rgba(0,0,0,.2)">🔒</div>
     <div class="locked-title" style="font-size:1.15rem;font-weight:600;color:#2a2a2a;margin-bottom:12px;letter-spacing:-0.015em">解锁完整洞察</div>
