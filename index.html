@@ -1342,7 +1342,7 @@ p {
 <div style="padding:20px 0;width:100%;overflow:hidden">
 
 <!-- 总分卡片 -->
-<div class="score-card" style="background:linear-gradient(145deg,rgba(255,255,255,.88),rgba(245,240,252,.75));backdrop-filter:blur(20px);border:1px solid rgba(122,90,122,.1);border-radius:20px;padding:32px 24px;margin-bottom:20px;text-align:center;box-shadow:0 4px 24px rgba(122,90,122,.1)">
+<div class="score-card" style="background:linear-gradient(145deg,rgba(255,255,255,.75),rgba(242,236,255,.65));backdrop-filter:blur(20px);border:1px solid rgba(122,90,122,.1);border-radius:20px;padding:32px 24px;margin-bottom:20px;text-align:center;box-shadow:0 4px 24px rgba(122,90,122,.1)">
   <div class="score-label" style="font-size:.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(0,0,0,.4);margin-bottom:12px">关 系 温 度</div>
   <div id="rs" style="font-size:3.5rem;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-0.03em;background:linear-gradient(135deg,#5a7a5a,#7a5a7a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin:12px 0">0</div>
   <div id="rb" style="font-size:.88rem;color:#666;margin-top:8px;letter-spacing:-0.005em"></div>
@@ -1712,7 +1712,7 @@ const ins=document.getElementById('tab-insight');
   h+='</div>';
   h+='</div>';
   h+='<div style="font-size:.72rem;color:rgba(90,70,90,.38);margin-bottom:20px;letter-spacing:0.02em">这份报告只属于你们两人 · 不会有第二份一样的</div>';
-  h+='<button class="unlock-btn" onclick="alert(\'付费功能开发中\')" style="width:100%;padding:16px;background:linear-gradient(135deg,#6a5a7a,#7a5a7a);border:none;border-radius:14px;color:white;font-size:.9rem;font-weight:500;cursor:pointer;box-shadow:0 8px 28px rgba(122,90,122,.28);letter-spacing:0.04em">看看我们的报告 ¥29</button>';
+  h+='<button class="unlock-btn" onclick="unlockInsight()" style="width:100%;padding:16px;background:linear-gradient(135deg,#6a5a7a,#7a5a7a);border:none;border-radius:14px;color:white;font-size:.9rem;font-weight:500;cursor:pointer;box-shadow:0 8px 28px rgba(122,90,122,.28);letter-spacing:0.04em">看看我们的报告 ¥29</button>';
   h+='<div style="font-size:.68rem;color:rgba(90,70,90,.32);margin-top:10px">一次性付费 · 永久保存</div>';
   h+='</div>';
     // 检查是否已解锁
