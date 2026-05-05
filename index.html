@@ -1802,6 +1802,7 @@ async function unlockInsight(){
 }
 
 function showQRCode(url, orderNo) {
+  if (document.getElementById('payment-modal')) return; // 防重复
   const modal = document.createElement('div');
   modal.id = 'payment-modal';
   modal.style.cssText = 'position:fixed;inset:0;background:rgba(30,20,40,.75);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:9999;padding:24px';
@@ -1899,7 +1900,7 @@ function showDunePromo(){
       </div>
       <p style="font-size:.8rem;color:rgba(255,255,255,0.5);margin:20px 0 10px">扫码进入渡小程序</p>
       <div style="width:140px;height:140px;background:white;margin:0 auto 20px;border-radius:8px;display:flex;align-items:center;justify-content:center">
-        <p style="color:#666;font-size:.75rem">小程序码</p>
+        <img src="images/wxcode.jpg" style="width:128px;height:128px;border-radius:4px" onerror="this.parentElement.innerHTML='<p style=color:#666;font-size:.75rem>扫码进入</p>'">
       </div>
       <button onclick="this.parentElement.parentElement.remove()" style="width:100%;padding:14px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:8px;color:#fff;cursor:pointer;font-family:serif;font-size:.8rem;font-weight:500;letter-spacing:0.02em">稍后探索</button>
     </div>
@@ -1985,22 +1986,23 @@ function generatePremiumInsight(sA, sB) {
   return h;
 }
 
-function getPortrait(scores) {
+function getPortrait(scores, name) {
+  const n = name || '你';
   const pts = [];
-  if (scores[0] >= 70) pts.push('渴望高频的深度对话，言语是感受连接的核心方式');
-  else if (scores[0] >= 40) pts.push('重视偶尔的深度交流，不需要每天都聊到很深的地方');
-  else pts.push('更多通过陪伴和行动感受连接，不需要大量的语言表达');
+  if (scores[0] >= 70) pts.push(n+'渴望高频的深度对话，言语是感受连接的核心方式');
+  else if (scores[0] >= 40) pts.push(n+'重视偶尔的深度交流，不需要每天都聊到很深的地方');
+  else pts.push(n+'更多通过陪伴和行动感受连接，不需要大量的语言表达');
 
   if (scores[1] >= 80) pts.push('遇到摩擦时希望快速和解，冷战会带来明显的焦虑');
   else if (scores[1] >= 50) pts.push('需要一点时间冷静，但不倾向于长期逃避');
   else pts.push('需要较长时间消化冲突，独处是修复情绪的方式');
 
-  if (scores[5] >= 80) pts.push('爱意表达对你很重要，被说出来的爱是真实存在的证明');
+  if (scores[5] >= 80) pts.push('爱意表达对'+n+'很重要，被说出来的爱是真实存在的证明');
   else if (scores[5] >= 45) pts.push('行动和语言表达都能接受，不是特别执着于其中一种');
-  else pts.push('习惯用行动而非言语表达爱，主动开口不是自然的事');
+  else pts.push(n+'习惯用行动而非言语表达爱，主动开口不是自然的事');
 
-  if (scores[6] >= 70) pts.push('愿意为这段关系深度投入，它是生活中很重要的部分');
-  else pts.push('愿意适度投入，同时需要保有属于自己的空间和节奏');
+  if (scores[6] >= 70) pts.push(n+'愿意为这段关系深度投入，它是生活中很重要的部分');
+  else pts.push(n+'愿意适度投入，同时需要保有属于自己的空间和节奏');
 
   return pts.join('；') + '。';
 }
