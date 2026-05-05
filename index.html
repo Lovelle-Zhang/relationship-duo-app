@@ -1759,6 +1759,7 @@ function drawRadar(sA,sB,sz){
 const svg=document.getElementById('radar');
 svg.setAttribute('viewBox','0 0 '+sz+' '+sz);
 svg.style.height=sz+'px';
+svg.style.overflow='visible';
 const cx=sz/2,cy=sz/2,r=sz*.32,n=DIMS.length;
 const ang=i=>(Math.PI*2*i/n)-Math.PI/2;
 const pt=(s,i)=>{const a=ang(i),d=r*s/100;return[cx+d*Math.cos(a),cy+d*Math.sin(a)]};
