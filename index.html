@@ -1171,6 +1171,22 @@ p {
 #tab-radar>*,#tab-compare>*,#tab-insight>*{width:100%;box-sizing:border-box}
 /* 雷达图容器居中 */
 #tab-radar>div:first-child{display:flex;justify-content:center}
+
+/* ===== 프레임 일관성: 탭 전환 시 wrap 너비 고정 ===== */
+/* wrap이 항상 100%/480px를 유지하도록 모든 탭 패널 full-width */
+#tab-radar, #tab-compare, #tab-insight {
+  width: 100% !important;
+  min-width: 100% !important;
+  box-sizing: border-box;
+}
+/* 레이더 SVG 컨테이너도 full width */
+#tab-radar > div {
+  width: 100% !important;
+}
+/* 성장 카드 full width */
+#tab-radar > div:last-child {
+  width: 100% !important;
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1309,7 +1325,7 @@ p {
 <!-- 七个维度 -->
 <div id="tab-radar" style="display:block;width:100%">
   <div style="display:flex;justify-content:center;padding:20px 0">
-    <svg id="radar" width="100%" height="280" viewBox="0 0 280 280" style="max-width:280px;display:block;margin:0 auto"></svg>
+    <svg id="radar" width="100%" height="260" viewBox="0 0 280 280" style="display:block;max-width:100%"></svg>
   </div>
   <div style="display:flex;justify-content:center;gap:28px;margin:24px 0;font-size:.78rem;font-weight:500;letter-spacing:0.02em">
     <span style="color:#5a7a5a">━━ 深林（发起方）</span>
@@ -1608,7 +1624,7 @@ document.getElementById('pa-s').textContent=tA;
 document.getElementById('pb-e').textContent=R==='A'?(theirName?theirName[0]:'TA'):(myName?myName[0]:'我');
 document.getElementById('pb-l').textContent=R==='A'?(theirName||'受邀方'):(myName||'发起方');
 document.getElementById('pb-s').textContent=tB;
-drawRadar(sA,sB,280);
+drawRadar(sA,sB,Math.min(280,document.querySelector(".wrap").offsetWidth-40));
 const cmp=document.getElementById('tab-compare');
 let compareHTML='';
 DIMS.forEach((dim,i)=>{
