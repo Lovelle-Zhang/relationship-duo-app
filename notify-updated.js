@@ -1,7 +1,8 @@
 const crypto = require('crypto');
-const API_V3_KEY = 'XrHSgBBmeUNkxxXcVe2ljVUMVX7oAUCE';
-const SB = 'https://esfuazchkbbtccxtamwp.supabase.co';
-const SK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVzZnVhemNoa2JidGNjeHRhbXdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3OTg2ODUsImV4cCI6MjA5MjM3NDY4NX0.xV6Vvv4P0W4ky853yC9OvqOaSAyDErZVTM9UfCUidpQ';
+
+const API_V3_KEY = process.env.WX_API_V3_KEY;
+const SB = process.env.SUPABASE_URL;
+const SK = process.env.SUPABASE_ANON_KEY;
 
 function decrypt(ciphertext, nonce, associated_data) {
   const key = Buffer.from(API_V3_KEY, 'utf8');
@@ -18,6 +19,11 @@ function decrypt(ciphertext, nonce, associated_data) {
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ code: 'FAIL', message: '仅支持POST' });
+
+  if (!API_V3_KEY || !SB || !SK) {
+    return res.status(500).json({ code: 'FAIL', message: '服务器配置缺失' });
+  }
+
   try {
     const { resource } = req.body;
     const decryptedData = decrypt(resource.ciphertext, resource.nonce, resource.associated_data);
@@ -26,7 +32,6 @@ module.exports = async (req, res) => {
       const out_trade_no = decryptedData.out_trade_no;
       const code = out_trade_no.split('_')[1];
       
-      // 更新数据库解锁状态
       await fetch(SB + '/rest/v1/pairs?code=eq.' + code, {
         method: 'PATCH',
         headers: {
