@@ -1564,11 +1564,14 @@ else if(ans[qi]==null)return;
 if(qi<QS.length-1){qi++;sv=QS[qi].def||0;renderQ();return}
 myS=toScores(ans);
 const nb=document.getElementById('bn');nb.disabled=true;nb.textContent='提交中…';
+try{
 await dbWrite(C,R,myS);
+}catch(e){console.error('write fail',e);nb.disabled=false;nb.textContent='完成 →';alert('网络异常，请重试');return;}
 if(R==='A'){
 document.getElementById('show-code').textContent=C;
 show('waiting');
 pollTimer=setInterval(async()=>{
+try{
 const b=await dbRead(C,'B');
 if(b){
 clearInterval(pollTimer);
@@ -1576,6 +1579,7 @@ theirS=b;
 const unlocked=await checkUnlocked(C);
 renderResult(unlocked);
 }
+}catch(e){console.error('poll error',e);}
 },3000);
 }else{
 theirS=await dbRead(C,'A');
@@ -2325,6 +2329,16 @@ if (window.location.search.includes('test=1')) {
     setTimeout(showTestResult, 500);
   });
 }
+
+// ?test=1 快速预览结果页
+(function(){
+  if(new URLSearchParams(location.search).get('test')==='1'){
+    R='A';C='TEST01';
+    myS=[78,85,72,88,58,82,76];
+    theirS=[82,88,88,79,96,85,80];
+    setTimeout(()=>renderResult(false),100);
+  }
+})();
 </script>
 </body>
 </html>
