@@ -1216,6 +1216,7 @@ p {
   box-sizing: border-box !important;
   padding: 16px 0 !important;
 }
+@keyframes ripple{0%{transform:scale(.8);opacity:.8}100%{transform:scale(1);opacity:0}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1302,14 +1303,13 @@ p {
 </div>
 
 <div id="waiting" class="screen hidden" style="text-align:center;padding:40px 20px">
-<div style="margin-bottom:40px;display:flex;justify-content:center;animation:floatBob 3s ease-in-out infinite">
-<svg width="64" height="64" viewBox="0 0 64 64">
-  <circle cx="32" cy="32" r="28" fill="none" stroke="rgba(90,122,90,.15)" stroke-width="3"/>
-  <circle cx="32" cy="32" r="28" fill="none" stroke="#5a7a5a" stroke-width="3"
-    stroke-dasharray="176" stroke-dashoffset="44" stroke-linecap="round"
-    style="animation:svgSpin 2s linear infinite;transform-origin:32px 32px"/>
-  <circle cx="32" cy="32" r="5" fill="#5a7a5a" style="animation:glowPulse 2s ease-in-out infinite"/>
-</svg>
+<div style="margin-bottom:40px;display:flex;justify-content:center;align-items:center">
+  <div style="position:relative;width:120px;height:120px;display:flex;align-items:center;justify-content:center">
+    <div style="position:absolute;width:120px;height:120px;border-radius:50%;border:1px solid rgba(90,122,90,.25);animation:ripple 3s ease-out infinite"></div>
+    <div style="position:absolute;width:80px;height:80px;border-radius:50%;border:1px solid rgba(90,122,90,.35);animation:ripple 3s ease-out infinite;animation-delay:.8s"></div>
+    <div style="position:absolute;width:44px;height:44px;border-radius:50%;border:1px solid rgba(90,122,90,.5);animation:ripple 3s ease-out infinite;animation-delay:1.6s"></div>
+    <div style="width:10px;height:10px;border-radius:50%;background:#5a7a5a;opacity:.7;animation:glowPulse 2s ease-in-out infinite"></div>
+  </div>
 </div>
 <h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--ink);margin-bottom:12px">等待TA完成</h2>
 <p style="font-size:.8rem;font-weight:500;letter-spacing:0.02em;color:var(--mid);margin-bottom:32px">把邀请码发给TA</p>
@@ -1339,7 +1339,7 @@ p {
 
 <!-- 总分卡片 -->
 <div class="score-card" style="background:rgba(255,255,255,.85);backdrop-filter:blur(20px);border:1px solid rgba(0,0,0,.04);border-radius:16px;padding:32px 24px;margin-bottom:20px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,.05)">
-  <div class="score-label" style="font-size:.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(0,0,0,.4);margin-bottom:12px">Relationship Temperature</div>
+  <div class="score-label" style="font-size:.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(0,0,0,.4);margin-bottom:12px">RELATIONSHIP TEMPERATURE</div>
   <div id="rs" style="font-size:3.5rem;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-0.03em;background:linear-gradient(135deg,#5a7a5a,#7a5a7a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin:12px 0">0</div>
   <div id="rb" style="font-size:.88rem;color:#666;margin-top:8px;letter-spacing:-0.005em"></div>
 </div>
@@ -1478,13 +1478,13 @@ p {
       <p style="font-size:.82rem;color:#666;line-height:1.7">基于追踪数据的分析模型：1年内分手概率、3年关系质量趋势...</p>
     </div>
     
-    <button class="unlock-btn" onclick="alert('付费功能开发中')" style="width:100%;padding:14px;background:linear-gradient(135deg,#5a7a5a,#7a5a7a);border:none;border-radius:8px;color:white;font-size:.88rem;font-weight:500;cursor:pointer;box-shadow:0 4px 12px rgba(90,122,90,.2);margin-top:24px">¥29 解锁完整洞察</button>
+    <button class="unlock-btn" onclick="alert('付费功能开发中')" style="width:100%;padding:16px;background:linear-gradient(135deg,#5a7a5a,#7a5a7a);border:none;border-radius:14px;color:white;font-size:.88rem;font-weight:500;cursor:pointer;box-shadow:0 8px 24px rgba(90,122,90,.25);margin-top:24px;letter-spacing:0.04em;transition:all .2s">¥29 解锁完整洞察</button>
   </div>
 </div>
 
 <!-- 底部按钮 -->
 <div style="margin-top:32px;text-align:center">
-  <button onclick="location.reload()" style="display:block;margin:16px auto 0;padding:10px 24px;background:transparent;border:1.5px solid rgba(90,122,90,.3);border-radius:8px;color:var(--mid);font-size:.8rem;font-weight:500;letter-spacing:0.02em;cursor:pointer;font-family:inherit">重新开始</button>
+  <button onclick="location.reload()" style="display:block;margin:20px auto 0;padding:11px 32px;background:transparent;border:1px solid rgba(90,122,90,.2);border-radius:24px;color:rgba(90,122,90,.6);font-size:.75rem;font-weight:400;letter-spacing:0.1em;cursor:pointer;font-family:inherit;transition:all .2s">重新开始</button>
 </div>
 
 </div>
