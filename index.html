@@ -1653,7 +1653,7 @@ document.getElementById('pa-s').textContent=tA;
 document.getElementById('pb-e').textContent=R==='A'?(theirName?theirName[0]:'TA'):(myName?myName[0]:'我');
 document.getElementById('pb-l').textContent=R==='A'?(theirName||'受邀方'):(myName||'发起方');
 document.getElementById('pb-s').textContent=tB;
-drawRadar(sA,sB,Math.min(280,document.querySelector(".wrap").offsetWidth-40));
+drawRadar(sA,sB,280);
 const cmp=document.getElementById('tab-compare');
 let compareHTML='';
 DIMS.forEach((dim,i)=>{
@@ -1731,9 +1731,8 @@ document.getElementById('tab-'+n).style.display='block';
 
 function drawRadar(sA,sB,sz){
 const svg=document.getElementById('radar');
-svg.setAttribute('width',sz);
-svg.setAttribute('height',sz);
 svg.setAttribute('viewBox','0 0 '+sz+' '+sz);
+svg.style.height=sz+'px';
 const cx=sz/2,cy=sz/2,r=sz*.32,n=DIMS.length;
 const ang=i=>(Math.PI*2*i/n)-Math.PI/2;
 const pt=(s,i)=>{const a=ang(i),d=r*s/100;return[cx+d*Math.cos(a),cy+d*Math.sin(a)]};
