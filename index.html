@@ -1703,20 +1703,20 @@ const ins=document.getElementById('tab-insight');
   h+='</div>';
   // 卡片2：半模糊
   h+='<div style="background:rgba(255,255,255,.72);border:1px solid rgba(122,90,122,.08);border-radius:14px;padding:18px 18px;margin-bottom:10px;text-align:left;position:relative;overflow:hidden;box-shadow:0 2px 12px rgba(122,90,122,.04)">';
-  h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
+  h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">';
   h+='<div style="width:6px;height:6px;border-radius:50%;background:#5a7a5a;flex-shrink:0"></div>';
-  h+='<span style="font-size:.82rem;font-weight:500;color:#5a3a6a">最值得先改善的一件事</span>';
+  h+='<span style="font-size:.82rem;font-weight:500;color:#5a3a6a">你们各自的频率画像</span>';
   h+='</div>';
-  h+='<div style="font-size:.76rem;color:#888;line-height:1.65;filter:blur(3px);user-select:none">投入产出分析显示，如果你们先从这一个维度开始改变，关系质量提升速度会快 3 倍……</div>';
-  h+='<div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(247,243,250,.95));border-radius:12px"></div>';
+  h+='<div style="font-size:.76rem;color:#888;line-height:1.75;filter:blur(3.5px);user-select:none">你是一个需要高频情感确认的人，语言表达对你很重要……TA 倾向于用行动表达，安静但有安全感，需要独处来整理情绪……两种频率，各有其美，关键是能否看见彼此……</div>';
+  h+='<div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 25%,rgba(247,243,250,.97));border-radius:12px"></div>';
   h+='</div>';
   // 卡片3：完全锁
   h+='<div style="background:rgba(248,244,254,.5);border:1px solid rgba(122,90,122,.06);border-radius:14px;padding:18px 18px;text-align:left;position:relative;overflow:hidden">';
-  h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
+  h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">';
   h+='<div style="width:6px;height:6px;border-radius:50%;background:#7a5a7a;flex-shrink:0"></div>';
-  h+='<span style="font-size:.82rem;font-weight:500;color:#6a4a7a;filter:blur(1px)">一年内关系预测</span>';
+  h+='<span style="font-size:.82rem;font-weight:500;color:#6a4a7a;filter:blur(1px)">完整频率报告</span>';
   h+='</div>';
-  h+='<div style="font-size:.76rem;color:#888;line-height:1.65;filter:blur(4px);user-select:none">根据你们在七个维度的得分分布，结合 12,847 对情侣的追踪数据……</div>';
+  h+='<div style="font-size:.76rem;color:#888;line-height:1.75;filter:blur(4.5px);user-select:none">你们最同频的地方 · 最容易产生摩擦的地方 · 3个为你们量身定制的对话问题 · 你们是什么类型的频率组合……</div>';
   h+='</div>';
   // 锁图标
   h+='<div style="position:absolute;bottom:12px;right:16px;width:32px;height:32px;background:rgba(122,90,122,.1);border-radius:50%;display:flex;align-items:center;justify-content:center">';
@@ -1894,166 +1894,155 @@ function showDunePromo(){
   document.body.appendChild(promo);
 }
 
-// 生成深度洞察内容
+// 生成深度洞察内容（频率画像 + 完整报告）
 function generatePremiumInsight(sA, sB) {
-  const diffs = DIMS.map((d,i) => ({d, a:sA[i], b:sB[i], avg:(sA[i]+sB[i])/2, df:Math.abs(sA[i]-sB[i])}));
-  const weak = diffs.filter(x => x.avg < 60).sort((a,b) => a.avg - b.avg);
-  const gaps = diffs.filter(x => x.df > 35).sort((a,b) => b.df - a.df);
-  const combined = avg(sA.map((a,i) => Math.round((a+sB[i])/2)));
-  
+  const _nA = R==='A'?'你':'TA', _nB = R==='A'?'TA':'你';
+  const diffs = DIMS.map((d,i)=>({d,a:sA[i],b:sB[i],avg:(sA[i]+sB[i])/2,df:Math.abs(sA[i]-sB[i])}));
+  const combined = avg(sA.map((a,i)=>Math.round((a+sB[i])/2)));
+  const sorted = [...diffs].sort((x,y)=>y.df-x.df);
+  const topAligned = [...diffs].sort((x,y)=>-(x.avg-y.avg)).slice(0,2);
+  const topFriction = sorted.slice(0,2);
+
   let h = '<div style="padding-top:10px">';
-  
-  // 1. 深度盲区分析
-  if (gaps.length > 0) {
-    h += '<div class="insight-block"><p class="insight-title">⚠️ 关系盲区深度诊断</p>';
-    h += '<p class="insight-sub">这些维度上你们的认知差异明显，以下是专业分析：</p>';
-    gaps.slice(0,2).forEach(g => {
-      const advice = getBlindSpotAdvice(g.d);
-      h += '<div class="blind-card" style="margin-bottom:16px;padding:16px">';
-      h += '<div class="blind-header"><span class="blind-dim">' + g.d + '</span><span class="blind-diff">差 ' + g.df + ' 分</span></div>';
-      h += '<p style="font-size:.8rem;font-weight:500;letter-spacing:0.02em;color:var(--ink);margin:12px 0 8px;line-height:1.8"><b>🔍 为什么会有这个差异？</b><br>' + advice.cause + '</p>';
-      h += '<p style="font-size:.8rem;font-weight:500;letter-spacing:0.02em;color:#b06010;margin:12px 0 8px;line-height:1.8"><b>⏱️ 不处理的后果：</b>' + advice.risk + '</p>';
-      h += '<p style="font-size:.8rem;font-weight:500;letter-spacing:0.02em;color:#2e8040;margin:12px 0 0;line-height:1.8"><b>✨ 立刻行动：</b>' + advice.action + '</p>';
-      h += '</div>';
+
+  // SECTION 1: 频率画像
+  h += '<div style="margin-bottom:28px">';
+  h += '<div style="font-size:.68rem;letter-spacing:.14em;color:rgba(90,70,90,.38);text-align:center;margin-bottom:16px">你 们 各 自 的 频 率 画 像</div>';
+  h += '<div style="background:linear-gradient(135deg,rgba(90,122,90,.06),rgba(90,122,90,.02));border:1px solid rgba(90,122,90,.12);border-radius:14px;padding:18px;margin-bottom:12px">';
+  h += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><div style="width:8px;height:8px;border-radius:50%;background:#5a7a5a"></div>';
+  h += '<span style="font-size:.78rem;font-weight:600;color:#3a5a3a;letter-spacing:.04em">'+_nA+'的频率</span></div>';
+  h += '<div style="font-size:.82rem;color:#2e3e2e;line-height:1.9">'+getPortrait(sA, _nA)+'</div></div>';
+  h += '<div style="background:linear-gradient(135deg,rgba(122,90,122,.06),rgba(122,90,122,.02));border:1px solid rgba(122,90,122,.12);border-radius:14px;padding:18px">';
+  h += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><div style="width:8px;height:8px;border-radius:50%;background:#7a5a7a"></div>';
+  h += '<span style="font-size:.78rem;font-weight:600;color:#5a3a5a;letter-spacing:.04em">'+_nB+'的频率</span></div>';
+  h += '<div style="font-size:.82rem;color:#2e1f2e;line-height:1.9">'+getPortrait(sB, _nB)+'</div></div>';
+  h += '</div>';
+
+  // 分割线
+  h += '<div style="width:48px;height:1px;background:linear-gradient(90deg,transparent,rgba(122,90,122,.2),transparent);margin:0 auto 22px"></div>';
+  h += '<div style="font-size:.68rem;letter-spacing:.14em;color:rgba(90,70,90,.38);text-align:center;margin-bottom:16px">完 整 频 率 报 告</div>';
+
+  // 最同频
+  h += '<div style="margin-bottom:18px">';
+  h += '<div style="font-size:.75rem;font-weight:600;color:#3a5a3a;margin-bottom:10px;display:flex;align-items:center;gap:6px">';
+  h += '<span style="width:18px;height:18px;border-radius:50%;background:rgba(90,122,90,.1);display:inline-flex;align-items:center;justify-content:center;font-size:.6rem;color:#3a5a3a">✓</span>你们最同频的地方</div>';
+  topAligned.forEach(g=>{
+    h += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;padding:10px 14px;background:rgba(90,122,90,.05);border-radius:10px">';
+    h += '<span style="font-size:.78rem;color:#3a5a3a;font-weight:500;min-width:56px">'+g.d+'</span>';
+    h += '<div style="flex:1;height:6px;background:rgba(0,0,0,.04);border-radius:3px;overflow:hidden"><div style="height:100%;background:linear-gradient(90deg,#5a7a5a,#7a9a7a);width:'+g.avg.toFixed(0)+'%;border-radius:3px"></div></div>';
+    h += '<span style="font-size:.75rem;color:#5a7a5a;font-weight:600;min-width:36px;text-align:right">'+g.avg.toFixed(0)+'分</span></div>';
+  });
+  h += '</div>';
+
+  // 摩擦点
+  const frictionItems = topFriction.filter(g=>g.df>15);
+  if (frictionItems.length > 0) {
+    h += '<div style="margin-bottom:18px">';
+    h += '<div style="font-size:.75rem;font-weight:600;color:#8a4a1a;margin-bottom:10px;display:flex;align-items:center;gap:6px">';
+    h += '<span style="width:18px;height:18px;border-radius:50%;background:rgba(230,140,60,.1);display:inline-flex;align-items:center;justify-content:center;font-size:.65rem">⚡</span>最容易产生摩擦的地方</div>';
+    frictionItems.forEach(g=>{
+      h += '<div style="padding:12px 14px;background:rgba(230,140,60,.05);border:1px solid rgba(230,140,60,.12);border-radius:10px;margin-bottom:8px">';
+      h += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">';
+      h += '<span style="font-size:.78rem;font-weight:600;color:#5a3010">'+g.d+'</span>';
+      h += '<span style="font-size:.68rem;color:#c07020;background:rgba(230,140,60,.1);padding:2px 8px;border-radius:99px">差 '+g.df+' 分</span></div>';
+      h += '<div style="font-size:.76rem;color:#6a4020;line-height:1.75">'+getFrictionDesc(g.d,g.a,g.b,_nA,_nB)+'</div></div>';
     });
     h += '</div>';
   }
-  
-  // 2. 快速提升策略
-  if (weak.length > 0) {
-    const target = weak[0];
-    const roi = (12 - target.avg/10).toFixed(1);
-    h += '<div class="insight-block"><p class="insight-title">快速提升策略</p>';
-    h += '<p class="insight-sub">投入产出比分析：优先改善「' + target.d + '」</p>';
-    h += '<div style="background:linear-gradient(135deg,rgba(80,180,100,.1),rgba(80,180,100,.05));border-left:3px solid #50b464;padding:16px;border-radius:8px;margin-top:14px">';
-    h += '<p style="font-size:.92rem;color:var(--ink);line-height:1.9;margin-bottom:12px">这个维度目前平均得分 <b style="color:#2e8040">' + target.avg.toFixed(0) + ' 分</b>，提升空间大且见效快。每改善 10 分，整体满意度预计提升 <b style="color:#2e8040">' + roi + ' 分</b>。</p>';
-    h += '<p style="font-size:.9rem;font-weight:600;margin:14px 0 10px;color:var(--ink)">📅 3个月渐进式提升计划：</p>';
-    h += get3MonthPlan(target.d);
-    h += '</div></div>';
-  }
-  
-  // 3. 关系预测模型
-  const breakup = Math.max(0, Math.min(95, 100 - combined * 0.9)).toFixed(1);
-  const stable = combined >= 73;
-  h += '<div class="insight-block"><p class="insight-title">关系稳定性预测</p>';
-  h += '<p class="insight-sub">基于 12,847 对情侣追踪数据的分析结果</p>';
-  h += '<div style="background:' + (stable ? 'linear-gradient(135deg,rgba(80,180,100,.12),rgba(80,180,100,.06))' : 'linear-gradient(135deg,rgba(230,140,60,.12),rgba(230,140,60,.06))') + ';padding:18px;border-radius:8px;margin-top:14px;border:1px solid ' + (stable ? 'rgba(80,180,100,.25)' : 'rgba(230,140,60,.25)') + '">';
-  h += '<p style="font-size:1rem;margin-bottom:14px;display:flex;align-items:baseline;gap:8px"><b>1年内分手概率：</b><span style="font-size:2rem;font-weight:700;color:' + (stable ? '#2e8040' : '#b06010') + '">' + breakup + '%</span></p>';
-  h += '<p style="font-size:.9rem;color:var(--ink);line-height:1.9;margin-bottom:10px">';
-  if (combined >= 88) h += ' 你们的关系非常稳固。继续保持目前的相处模式，偶尔做些新鲜事避免舒适区倦怠即可。';
-  else if (combined >= 73) h += ' 关系基础扎实，但需持续投入。建议：每月至少1次深度对话 + 1次新体验活动。';
-  else if (combined >= 55) h += '⚠️ 关系处于「可改善」状态。现在投入精力提升，3-6个月内会有明显改善。关键是行动要快。';
-  else h += '🚨 关系出现多个警报。强烈建议：(1)立刻执行3个月计划 (2)必要时寻求专业咨询 (3)坦诚沟通是否继续。';
-  h += '</p>';
-  const danger = weak.length > 0 && weak[0].d === "价值契合" ? "遇到重大决策时（买房、生育、职业选择）" :
-                 weak.length > 0 && weak[0].d === "修复能力" ? "连续冲突无法和解时" :
-                 weak.length > 0 && weak[0].d === "共同体验" ? "长期日常重复、激情消退时" : "面对外部压力（工作/家庭）时";
-  h += '<p style="font-size:.86rem;color:var(--faint);margin-top:12px;padding-top:12px;border-top:1px solid rgba(0,0,0,.08)"><b>最危险的时间节点：</b>' + danger + '，关系最容易崩溃。</p>';
-  h += '</div></div>';
-  
-  // 4. Gottman 四骑士诊断
-  const comm = (sA[0]+sB[0])/2, repair = (sA[1]+sB[1])/2, support = (sA[4]+sB[4])/2;
-  const hasRisk = comm < 40 || repair < 50 || support < 35 || Math.abs(sA[1]-sB[1]) > 40;
-  if (hasRisk) {
-    h += '<div class="insight-block"><p class="insight-title">Gottman "四骑士" 风险诊断</p>';
-    h += '<p class="insight-sub">婚姻研究大师 John Gottman 识别的关系杀手信号</p>';
-    h += '<div style="margin-top:14px">';
-    if (comm < 40) h += '<div style="background:rgba(230,140,60,.08);padding:12px 14px;border-radius:8px;margin-bottom:10px;border-left:3px solid #e68c3c"><p style="font-size:.8rem;font-weight:500;letter-spacing:0.02em;color:var(--ink);line-height:1.8">⚠️ <b>批评（Criticism）：</b>深度沟通得分低，可能存在「抱怨升级为人身攻击」的模式（「你总是...」「你从来不...」）。<br><b>改善：</b>改用「我感到...因为...我希望...」的句式。</p></div>';
-    if (repair < 50) h += '<div style="background:rgba(230,140,60,.08);padding:12px 14px;border-radius:8px;margin-bottom:10px;border-left:3px solid #e68c3c"><p style="font-size:.8rem;font-weight:500;letter-spacing:0.02em;color:var(--ink);line-height:1.8">⚠️ <b>防御（Defensiveness）：</b>修复能力弱，争吵时容易「找借口、推卸责任」。<br><b>改善：</b>先承认「我确实在X这件事上做得不好」，再解释原因。</p></div>';
-    if (support < 35) h += '<div style="background:rgba(90,122,90,.12);padding:12px 14px;border-radius:8px;margin-bottom:10px;border-left:3px solid #5a7a5a"><p style="font-size:.8rem;font-weight:500;letter-spacing:0.02em;color:var(--ink);line-height:1.8">🔴 <b>蔑视（Contempt）——最危险：</b>情绪支持严重缺失，可能存在「翻白眼、嘲讽、不屑」的行为。这是关系的头号杀手，必须立刻停止。<br><b>改善：</b>建立感恩习惯，每天说一件欣赏对方的事。</p></div>';
-    if (Math.abs(sA[1]-sB[1]) > 40) h += '<div style="background:rgba(230,140,60,.08);padding:12px 14px;border-radius:8px;margin-bottom:10px;border-left:3px solid #e68c3c"><p style="font-size:.8rem;font-weight:500;letter-spacing:0.02em;color:var(--ink);line-height:1.8">⚠️ <b>冷战（Stonewalling）：</b>修复能力差异大，可能一方「逃避关闭」，另一方「追着要说清楚」，形成追-逃恶性循环。<br><b>改善：</b>约定「暂停手势」+「X小时后恢复对话」的机制。</p></div>';
-    h += '</div></div>';
-  }
-  
-  // 5. 实战工具包
-  h += '<div class="insight-block"><p class="insight-title">实战工具包</p>';
-  h += '<p class="insight-sub">基于你们的问题，个性化推荐以下资源</p>';
-  const book = weak.length > 0 ? getBookRec(weak[0].d) : "《幸福婚姻法则》——Gottman 40年研究精华";
-  h += '<div style="background:rgba(255,255,255,.7);padding:16px;border-radius:8px;margin-top:14px;border:1px solid rgba(90,122,90,.12)">';
-  h += '<p style="font-size:.9rem;margin-bottom:12px;line-height:1.8"><b>📚 推荐书籍：</b>' + book + '</p>';
-  h += '<p style="font-size:.9rem;margin-bottom:12px;line-height:1.8"><b>💬 对话主题清单：</b>每周选一个深度话题（童年记忆/未来梦想/内心恐惧/感谢时刻），建立情感账户。</p>';
-  h += '<p style="font-size:.9rem;margin-bottom:12px;line-height:1.8"><b>📝 争吵复盘模板：</b>冷静后一起填写：① 导火索是什么？② 我的真实诉求？③ 对方的感受？④ 下次怎么改进？</p>';
-  h += '<p style="font-size:.9rem;line-height:1.8"><b>⏰ 进步检查点：</b>30天后重新测试，对比分数变化。之后每月测一次，追踪改善轨迹。</p>';
-  h += '</div></div>';
-  
+
+  // 定制对话问题
+  h += '<div style="margin-bottom:22px">';
+  h += '<div style="font-size:.75rem;font-weight:600;color:#4a3a6a;margin-bottom:10px;display:flex;align-items:center;gap:6px">';
+  h += '<span style="width:18px;height:18px;border-radius:50%;background:rgba(122,90,122,.1);display:inline-flex;align-items:center;justify-content:center;font-size:.6rem">💬</span>为你们量身定制的对话</div>';
+  getConvoQuestions(sorted.slice(0,3).map(x=>x.d)).forEach((q,i)=>{
+    h += '<div style="padding:14px;background:rgba(122,90,122,.04);border-left:3px solid rgba(122,90,122,.18);border-radius:0 10px 10px 0;margin-bottom:10px">';
+    h += '<div style="font-size:.66rem;color:rgba(90,70,90,.38);margin-bottom:4px;letter-spacing:.06em">问题 '+(i+1)+'</div>';
+    h += '<div style="font-size:.82rem;color:#3a2a4a;line-height:1.85;font-style:italic">「'+q+'」</div></div>';
+  });
+  h += '</div>';
+
+  // 最终画像
+  const combo = getComboType(combined, sorted[0].df);
+  h += '<div style="background:linear-gradient(135deg,rgba(90,122,90,.05),rgba(122,90,122,.05));border:1px solid rgba(122,90,122,.1);border-radius:14px;padding:20px;text-align:center">';
+  h += '<div style="font-size:.66rem;letter-spacing:.12em;color:rgba(90,70,90,.38);margin-bottom:10px">你 们 的 频 率 组 合</div>';
+  h += '<div style="font-family:\'Playfair Display\',serif;font-size:1.1rem;color:#3a2a4a;margin-bottom:10px">'+combo.name+'</div>';
+  h += '<div style="font-size:.8rem;color:rgba(60,40,80,.65);line-height:1.9">'+combo.desc+'</div></div>';
+
   h += '</div>';
   return h;
 }
 
-function getBlindSpotAdvice(dim) {
-  const db = {
-    "深度沟通": {
-      cause: "你们对「深度」的定义不同。一方觉得聊工作就算深度沟通，另一方期待的是情感、梦想、恐惧层面的交流。或者双方都想聊，但不知道如何开启深层话题。",
-      risk: "期待落差会累积成怨气。觉得被忽视的一方会逐渐关闭心门（「算了，说了也白说」），觉得对方「话太多」的一方会越来越烦躁，最终变成「没什么好聊的」室友关系。",
-      action: "今晚就做：各自写下「我理解的深度沟通是什么？」交换看，找差异。然后约定：本周你选一个话题（对方必须认真回应15分钟），下周TA选。轮流主导，培养深度对话习惯。"
-    },
-    "修复能力": {
-      cause: "你们的「冷却期」需求不同。一方属于追求型（需要立刻解决，否则焦虑），另一方属于回避型（需要先冷静，否则会爆炸）。这是依恋风格差异，不是谁的错。",
-      risk: "追求型会觉得「TA根本不在乎我」，回避型会觉得「TA太粘人窒息」，形成「追-逃」恶性循环。每次冷战都在消耗信任额度，最后会演变成「算了，懒得吵了」的麻木状态。",
-      action: "今天协商：「我吵架后需要X小时/天冷静，但我保证X时间后一定回来聊，不逃避。」给彼此确定性。准备破冰话术：「我知道我们都还在气头上，但我不想让这件事伤害我们。能先抱一下吗？」"
-    },
-    "共同体验": {
-      cause: "你们对「新鲜感」的敏感度不同。一方觉得换个餐厅、走不同的路回家就算新体验，另一方需要更刺激的冒险（旅行、极限运动、学新技能）才有感觉。",
-      risk: "期待新鲜感的一方会觉得「生活太无聊，TA一点都不懂浪漫」，喜欢稳定的一方会觉得「TA太折腾，我跟不上」，逐渐产生「我们不适合」的价值观分歧。关系会变得舒适但无趣，容易被外界诱惑吸引注意力。",
-      action: "这周末就做：打开地图，闭眼随机点一个没去过的地方，周末去探索。建立「妥协法则」：这次听TA的去蹦极（你陪着），下次听你的去美术馆（TA陪着）。轮流体验对方定义的「新鲜感」。"
-    },
-    "价值契合": {
-      cause: "你们在核心议题上的优先级排序不同——事业 vs 家庭、存钱 vs 享受、城市 vs 小镇、要不要孩子、孝顺方式...这些从未深入聊过，或者聊了但没达成共识。",
-      risk: "遇到重大决策时会爆发严重冲突（买房、生育、职业选择、照顾父母）。这不是小吵小闹，而是「三观不合」级别的撕裂。长期分歧会导致「两条平行线」——你过你的人生，TA过TA的人生，关系名存实亡。",
-      action: "本周行动：做「价值观卡片排序」（搜索「价值观卡片」下载）。各自排出前10名，对比哪些一致、哪些冲突。针对最大分歧点，问「你为什么觉得X这么重要？」理解背后的渴望和恐惧，别急着说服对方。"
-    },
-    "情绪支持": {
-      cause: "你们对「支持」的定义不同。一方需要的是倾听+拥抱+「我懂你」的共情，另一方给的是建议+方案+「你应该这样做」的理性分析。或者一方习惯报喜不报忧，从不主动求助。",
-      risk: "需要情绪支持的人会觉得「TA根本不懂我」，转向闺蜜/同事/甚至陌生人寻求安慰，伴侣沦为「最熟悉的陌生人」。提供建议的人会觉得「我这么努力帮TA想办法，TA还不领情」，双双受伤。",
-      action: "今天开始：TA低落时，先问「你需要我听你说，还是帮你想办法？」让TA选择支持方式。明确告诉对方：「我难过时需要的是X（拥抱/倾听/陪伴），不是Y（讲道理/说我想多了）。」学会说出脆弱。"
-    },
-    "爱意表达": {
-      cause: "你们的「爱的语言」不同（Gary Chapman理论）。一方用行动表达爱（做饭、赚钱、修东西），另一方需要语言表达（「我爱你」「你辛苦了」「谢谢」）。或者双方都爱对方，但老夫老妻心态，觉得「不说TA也知道」。",
-      risk: "「爱的错位」让双方都觉得委屈——「我明明那么爱TA，为什么TA感受不到？」「TA是不是不爱我了？」最终演变成互相指责：「你根本不关心我」「我做这么多你看不见吗」。进入假性亲密——表面和睦，内心孤独。",
-      action: "这周行动：做「爱的五种语言测试」（搜索「5 Love Languages Quiz」），找出你们各自的前2名。然后刻意用对方的语言表达爱——哪怕一开始觉得别扭（比如你不习惯说甜言蜜语，但TA需要，就逼自己每天说一句）。"
-    },
-    "整体满意": {
-      cause: "这是综合指标。你们对关系的期待不同——一方觉得「没吵架、有性生活」就是好关系，另一方需要「激情+成长+深度连接」。或者前6个维度的问题累积，导致整体满意度下降。",
-      risk: "满意度差异会导致「关系投入不对等」——满意的一方懈怠（觉得已经够好了），不满的一方过度补偿（拼命想改善），天平失衡。严重的话会进入「分手倒计时」——开始考虑「没有TA会不会更好？」",
-      action: "今晚就聊：问对方「在你心里，一段好的关系应该是什么样的？」听TA描述理想关系，别急着辩解「我们已经很好了」。找到共同目标，一起努力。如果满意度差距>20分，强烈建议寻求专业情感咨询。"
-    }
-  };
-  return db[dim] || db["整体满意"];
+function getPortrait(scores) {
+  const pts = [];
+  if (scores[0] >= 70) pts.push('渴望高频的深度对话，言语是感受连接的核心方式');
+  else if (scores[0] >= 40) pts.push('重视偶尔的深度交流，不需要每天都聊到很深的地方');
+  else pts.push('更多通过陪伴和行动感受连接，不需要大量的语言表达');
+
+  if (scores[1] >= 80) pts.push('遇到摩擦时希望快速和解，冷战会带来明显的焦虑');
+  else if (scores[1] >= 50) pts.push('需要一点时间冷静，但不倾向于长期逃避');
+  else pts.push('需要较长时间消化冲突，独处是修复情绪的方式');
+
+  if (scores[5] >= 80) pts.push('爱意表达对你很重要，被说出来的爱是真实存在的证明');
+  else if (scores[5] >= 45) pts.push('行动和语言表达都能接受，不是特别执着于其中一种');
+  else pts.push('习惯用行动而非言语表达爱，主动开口不是自然的事');
+
+  if (scores[6] >= 70) pts.push('愿意为这段关系深度投入，它是生活中很重要的部分');
+  else pts.push('愿意适度投入，同时需要保有属于自己的空间和节奏');
+
+  return pts.join('；') + '。';
 }
 
-function get3MonthPlan(dim) {
-  const plans = {
-    "深度沟通": '<div style="background:rgba(255,255,255,.5);padding:12px;border-radius:8px;margin-top:10px"><p style="font-size:.86rem;margin:8px 0;line-height:1.8;color:var(--ink)"><b>第1个月 · 建立安全对话空间：</b><br>Week 1-2: 每天睡前15分钟「无手机对话」，练习「我感到...」句式，不评判不打断<br>Week 3-4: 主动分享——每天说一件对方不知道的事（想法/感受/经历）</p><p style="font-size:.86rem;margin:8px 0;line-height:1.8;color:var(--ink)"><b>第2个月 · 深化情感连接：</b><br>Week 5-6: 使用「36个问题」清单（搜索下载），每周聊3个<br>Week 7-8: 童年故事交换——每周分享一个童年经历，理解成长背景</p><p style="font-size:.86rem;margin:8px 0;line-height:1.8;color:var(--ink)"><b>第3个月 · 让沟通成为习惯：</b><br>Week 9-10: 建立「每周关系回顾」固定时间<br>Week 11-12: 制定未来6个月共同目标</p><p style="font-size:.8rem;color:var(--faint);margin-top:10px">✓ 检查点：第12周重测，「深度沟通」预期提升20-30分</p></div>',
-    "修复能力": '<div style="background:rgba(255,255,255,.5);padding:12px;border-radius:8px;margin-top:10px"><p style="font-size:.86rem;margin:8px 0;line-height:1.8;color:var(--ink)"><b>第1个月 · 建立修复机制：</b><br>Week 1-2: 约定「24小时和解原则」+准备3句破冰话术<br>Week 3-4: 每次争吵后做「复盘」——写下导火索/真实诉求/下次改进点</p><p style="font-size:.86rem;margin:8px 0;line-height:1.8;color:var(--ink)"><b>第2个月 · 练习健康冲突：</b><br>Week 5-6: 学习Gottman「修复尝试」——吵架时插入幽默/认错/示弱<br>Week 7-8: 角色互换练习——模拟上次争吵，交换立场重新对话</p><p style="font-size:.86rem;margin:8px 0;line-height:1.8;color:var(--ink)"><b>第3个月 · 提升和解亲密感：</b><br>Week 9-10: 建立「和好后仪式」（拥抱/散步/写感谢信）<br>Week 11-12: 总结「我们的冲突模式」，固化有效的和解方式</p><p style="font-size:.8rem;color:var(--faint);margin-top:10px">✓ 检查点：第12周重测，「修复能力」预期提升25-35分</p></div>',
-    "共同体验": '<div style="background:rgba(255,255,255,.5);padding:12px;border-radius:8px;margin-top:10px"><p style="font-size:.86rem;margin:8px 0;line-height:1.8;color:var(--ink)"><b>第1个月 · 打破舒适区：</b><br>Week 1-2: 每周做1件从没做过的事（新餐厅/新路线/新活动）<br>Week 3-4: 「惊喜轮换制」——轮流策划周末，不许提前剧透</p><p style="font-size:.86rem;margin:8px 0;line-height:1.8;color:var(--ink)"><b>第2个月 · 创造专属回忆：</b><br>Week 5-6: 尝试对方的兴趣爱好（你陪TA打游戏，TA陪你逛展）<br>Week 7-8: 「主题月挑战」——选一个话题（美食/运动/艺术）深度探索</p><p style="font-size:.86rem;margin:8px 0;line-height:1.8;color:var(--ink)"><b>第3个月 · 让新鲜感可持续：</b><br>Week 9-10: 建立「每月冒险日」，日历标记，雷打不动<br>Week 11-12: 规划未来6个月愿望清单</p><p style="font-size:.8rem;color:var(--faint);margin-top:10px">✓ 检查点：第12周重测，「共同体验」预期提升30-40分</p></div>',
-    "价值契合": '<div style="background:rgba(255,255,255,.5);padding:12px;border-radius:8px;margin-top:10px"><p style="font-size:.86rem;margin:8px 0;line-height:1.8;color:var(--ink)"><b>第1个月 · 澄清价值观：</b><br>Week 1-2: 价值观卡片排序，对比前10名，找核心分歧<br>Week 3-4: 针对最大分歧，各自写「我为什么这么看？」交换阅读</p><p style="font-size:.86rem;margin:8px 0;line-height:1.8;color:var(--ink)"><b>第2个月 · 寻找妥协：</b><br>Week 5-6: 「试验期协议」——选1个分歧按一方方式试1个月<br>Week 7-8: 学习案例——找3对处理过类似问题的情侣</p><p style="font-size:.86rem;margin:8px 0;line-height:1.8;color:var(--ink)"><b>第3个月 · 建立共同愿景：</b><br>Week 9-10: 「5年后的我们」——一起画出理想生活<br>Week 11-12: 制定「关系宪法」——写下双方认同的3-5条核心原则</p><p style="font-size:.8rem;color:var(--faint);margin-top:10px">✓ 检查点：第12周重测，「价值契合」预期提升15-25分（改善最慢但最重要）</p></div>',
-    "情绪支持": '<div style="background:rgba(255,255,255,.5);padding:12px;border-radius:8px;margin-top:10px"><p style="font-size:.86rem;margin:8px 0;line-height:1.8;color:var(--ink)"><b>第1个月 · 学会表达脆弱：</b><br>Week 1-2: 每天「情绪check-in」——问「今天情绪几分？」<br>Week 3-4: 建立求助信号——明确告诉对方「我需要你X」</p><p style="font-size:.86rem;margin:8px 0;line-height:1.8;color:var(--ink)"><b>第2个月 · 提升支持质量：</b><br>Week 5-6: 学习「积极倾听」——复述→确认情绪→问需求<br>Week 7-8: 角色扮演——模拟对方低落场景，练习怎么支持</p><p style="font-size:.86rem;margin:8px 0;line-height:1.8;color:var(--ink)"><b>第3个月 · 让支持成为日常：</b><br>Week 9-10: 制定「情绪急救包」标准流程<br>Week 11-12: 每周写下对方支持你的1件事，月底念给TA听</p><p style="font-size:.8rem;color:var(--faint);margin-top:10px">✓ 检查点：第12周重测，「情绪支持」预期提升20-30分</p></div>',
-    "爱意表达": '<div style="background:rgba(255,255,255,.5);padding:12px;border-radius:8px;margin-top:10px"><p style="font-size:.86rem;margin:8px 0;line-height:1.8;color:var(--ink)"><b>第1个月 · 恢复爱的表达：</b><br>Week 1-2: 每天发消息/说话表达感谢/欣赏（具体到事）<br>Week 3-4: 建立「爱的小仪式」——睡前亲吻/出门拥抱/回家问候</p><p style="font-size:.86rem;margin:8px 0;line-height:1.8;color:var(--ink)"><b>第2个月 · 用对方的语言爱TA：</b><br>Week 5-6: 做「爱的语言测试」，找出各自前2名<br>Week 7-8: 实验周——刻意用对方喜欢的方式表达</p><p style="font-size:.86rem;margin:8px 0;line-height:1.8;color:var(--ink)"><b>第3个月 · 让爱意可持续：</b><br>Week 9-10: 建立「每周爱意表白时间」固定仪式<br>Week 11-12: 记录彼此的表达，制作「爱的记录本」</p><p style="font-size:.8rem;color:var(--faint);margin-top:10px">✓ 检查点：第12周重测，「爱意表达」预期提升25-35分</p></div>',
-    "整体满意": '<div style="background:rgba(255,255,255,.5);padding:12px;border-radius:8px;margin-top:10px"><p style="font-size:.86rem;margin:8px 0;line-height:1.8;color:var(--ink)"><b>第1个月 · 诊断问题：</b><br>Week 1-2: 列出「最不满的3件事」和「最珍惜的3件事」<br>Week 3-4: 识别是哪个维度拖累了整体满意度</p><p style="font-size:.86rem;margin:8px 0;line-height:1.8;color:var(--ink)"><b>第2个月 · 找到方向：</b><br>Week 5-6: 问「你理想的关系是什么样？」找共同目标<br>Week 7-8: 开始改善得分最低的2个维度</p><p style="font-size:.86rem;margin:8px 0;line-height:1.8;color:var(--ink)"><b>第3个月 · 关系重启：</b><br>Week 9-10: 「假装重新追求对方」计划<br>Week 11-12: 评估改善效果，必要时考虑专业咨询</p><p style="font-size:.8rem;color:var(--faint);margin-top:10px">✓ 检查点：第12周重测，整体满意度取决于具体维度改善</p></div>'
+function getFrictionDesc(dim, a, b, nA, nB) {
+  const map = {
+    '深度沟通': nA+'期望的深聊频率打了'+a+'分，'+nB+'是'+b+'——一方渴望的深谈，对另一方来说可能是"太沉重"',
+    '修复能力': nA+'希望以'+a+'分的速度和好，'+nB+'是'+b+'——一方想快速解决，另一方需要更多时间消化',
+    '共同体验': nA+'对新鲜体验的期待是'+a+'，'+nB+'是'+b+'——对"有趣"的定义不同，容易让一方觉得无聊或疲惫',
+    '价值契合': nA+'对价值观一致的重视程度是'+a+'，'+nB+'是'+b+'——遇到重大决策时，这个差距会被放大',
+    '情绪支持': nA+'需要的支持方式是'+a+'分，'+nB+'是'+b+'——你们对"被支持"的理解可能完全不同',
+    '爱意表达': nA+'对爱意表达的态度是'+a+'，'+nB+'是'+b+'——一方在等待被表达，另一方觉得懂得就够了',
+    '整体契合': nA+'的投入意愿是'+a+'分，'+nB+'是'+b+'——投入落差会带来"我更在乎"的委屈感'
   };
-  return plans[dim] || plans["整体满意"];
+  return map[dim] || (nA+'是'+a+'分，'+nB+'是'+b+'分');
 }
 
-function getBookRec(dim) {
-  const books = {
-    "深度沟通": "《非暴力沟通》第3章——学会「描述感受」而不是「指责行为」。你们需要的不是更多对话，而是更有质量的对话。",
-    "修复能力": "《依恋》第7章——理解焦虑型和回避型的冲突模式。你们不是故意伤害对方，而是依恋风格使然。",
-    "共同体验": "《爱的五种语言》——共度时光是一种爱语。但质量>数量，刷剧≠共同体验，一起做新鲜事才能创造记忆点。",
-    "价值契合": "《幸福婚姻法则》第9章——Gottman的「梦想对话」技巧。价值观冲突不是要改变对方，而是理解背后的梦想。",
-    "情绪支持": "《情绪急救》——把情绪当作「心理受伤」来对待。你不会对骨折的人说「别想了就不疼了」，情绪也需要认真处理。",
-    "爱意表达": "《爱的五种语言》完整版——找出你们各自的爱语。你可能在用「服务」爱TA，但TA需要的是「肯定的言语」。",
-    "整体满意": "《亲密关系》全书——满意度低是结果不是原因，要找到根源问题（安全感/沟通/价值观），对症下药。"
+function getConvoQuestions(topDims) {
+  const qMap = {
+    '深度沟通': '对你来说，什么样的对话叫做"真正聊到心里"？可以给我举一个例子吗？',
+    '修复能力': '我们闹别扭的时候，你内心最真实的感受是什么？那个时刻你最需要我做什么？',
+    '共同体验': '你有没有一直想做但还没做的事？如果我们一起去，你觉得会是什么感觉？',
+    '价值契合': '有什么是你绝对不会妥协的？它对你这么重要，是因为什么？',
+    '情绪支持': '下次你很低落的时候，你希望我怎么回应？还是你更想先一个人待着？',
+    '爱意表达': '我做什么的时候，你最能感受到被爱？有一件具体的事吗？',
+    '整体契合': '你对我们之间的连接，有什么期待是还没说出口的？'
   };
-  return books[dim] || books["整体满意"];
+  const result = [];
+  const used = new Set();
+  topDims.forEach(d => {
+    if (qMap[d] && !used.has(d)) { result.push(qMap[d]); used.add(d); }
+  });
+  // 补到3个
+  const fallback = ['你觉得我们在哪件事上最像彼此？', '你上一次感到真正被我看见，是什么时候？', '如果可以改变我们之间的一件事，你希望是什么？'];
+  fallback.forEach(q => { if (result.length < 3) result.push(q); });
+  return result.slice(0,3);
 }
 
-
-// 点击邀请码复制
-function copyCodeBig(){
-  copyCode();
-  const el=document.getElementById('show-code');
-  el.style.color='#2e8040';
-  setTimeout(()=>el.style.color='#5a7a5a',1000);
+function getComboType(combined, maxGap) {
+  if (combined >= 80 && maxGap <= 25) return {
+    name: '深度共鸣型',
+    desc: '你们在大多数维度上高度一致，彼此的期待和表达方式都很接近。这种同频很难得——珍惜它，同时保持各自的独特性，不要在同频里失去自我。'
+  };
+  if (combined >= 65 && maxGap <= 40) return {
+    name: '互补流动型',
+    desc: '你们有共同的核心价值，也有各自不同的节奏和方式。差异不是问题，而是让彼此完整的部分。关键是把差异变成对话，而不是让它悄悄累积成误解。'
+  };
+  if (combined >= 50) return {
+    name: '磁场探索型',
+    desc: '你们之间既有强烈吸引，也有明显的频率错位。此刻的你们正处于最关键的阶段——摩擦不代表不合适，而是两种频率在寻找共同语言。多聊，多说出来。'
+  };
+  return {
+    name: '等待调频型',
+    desc: '你们目前的频率差距较大，但这不是终点，而是起点。每一次真正的对话，都是一次调频的机会。最重要的是：你们都愿意坐下来，认真听彼此说什么。'
+  };
 }
 
 // 海报生成功能
