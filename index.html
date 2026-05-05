@@ -38,7 +38,7 @@ to{stroke-dashoffset:0}}
 .div-line{flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(90,122,90,.2),transparent)}
 .div-dot{font-size:.65rem;color:#5a7a5a;opacity:.5}
 .btn-main{display:block;width:100%;padding:16px 0;background:linear-gradient(135deg,#4a7a5a,#5a6a8a);border:none;border-radius:14px;color:#fff;font-family:'Noto Serif SC',serif;font-size:1rem;font-weight:600;letter-spacing:.12em;cursor:pointer;box-shadow:0 8px 28px rgba(90,122,90,.28);margin-bottom:16px;transition:all .2s}
-.btn-main:hover{filter:brightness(1.05);transform:translateY(-1px)}
+.btn-main:hover{filter:brightness(1.06);box-shadow:0 12px 36px rgba(90,122,90,.38)}.btn-main:active{transform:scale(.97);filter:brightness(.98)}
 .hint{font-size:.72rem;color:var(--faint);text-align:center;letter-spacing:.06em}
 .or-row{display:flex;align-items:center;gap:10px;margin-bottom:16px}
 .or-line{flex:1;height:1px;background:rgba(90,122,90,.12)}
@@ -80,7 +80,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 .nav-row{display:flex;gap:10px;margin-top:24px}
 .btn-back{padding:12px 18px;background:transparent;border:1.5px solid rgba(90,122,90,.2);border-radius:8px;color:var(--faint);font-family:'Noto Serif SC',serif;font-size:.85rem;cursor:pointer}
 .btn-next{flex:1;padding:14px 0;border:none;border-radius:8px;color:#fff;font-family:'Noto Serif SC',serif;font-size:.8rem;font-weight:500;letter-spacing:0.02em;font-weight:600;cursor:pointer;box-shadow:0 6px 20px rgba(90,122,90,.25);transition:all .2s}
-.btn-next:disabled{opacity:.6;cursor:not-allowed}
+.btn-next:hover{filter:brightness(1.06)}.btn-next:active{transform:scale(.97)}.btn-next:disabled{opacity:.6;cursor:not-allowed}
 .btn-next.rose{background:linear-gradient(135deg,#4a7a5a,#6a7a6a)}
 .btn-next.purple{background:linear-gradient(135deg,#a07ed0,#7a5a7a)}
 .ml-auto{margin-left:auto}
@@ -88,7 +88,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 .code-label{font-size:.75rem;letter-spacing:.15em;color:var(--faint);margin-bottom:12px}
 .code-big{font-family:'Playfair Display',serif;font-size:3.2rem;font-weight:600;color:#5a7a5a;letter-spacing:.25em;margin-bottom:10px}
 .code-share{display:flex;gap:8px;margin-top:16px}
-.btn-copy{flex:1;padding:11px 0;background:rgba(90,122,90,.1);border:1px solid rgba(90,122,90,.2);border-radius:8px;color:#5a7a5a;font-family:'Noto Serif SC',serif;font-size:.85rem;cursor:pointer}
+.btn-copy{flex:1;padding:11px 0;background:rgba(90,122,90,.1);border:1px solid rgba(90,122,90,.2);border-radius:8px;color:#5a7a5a;font-family:'Noto Serif SC',serif;font-size:.85rem;cursor:pointer;transition:all .2s}.btn-copy:hover{background:rgba(90,122,90,.18)}
 .code-hint{font-size:.78rem;color:var(--faint);margin-top:12px}
 .score-card{background:linear-gradient(145deg,#fce8e4,#fdeee4,#fdf5e8);border-radius:14px;padding:24px 24px 20px;text-align:center;margin-bottom:16px;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(90,122,90,.1)}
 .score-glow{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(90,122,90,.15),transparent 60%);pointer-events:none}
@@ -173,7 +173,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 
 /* 选项卡片hover效果 */
 .opt{transition:all .25s cubic-bezier(.4,0,.2,1)}
-.opt:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(90,122,90,.15)}
+.opt:hover{background:rgba(255,255,255,.9);border-color:rgba(90,122,90,.25)}
 
 /* 标签页下划线动画 */
 .tabs{position:relative}
@@ -245,7 +245,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 
 /* 选项卡片 hover 效果 */
 .opt{transition:all .25s cubic-bezier(.4,0,.2,1)}
-.opt:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(90,122,90,.15)}
+.opt:hover{background:rgba(255,255,255,.9);border-color:rgba(90,122,90,.25)}
 
 /* 标签页下划线动画 */
 /* 标签页下划线 - 已统一到 .tab.active::after */
@@ -1222,6 +1222,8 @@ p {
 /* ── toast 通知 ── */
 .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(42,34,42,.88);color:rgba(255,255,255,.92);padding:10px 20px;border-radius:99px;font-size:.82rem;letter-spacing:0.02em;pointer-events:none;opacity:0;transition:all .3s;z-index:9999;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* 全局按钮按压感 */
+button:not(:disabled):active{transform:scale(.97)!important;transition:transform .08s!important}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
