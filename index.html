@@ -1170,7 +1170,8 @@ p {
 #tab-radar,#tab-compare,#tab-insight{width:100%;box-sizing:border-box}
 #tab-radar>*,#tab-compare>*,#tab-insight>*{width:100%;box-sizing:border-box}
 /* 雷达图容器居中 */
-#tab-radar>div:first-child{display:flex;justify-content:center}
+#tab-radar>div:first-child{display:flex;justify-content:center;overflow:visible}
+#tab-radar{overflow:visible!important}
 
 /* ===== 프레임 일관성: 탭 전환 시 wrap 너비 고정 ===== */
 /* wrap이 항상 100%/480px를 유지하도록 모든 탭 패널 full-width */
