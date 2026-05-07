@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>今日对话 · 林 Link</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #0a0f0a; font-family: sans-serif; }
+canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
+
+.ui {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+/* 顶部返回 */
+.back {
+  position: fixed;
+  top: 32px; left: 24px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.3);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: color 0.2s;
+}
+.back:hover { color: rgba(255,255,255,0.6); }
+
+/* 顶部标签 */
+.top-label {
+  position: fixed;
+  top: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: rgba(255,255,255,0.2);
+  white-space: nowrap;
+}
+
+/* 卡片容器 */
+.card-container {
+  position: relative;
+  width: 220px;
+  height: 308px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(100,180,100,0.08);
+  animation: cardIn 0.8s cubic-bezier(0.22,1,0.36,1) both;
+  pointer-events: auto;
+  cursor: pointer;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.card-container svg { width: 100%; height: 100%; display: block; }
+
+/* 底部操作 */
+.actions {
+  position: fixed;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  pointer-events: auto;
+}
+.btn-another {
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.4);
+  cursor: pointer;
+  transition: color 0.2s;
+  background: none;
+  border: none;
+  padding: 8px 20px;
+}
+.btn-another:hover { color: rgba(255,255,255,0.7); }
+
+.card-type-label {
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.15);
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="back" onclick="window.location.href='forest.html'">← 林</div>
+<div class="top-label">今 日 对 话</div>
+
+<div class="ui">
+  <div class="card-container" id="cardWrap">
+    <!-- SVG 卡片由 JS 渲染 -->
+  </div>
+</div>
+
+<div class="actions">
+  <div class="card-type-label" id="typeLabel"></div>
+  <button class="btn-another" onclick="drawCard()">再抽一张</button>
+</div>
+
+<script>
+// ============ 背景森林动画 ============
+const canvas = document.getElementById('bg');
+const ctx = canvas.getContext('2d');
+let W, H, t = 0, trees = [], particles = [];
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  initBg();
+}
+
+function initBg() {
+  trees = [];
+  for (let i = 0; i < 18; i++) {
+    trees.push({
+      x: Math.random(),
+      y: 0.75 + Math.random() * 0.3,
+      h: 0.15 + Math.random() * 0.28,
+      w: 0.025 + Math.random() * 0.03,
+      l: 3 + Math.floor(Math.random() * 3),
+      c: `hsl(${120 + Math.random()*20},${20+Math.random()*15}%,${8+Math.random()*10}%)`,
+      phase: Math.random() * Math.PI * 2
+    });
+  }
+  particles = [];
+  for (let i = 0; i < 25; i++) {
+    particles.push({
+      x: Math.random(), y: 0.3 + Math.random() * 0.6,
+      r: 0.4 + Math.random() * 0.9,
+      sp: 0.0002 + Math.random() * 0.0003,
+      ph: Math.random() * Math.PI * 2,
+      dr: (Math.random() - 0.5) * 0.0001,
+      col: Math.random() > 0.5 ? 'rgba(180,230,140,' : 'rgba(140,210,160,'
+    });
+  }
+}
+
+function drawBg() {
+  t += 0.016;
+  ctx.clearRect(0, 0, W, H);
+  const sky = ctx.createLinearGradient(0, 0, 0, H);
+  sky.addColorStop(0, '#050c08');
+  sky.addColorStop(0.5, '#081208');
+  sky.addColorStop(1, '#0d1c0d');
+  ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+
+  // 月亮光晕
+  const mg = ctx.createRadialGradient(W*0.7, H*0.15, 0, W*0.7, H*0.15, H*0.3);
+  mg.addColorStop(0, 'rgba(160,210,140,0.05)');
+  mg.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = mg; ctx.fillRect(0, 0, W, H);
+
+  // 树
+  trees.forEach(tr => {
+    const x = tr.x * W, by = tr.y * H, th = tr.h * H, tw = tr.w * W;
+    const sw = Math.sin(t * 0.4 + tr.phase) * 1.2;
+    for (let l = 0; l < tr.l; l++) {
+      const p = l / tr.l;
+      ctx.globalAlpha = 0.5 + p * 0.3;
+      ctx.fillStyle = tr.c;
+      ctx.beginPath();
+      ctx.moveTo(x + sw * (0.3 + p * 0.7), by - th * (0.15 + p * 0.85));
+      ctx.lineTo(x - tw * (1 - p * 0.4) + sw * 0.2, by - th * 0.15 + th * 0.25);
+      ctx.lineTo(x + tw * (1 - p * 0.4) + sw * 0.2, by - th * 0.15 + th * 0.25);
+      ctx.closePath();
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  });
+
+  // 地面雾
+  const gf = ctx.createLinearGradient(0, H * 0.78, 0, H);
+  gf.addColorStop(0, 'rgba(0,0,0,0)');
+  gf.addColorStop(0.5, 'rgba(6,12,6,0.7)');
+  gf.addColorStop(1, 'rgba(4,8,4,0.95)');
+  ctx.fillStyle = gf; ctx.fillRect(0, H * 0.78, W, H * 0.22);
+
+  // 卡片区域暗化（聚焦效果）
+  const focus = ctx.createRadialGradient(W/2, H/2, H*0.15, W/2, H/2, H*0.65);
+  focus.addColorStop(0, 'rgba(0,0,0,0)');
+  focus.addColorStop(1, 'rgba(0,0,0,0.55)');
+  ctx.fillStyle = focus; ctx.fillRect(0, 0, W, H);
+
+  // 萤火虫
+  particles.forEach(p => {
+    p.x += p.dr + Math.sin(t * p.sp * 100 + p.ph) * 0.0002;
+    p.y += Math.cos(t * p.sp * 80 + p.ph) * 0.0001;
+    if (p.x < 0) p.x = 1; if (p.x > 1) p.x = 0;
+    if (p.y < 0.2) p.y = 0.9; if (p.y > 0.95) p.y = 0.2;
+    const fl = 0.3 + Math.sin(t * 1.8 + p.ph) * 0.3;
+    ctx.beginPath();
+    ctx.arc(p.x * W, p.y * H, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = p.col + fl + ')';
+    ctx.fill();
+  });
+
+  requestAnimationFrame(drawBg);
+}
+
+window.addEventListener('resize', resize);
+resize();
+drawBg();
+
+// ============ 卡牌数据 ============
+const CARDS = [
+  // 绿牌·亲密
+  { type: '绿牌·亲密', color: 'green', prompt: '说一件——', text: '有没有哪件小事，是\n你做了但没想到我会\n记住的？', id: 'I·01' },
+  { type: '绿牌·亲密', color: 'green', prompt: '说实话——', text: '你上次偷偷看我，\n在看什么？', id: 'I·02' },
+  { type: '绿牌·亲密', color: 'green', prompt: '随便一句——', text: '我说过哪句话，\n你觉得最像我？', id: 'I·04' },
+  { type: '绿牌·亲密', color: 'green', prompt: '说一个——', text: '我做什么，会让你突\n然很想靠近我？', id: 'I·05' },
+  { type: '绿牌·亲密', color: 'green', prompt: '说真的——', text: '你觉得，我知道\n你爱我吗？', id: 'I·06' },
+  { type: '绿牌·亲密', color: 'green', prompt: '随便——', text: '牵手的时候，\n你在想什么？', id: 'I·07' },
+  // 绿牌·日常
+  { type: '绿牌·日常', color: 'green', prompt: '随便一件——', text: '今天我做了什么，\n你没说但心里记了一下？', id: 'D·01' },
+  { type: '绿牌·日常', color: 'green', prompt: '说说——', text: '和我在一起，你最容\n易忘记时间是什么时候？', id: 'D·06' },
+  { type: '绿牌·日常', color: 'green', prompt: '说说——', text: '你有没有注意过\n我睡着的样子？', id: 'D·07' },
+  // 绿牌·沟通
+  { type: '绿牌·沟通', color: 'green', prompt: '说个场景——', text: '你什么时候最不想\n和我说话？', id: 'C·04' },
+  { type: '绿牌·沟通', color: 'green', prompt: '说实话——', text: '我说「没事」的时候，\n你信吗？', id: 'C·06' },
+  { type: '绿牌·沟通', color: 'green', prompt: '问吧——', text: '现在可以问我一个问题，\n我保证说实话', id: 'C·07' },
+  // 绿牌·修复
+  { type: '绿牌·修复', color: 'green', prompt: '说清楚——', text: '你生气的时候，需要\n我消失还是在场？', id: 'R·04' },
+  { type: '绿牌·修复', color: 'green', prompt: '慢慢说——', text: '我们之间，有没有一\n件事一直没说清楚？', id: 'R·06' },
+  // 绿牌·支持
+  { type: '绿牌·支持', color: 'green', prompt: '说清楚——', text: '你压力大的时候，需\n要我说话还是安静？', id: 'S·01' },
+  { type: '绿牌·支持', color: 'green', prompt: '说实话——', text: '你最担心我的，\n是什么？', id: 'S·04' },
+  // 绿牌·信任
+  { type: '绿牌·信任', color: 'green', prompt: '说直接——', text: '你最信任我的，\n是哪一面？', id: 'T·02' },
+  { type: '绿牌·信任', color: 'green', prompt: '说实话——', text: '你会让我看见你\n最坏的那面吗？', id: 'T·07' },
+  // 紫牌·亲密
+  { type: '紫牌·亲密', color: 'purple', prompt: '说说——', text: '有没有哪件小事，是\n我做了但你没想到自\n己会一直记着？', id: 'I·01' },
+  { type: '紫牌·亲密', color: 'purple', prompt: '说一样——', text: '你哪里比我想象中\n更好一点？', id: 'I·03' },
+  { type: '紫牌·亲密', color: 'purple', prompt: '随便——', text: '和你在一起，\n我是什么感觉？', id: 'I·05' },
+  // 紫牌·沟通
+  { type: '紫牌·沟通', color: 'purple', prompt: '随便一句——', text: '你说过哪句话，\n我记到现在？', id: 'C·02' },
+  { type: '紫牌·沟通', color: 'purple', prompt: '说一件——', text: '有没有一件事，你误\n解了我，我没有解释？', id: 'C·05' },
+  // 紫牌·修复
+  { type: '紫牌·修复', color: 'purple', prompt: '说实话——', text: '我道歉的方式，\n对你有用吗？', id: 'R·02' },
+  { type: '紫牌·修复', color: 'purple', prompt: '说个信号——', text: '什么时候，你会觉得\n我们好了？', id: 'R·07' },
+  // 紫牌·支持
+  { type: '紫牌·支持', color: 'purple', prompt: '说一次——', text: '最近有没有一刻，\n你让我觉得不孤单？', id: 'S·05' },
+  // 紫牌·体验
+  { type: '紫牌·体验', color: 'purple', prompt: '瞎想——', text: '如果可以消失一周，\n你想带我去哪里？', id: 'E·02' },
+  { type: '紫牌·体验', color: 'purple', prompt: '有的话说——', text: '有没有一首歌，\n是我们的歌？', id: 'E·07' },
+  // 特殊牌
+  { type: '特殊牌', color: 'special', prompt: '', text: '不说话了', sub: '抱一会儿再继续', id: 'S·01' },
+  { type: '特殊牌', color: 'special', prompt: '', text: '今晚只说好事', sub: '各说三件', id: 'S·03' },
+  { type: '特殊牌', color: 'special', prompt: '', text: '今天，夸我一件事', sub: '认真的', id: 'S·05' },
+];
+
+function makeCardSVG(card) {
+  if (card.color === 'green') {
+    return `<svg width="220" height="308" viewBox="0 0 240 336" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="30%" cy="20%" r="80%">
+      <stop offset="0%" stop-color="#243424"/>
+      <stop offset="55%" stop-color="#1a281a"/>
+      <stop offset="100%" stop-color="#1e2428"/>
+    </radialGradient>
+    <radialGradient id="gw" cx="30%" cy="25%" r="55%">
+      <stop offset="0%" stop-color="#5a7a5a" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#5a7a5a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="240" height="336" fill="url(#bg)"/>
+  <ellipse cx="72" cy="80" rx="110" ry="95" fill="url(#gw)"/>
+  <rect x="22" y="240" width="7" height="96" fill="#5a7a5a" opacity="0.16"/>
+  <ellipse cx="26" cy="222" rx="30" ry="26" fill="#5a7a5a" opacity="0.12"/>
+  <line x1="18" y1="18" x2="54" y2="18" stroke="rgba(255,255,255,.06)" stroke-width="0.6"/>
+  <line x1="18" y1="18" x2="18" y2="46" stroke="rgba(255,255,255,.06)" stroke-width="0.6"/>
+  <text x="22" y="28" font-family="sans-serif" font-size="10" letter-spacing="2" fill="#5a7a5a" opacity="0.6">绿牌</text>
+  <text x="218" y="24" text-anchor="end" font-family="sans-serif" font-size="9" fill="#c47a7a" opacity="0.55">${card.type.split('·')[1]}</text>
+  <text x="218" y="36" text-anchor="end" font-family="sans-serif" font-size="9" fill="#c47a7a" opacity="0.7">${card.id}</text>
+  <line x1="22" y1="42" x2="64" y2="42" stroke="#c47a7a" stroke-width="0.8" opacity="0.45"/>
+  <text x="22" y="74" font-family="serif" font-style="italic" font-size="11" fill="rgba(255,255,255,.28)" letter-spacing="0.5">${card.prompt}</text>
+  ${card.text.split('\n').map((line, i) => `<text x="22" y="${118 + i*30}" font-size="17" letter-spacing="0.5" fill="rgba(255,255,255,.88)" font-family="sans-serif">${line}</text>`).join('')}
+  <image href="images/lin-watermark-green.png" x="190" y="296" width="30" height="30" opacity="0.32" style="filter:invert(1)"/>
+</svg>`;
+  } else if (card.color === 'purple') {
+    return `<svg width="220" height="308" viewBox="0 0 240 336" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="70%" cy="20%" r="80%">
+      <stop offset="0%" stop-color="#251e30"/>
+      <stop offset="55%" stop-color="#1e1828"/>
+      <stop offset="100%" stop-color="#271e28"/>
+    </radialGradient>
+    <radialGradient id="gw" cx="70%" cy="25%" r="55%">
+      <stop offset="0%" stop-color="#9a7aaa" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#9a7aaa" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="240" height="336" fill="url(#bg)"/>
+  <ellipse cx="168" cy="80" rx="110" ry="95" fill="url(#gw)"/>
+  <rect x="211" y="240" width="7" height="96" fill="#7a5a7a" opacity="0.16"/>
+  <ellipse cx="214" cy="222" rx="30" ry="26" fill="#7a5a7a" opacity="0.12"/>
+  <line x1="186" y1="18" x2="222" y2="18" stroke="rgba(255,255,255,.06)" stroke-width="0.6"/>
+  <line x1="222" y1="18" x2="222" y2="46" stroke="rgba(255,255,255,.06)" stroke-width="0.6"/>
+  <text x="22" y="28" font-family="sans-serif" font-size="10" letter-spacing="2" fill="#9a7aaa" opacity="0.6">紫牌</text>
+  <text x="218" y="24" text-anchor="end" font-family="sans-serif" font-size="9" fill="#c47a7a" opacity="0.55">${card.type.split('·')[1]}</text>
+  <text x="218" y="36" text-anchor="end" font-family="sans-serif" font-size="9" fill="#c47a7a" opacity="0.7">${card.id}</text>
+  <line x1="22" y1="42" x2="64" y2="42" stroke="#c47a7a" stroke-width="0.8" opacity="0.45"/>
+  <text x="22" y="74" font-family="serif" font-style="italic" font-size="11" fill="rgba(255,255,255,.28)" letter-spacing="0.5">${card.prompt}</text>
+  ${card.text.split('\n').map((line, i) => `<text x="22" y="${118 + i*30}" font-size="17" letter-spacing="0.5" fill="rgba(255,255,255,.88)" font-family="sans-serif">${line}</text>`).join('')}
+  <image href="images/lin-watermark.png" x="20" y="296" width="30" height="30" opacity="0.32" style="filter:invert(1)"/>
+</svg>`;
+  } else {
+    // 特殊牌
+    return `<svg width="220" height="308" viewBox="0 0 240 336" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#221e16"/>
+      <stop offset="100%" stop-color="#161410"/>
+    </radialGradient>
+  </defs>
+  <rect width="240" height="336" fill="url(#bg)"/>
+  <ellipse cx="120" cy="140" rx="110" ry="100" fill="rgba(200,170,100,.06)"/>
+  <circle cx="42" cy="32" r="1" fill="rgba(255,255,255,.15)"/>
+  <circle cx="198" cy="26" r="1.2" fill="rgba(255,255,255,.12)"/>
+  <text x="120" y="128" text-anchor="middle" font-family="serif" font-size="40" fill="rgba(200,170,100,.22)">✦</text>
+  <text x="120" y="178" text-anchor="middle" font-size="18" letter-spacing="0.5" fill="rgba(255,255,255,.85)" font-family="sans-serif">${card.text}</text>
+  <text x="120" y="230" text-anchor="middle" font-family="serif" font-style="italic" font-size="12" fill="rgba(255,255,255,.25)" letter-spacing="1">${card.sub || ''}</text>
+  <line x1="80" y1="244" x2="160" y2="244" stroke="rgba(200,170,100,.12)" stroke-width="0.6"/>
+  <image href="images/lin-watermark.png" x="107" y="282" width="26" height="26" opacity="0.18" style="filter:invert(1)"/>
+  <text x="120" y="320" text-anchor="middle" font-family="sans-serif" font-size="9" letter-spacing="3" fill="rgba(200,170,100,.2)">${card.id}</text>
+</svg>`;
+  }
+}
+
+let lastIndex = -1;
+function drawCard() {
+  let idx;
+  do { idx = Math.floor(Math.random() * CARDS.length); } while (idx === lastIndex && CARDS.length > 1);
+  lastIndex = idx;
+  const card = CARDS[idx];
+
+  const wrap = document.getElementById('cardWrap');
+  wrap.style.animation = 'none';
+  wrap.offsetHeight; // reflow
+  wrap.style.animation = 'cardIn 0.6s cubic-bezier(0.22,1,0.36,1) both';
+  wrap.innerHTML = makeCardSVG(card);
+
+  document.getElementById('typeLabel').textContent = card.type;
+}
+
+drawCard();
+</script>
+</body>
+</html>
