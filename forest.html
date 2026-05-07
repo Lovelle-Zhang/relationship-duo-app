@@ -232,7 +232,9 @@ function drawTree(tree, time) {
   const x = tree.x * W;
   const baseY = tree.y * H;
   const treeH = tree.h * H;
-  const treeW = tree.w * W;
+  // 用 min(W,H) 保证手机竖屏上树不会太细
+  const base = Math.min(W, H);
+  const treeW = tree.w * base;
   const sway = Math.sin(time * 0.4 + tree.x * 10) * 1.5;
 
   // 发光效果
