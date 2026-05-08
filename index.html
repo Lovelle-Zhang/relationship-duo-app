@@ -2244,9 +2244,20 @@ async function unlockContent() {
   notifyBanner.innerHTML='<span style="font-size:.8rem;color:rgba(60,40,80,.65);line-height:1.6">报告已解锁<br><span style="font-size:.72rem;opacity:.7">让 TA 也来看看你们的频率</span></span>'
     +'<button onclick="copyLink();this.textContent=\'已复制 ✓\';this.style.background=\'#5a7a5a\'" style="padding:8px 16px;background:#7a5a7a;color:white;border:none;border-radius:8px;font-size:.78rem;cursor:pointer;white-space:nowrap;flex-shrink:0">通知 TA →</button>';
   ins.insertBefore(notifyBanner, ins.firstChild);
-  
-  // 2秒后显示反馈弹窗
-  setTimeout(showFeedback,2000);
+
+  // 加底部锚点，滚到底部才弹评分
+  const anchor = document.createElement('div');
+  anchor.id = 'report-end';
+  ins.appendChild(anchor);
+
+  // IntersectionObserver 监听锚点
+  const observer = new IntersectionObserver((entries) => {
+    if(entries[0].isIntersecting) {
+      observer.disconnect();
+      setTimeout(showFeedback, 800);
+    }
+  }, { threshold: 0.5 });
+  observer.observe(anchor);
 }
 
 function showFeedback(){
