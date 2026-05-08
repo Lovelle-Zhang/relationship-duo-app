@@ -1238,7 +1238,180 @@ button:focus{outline:none!important;box-shadow:none!important}
 </head>
 <body>
 <div class="wrap">
-<div id="intro" class="screen">
+
+<!-- ===== 引导页 ===== -->
+<div id="splash" class="screen" style="min-height:calc(100vh - 56px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 0 40px">
+
+  <!-- 七维度森林 SVG -->
+  <div style="width:100%;max-width:420px;margin:0 auto 32px">
+  <svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">
+    <defs>
+      <!-- 天空渐变 -->
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#f0edf8"/>
+        <stop offset="60%" stop-color="#e8f0ec"/>
+        <stop offset="100%" stop-color="#dde8e0"/>
+      </linearGradient>
+      <!-- 地面渐变 -->
+      <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#c8d8c8" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#b8ccb8" stop-opacity="0.6"/>
+      </linearGradient>
+      <!-- 绿树光晕 -->
+      <radialGradient id="gg1" cx="50%" cy="80%" r="60%">
+        <stop offset="0%" stop-color="#5a7a5a" stop-opacity="0.12"/>
+        <stop offset="100%" stop-color="#5a7a5a" stop-opacity="0"/>
+      </radialGradient>
+      <!-- 紫树光晕 -->
+      <radialGradient id="gp1" cx="50%" cy="80%" r="60%">
+        <stop offset="0%" stop-color="#7a5a7a" stop-opacity="0.12"/>
+        <stop offset="100%" stop-color="#7a5a7a" stop-opacity="0"/>
+      </radialGradient>
+      <!-- 月光 -->
+      <radialGradient id="moon" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#e8e0f0" stop-opacity="0.5"/>
+        <stop offset="100%" stop-color="#e8e0f0" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+
+    <!-- 背景 -->
+    <rect width="420" height="260" fill="url(#sky)"/>
+
+    <!-- 月光晕 -->
+    <ellipse cx="210" cy="60" rx="120" ry="80" fill="url(#moon)"/>
+
+    <!-- 地面 -->
+    <rect x="0" y="220" width="420" height="40" fill="url(#ground)" rx="2"/>
+
+    <!-- 远景雾气 -->
+    <ellipse cx="210" cy="222" rx="200" ry="12" fill="rgba(220,230,220,0.35)"/>
+
+    <!-- ── 七棵树（从左到右，高矮错落）── -->
+
+    <!-- 树1：深度沟通（绿，最高，左1） -->
+    <g transform="translate(38,220)">
+      <ellipse cx="0" cy="-80" rx="28" ry="32" fill="url(#gg1)"/>
+      <rect x="-3" y="-18" width="6" height="18" rx="2" fill="#4a6a4a" opacity="0.5"/>
+      <polygon points="0,-148 -18,-100 18,-100" fill="#5a7a5a" opacity="0.2"/>
+      <polygon points="0,-130 -20,-88 20,-88" fill="#5a7a5a" opacity="0.28"/>
+      <polygon points="0,-112 -22,-72 22,-72" fill="#5a7a5a" opacity="0.35"/>
+      <polygon points="0,-92 -24,-52 24,-52" fill="#5a7a5a" opacity="0.42"/>
+      <polygon points="0,-148 -18,-100 18,-100" fill="none" stroke="#5a7a5a" stroke-width="0.8" opacity="0.4"/>
+      <polygon points="0,-92 -24,-52 24,-52" fill="none" stroke="#5a7a5a" stroke-width="1" opacity="0.5"/>
+      <text y="12" text-anchor="middle" font-family="sans-serif" font-size="7" letter-spacing="0.5" fill="#5a7a5a" opacity="0.55">深度沟通</text>
+    </g>
+
+    <!-- 树2：修复能力（紫，中高，左2） -->
+    <g transform="translate(90,220)">
+      <ellipse cx="0" cy="-65" rx="24" ry="28" fill="url(#gp1)"/>
+      <rect x="-3" y="-16" width="6" height="16" rx="2" fill="#6a4a6a" opacity="0.5"/>
+      <polygon points="0,-122 -16,-82 16,-82" fill="#7a5a7a" opacity="0.2"/>
+      <polygon points="0,-106 -18,-70 18,-70" fill="#7a5a7a" opacity="0.28"/>
+      <polygon points="0,-88 -20,-54 20,-54" fill="#7a5a7a" opacity="0.35"/>
+      <polygon points="0,-70 -22,-38 22,-38" fill="#7a5a7a" opacity="0.42"/>
+      <polygon points="0,-122 -16,-82 16,-82" fill="none" stroke="#7a5a7a" stroke-width="0.8" opacity="0.4"/>
+      <polygon points="0,-70 -22,-38 22,-38" fill="none" stroke="#7a5a7a" stroke-width="1" opacity="0.5"/>
+      <text y="12" text-anchor="middle" font-family="sans-serif" font-size="7" letter-spacing="0.5" fill="#7a5a7a" opacity="0.55">修复能力</text>
+    </g>
+
+    <!-- 树3：共同体验（绿，中，左3） -->
+    <g transform="translate(148,220)">
+      <ellipse cx="0" cy="-55" rx="22" ry="26" fill="url(#gg1)"/>
+      <rect x="-3" y="-14" width="6" height="14" rx="2" fill="#4a6a4a" opacity="0.5"/>
+      <polygon points="0,-104 -15,-68 15,-68" fill="#5a7a5a" opacity="0.22"/>
+      <polygon points="0,-88 -17,-56 17,-56" fill="#5a7a5a" opacity="0.3"/>
+      <polygon points="0,-70 -19,-42 19,-42" fill="#5a7a5a" opacity="0.38"/>
+      <polygon points="0,-104 -15,-68 15,-68" fill="none" stroke="#5a7a5a" stroke-width="0.8" opacity="0.38"/>
+      <polygon points="0,-70 -19,-42 19,-42" fill="none" stroke="#5a7a5a" stroke-width="1" opacity="0.48"/>
+      <text y="12" text-anchor="middle" font-family="sans-serif" font-size="7" letter-spacing="0.5" fill="#5a7a5a" opacity="0.55">共同体验</text>
+    </g>
+
+    <!-- 树4：价值契合（紫，最高，中央主树） -->
+    <g transform="translate(210,220)">
+      <ellipse cx="0" cy="-90" rx="34" ry="38" fill="url(#gp1)"/>
+      <rect x="-4" y="-20" width="8" height="20" rx="2" fill="#6a4a6a" opacity="0.5"/>
+      <polygon points="0,-168 -22,-112 22,-112" fill="#7a5a7a" opacity="0.18"/>
+      <polygon points="0,-148 -24,-96 24,-96" fill="#7a5a7a" opacity="0.25"/>
+      <polygon points="0,-126 -26,-78 26,-78" fill="#7a5a7a" opacity="0.32"/>
+      <polygon points="0,-104 -28,-58 28,-58" fill="#7a5a7a" opacity="0.4"/>
+      <polygon points="0,-80 -30,-36 30,-36" fill="#7a5a7a" opacity="0.46"/>
+      <polygon points="0,-168 -22,-112 22,-112" fill="none" stroke="#7a5a7a" stroke-width="0.8" opacity="0.38"/>
+      <polygon points="0,-80 -30,-36 30,-36" fill="none" stroke="#7a5a7a" stroke-width="1.2" opacity="0.55"/>
+      <!-- 中央树顶星点 -->
+      <circle cx="0" cy="-172" r="2.5" fill="#9a7aaa" opacity="0.5"/>
+      <text y="12" text-anchor="middle" font-family="sans-serif" font-size="7" letter-spacing="0.5" fill="#7a5a7a" opacity="0.6">价值契合</text>
+    </g>
+
+    <!-- 树5：情绪支持（绿，中，右3） -->
+    <g transform="translate(272,220)">
+      <ellipse cx="0" cy="-55" rx="22" ry="26" fill="url(#gg1)"/>
+      <rect x="-3" y="-14" width="6" height="14" rx="2" fill="#4a6a4a" opacity="0.5"/>
+      <polygon points="0,-104 -15,-68 15,-68" fill="#5a7a5a" opacity="0.22"/>
+      <polygon points="0,-88 -17,-56 17,-56" fill="#5a7a5a" opacity="0.3"/>
+      <polygon points="0,-70 -19,-42 19,-42" fill="#5a7a5a" opacity="0.38"/>
+      <polygon points="0,-104 -15,-68 15,-68" fill="none" stroke="#5a7a5a" stroke-width="0.8" opacity="0.38"/>
+      <polygon points="0,-70 -19,-42 19,-42" fill="none" stroke="#5a7a5a" stroke-width="1" opacity="0.48"/>
+      <text y="12" text-anchor="middle" font-family="sans-serif" font-size="7" letter-spacing="0.5" fill="#5a7a5a" opacity="0.55">情绪支持</text>
+    </g>
+
+    <!-- 树6：爱意表达（紫，中高，右2） -->
+    <g transform="translate(330,220)">
+      <ellipse cx="0" cy="-65" rx="24" ry="28" fill="url(#gp1)"/>
+      <rect x="-3" y="-16" width="6" height="16" rx="2" fill="#6a4a6a" opacity="0.5"/>
+      <polygon points="0,-122 -16,-82 16,-82" fill="#7a5a7a" opacity="0.2"/>
+      <polygon points="0,-106 -18,-70 18,-70" fill="#7a5a7a" opacity="0.28"/>
+      <polygon points="0,-88 -20,-54 20,-54" fill="#7a5a7a" opacity="0.35"/>
+      <polygon points="0,-70 -22,-38 22,-38" fill="#7a5a7a" opacity="0.42"/>
+      <polygon points="0,-122 -16,-82 16,-82" fill="none" stroke="#7a5a7a" stroke-width="0.8" opacity="0.4"/>
+      <polygon points="0,-70 -22,-38 22,-38" fill="none" stroke="#7a5a7a" stroke-width="1" opacity="0.5"/>
+      <text y="12" text-anchor="middle" font-family="sans-serif" font-size="7" letter-spacing="0.5" fill="#7a5a7a" opacity="0.55">爱意表达</text>
+    </g>
+
+    <!-- 树7：整体契合（绿，最高，右1） -->
+    <g transform="translate(382,220)">
+      <ellipse cx="0" cy="-80" rx="28" ry="32" fill="url(#gg1)"/>
+      <rect x="-3" y="-18" width="6" height="18" rx="2" fill="#4a6a4a" opacity="0.5"/>
+      <polygon points="0,-148 -18,-100 18,-100" fill="#5a7a5a" opacity="0.2"/>
+      <polygon points="0,-130 -20,-88 20,-88" fill="#5a7a5a" opacity="0.28"/>
+      <polygon points="0,-112 -22,-72 22,-72" fill="#5a7a5a" opacity="0.35"/>
+      <polygon points="0,-92 -24,-52 24,-52" fill="#5a7a5a" opacity="0.42"/>
+      <polygon points="0,-148 -18,-100 18,-100" fill="none" stroke="#5a7a5a" stroke-width="0.8" opacity="0.4"/>
+      <polygon points="0,-92 -24,-52 24,-52" fill="none" stroke="#5a7a5a" stroke-width="1" opacity="0.5"/>
+      <text y="12" text-anchor="middle" font-family="sans-serif" font-size="7" letter-spacing="0.5" fill="#5a7a5a" opacity="0.55">整体契合</text>
+    </g>
+
+    <!-- 地面草线 -->
+    <line x1="0" y1="220" x2="420" y2="220" stroke="rgba(90,120,90,0.15)" stroke-width="1"/>
+
+    <!-- 萤火虫粒子 -->
+    <circle cx="120" cy="140" r="1.2" fill="#8aaa8a" opacity="0.4"/>
+    <circle cx="180" cy="110" r="1" fill="#9a8aaa" opacity="0.35"/>
+    <circle cx="250" cy="130" r="1.4" fill="#8aaa8a" opacity="0.3"/>
+    <circle cx="310" cy="150" r="1" fill="#9a8aaa" opacity="0.38"/>
+    <circle cx="70" cy="160" r="1.2" fill="#8aaa8a" opacity="0.32"/>
+    <circle cx="355" cy="145" r="1" fill="#9a8aaa" opacity="0.3"/>
+  </svg>
+  </div>
+
+  <!-- 标题文字 -->
+  <h1 style="font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:700;color:#2e1a2e;line-height:1.35;margin-bottom:12px;letter-spacing:-.01em">
+    两片森林<br>各自生长，彼此照见
+  </h1>
+  <p style="font-size:.85rem;color:rgba(60,50,70,.45);line-height:1.9;margin-bottom:8px;letter-spacing:.02em">
+    7 个维度 · 绿树与紫树
+  </p>
+  <p style="font-size:.78rem;color:rgba(60,50,70,.35);line-height:1.8;margin-bottom:36px;max-width:280px;margin-left:auto;margin-right:auto">
+    两个人各自作答<br>不受对方影响，结果才真实
+  </p>
+
+  <!-- 进入按钮 -->
+  <button onclick="show('intro')" style="padding:14px 48px;background:linear-gradient(135deg,#4a6a4a,#6a4a6a);border:none;border-radius:99px;color:#fff;font-family:'Noto Serif SC',serif;font-size:.95rem;font-weight:600;letter-spacing:.1em;cursor:pointer;box-shadow:0 8px 28px rgba(90,80,100,.22);transition:opacity .15s">
+    走进去
+  </button>
+  <p style="font-size:.68rem;color:rgba(60,50,70,.28);margin-top:16px;letter-spacing:.08em">轻触，开始</p>
+</div>
+
+<div id="intro" class="screen hidden">
 <!-- 品牌标识 -->
 <div style="text-align:center;margin-bottom:24px">
   <img src="images/lin-watermark-green.png" style="width:56px;height:56px;opacity:.7;object-fit:contain;display:block;margin:0 auto 10px">
@@ -1677,7 +1850,7 @@ async function checkUnlocked(code){
 
 let R,C,qi=0,ans=[],sv=0,myS,theirS,pollTimer,myName='',theirName='';
 
-function show(id){['intro','quiz','waiting','result'].forEach(s=>document.getElementById(s).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');if(id==='result'){document.body.classList.add('has-result')}else{document.body.classList.remove('has-result')}}
+function show(id){['splash','intro','quiz','waiting','result'].forEach(s=>document.getElementById(s).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');if(id==='result'){document.body.classList.add('has-result')}else{document.body.classList.remove('has-result')}}
 function err(m){const e=document.getElementById('err');e.textContent=m;setTimeout(()=>e.textContent='',3000)}
 
 function startA(){
