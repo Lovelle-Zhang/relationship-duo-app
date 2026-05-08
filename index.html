@@ -54,10 +54,16 @@ to{stroke-dashoffset:0}}
 .progress-track{flex:1;height:4px;background:rgba(90,122,90,.12);border-radius:99px;overflow:hidden}
 .progress-fill{height:100%;background:linear-gradient(90deg,#7a9a7a,#5a7a5a,#7a5a8a);border-radius:99px;transition:width .6s cubic-bezier(.4,0,.2,1)}
 .progress-num{font-family:'Playfair Display',serif;font-size:.82rem;color:var(--faint)}
-.q-box{margin-bottom:40px;padding-bottom:20px;border-bottom:1px solid rgba(90,122,90,.1)}
-.q-label{font-size:.6rem;letter-spacing:.3em;color:#5a7a5a;opacity:.5;margin-bottom:12px;font-family:'Inter',sans-serif;font-weight:500}
-.q-text{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--ink);line-height:1.5;margin-bottom:6px}
-.q-sub{font-size:.78rem;color:var(--faint);font-weight:300}
+/* 题目文字升级 */
+.q-text{font-family:'Noto Serif SC',serif;font-size:1.25rem;color:var(--ink);line-height:1.65;margin-bottom:8px;font-weight:400;letter-spacing:.01em}
+.q-sub{font-size:.78rem;color:var(--faint);font-weight:300;line-height:1.75}
+.q-label{font-size:.62rem;letter-spacing:.22em;margin-bottom:10px;font-family:'Inter',sans-serif;font-weight:600;text-transform:none}
+
+/* 滑块情感标签 */
+#slider-labels span{font-size:.62rem;letter-spacing:.02em;opacity:.55}
+
+/* 进度条颜色过渡 */
+.progress-fill{transition:width .5s cubic-bezier(.4,0,.2,1),background .5s ease}
 .slider-wrap{padding:8px 0 28px}
 input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:99px;outline:none;cursor:pointer;margin-bottom:16px}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#5a7a5a,#5a7a5a);box-shadow:0 2px 8px rgba(90,122,90,.4);cursor:pointer}
@@ -1257,9 +1263,12 @@ button:focus{outline:none!important;box-shadow:none!important}
   </svg>
 </div>
 
-<!-- 副标题 - 更清晰 -->
-<p style="font-size:1rem;color:#5a4545;text-align:center;line-height:1.8;margin-bottom:10px;font-weight:500">
+<!-- 副标题 -->
+<p style="font-size:1rem;color:#5a4545;text-align:center;line-height:1.8;margin-bottom:6px;font-weight:500">
   不管相识多久<br>两个人的频率，值得被看见
+</p>
+<p style="font-size:.78rem;color:rgba(90,70,90,.45);text-align:center;line-height:1.7;margin-bottom:28px;letter-spacing:.02em">
+  表层习惯 · 中层期待 · 深层渴望<br>三个层次，七道问题
 </p>
 
 <!-- 社交证明 - 更突出 -->
@@ -1299,9 +1308,19 @@ button:focus{outline:none!important;box-shadow:none!important}
 <div id="quiz" class="screen hidden">
 <div class="role-tag"><span class="role-dot" id="rd"></span><span id="rl"></span></div>
 <div class="progress-row"><div class="progress-track"><div class="progress-fill" id="pb"></div></div><span class="progress-num" id="pn"></span></div>
-<div class="q-box"><p class="q-label" id="ql"></p><p class="q-text" id="qt"></p><p class="q-sub" id="qs"></p></div>
+
+<!-- 题目区：带氛围背景 -->
+<div id="qbox-wrap" style="border-radius:16px;padding:20px 18px;margin-bottom:24px;border:1px solid transparent;transition:background .5s ease,border-color .5s ease">
+  <div class="q-box" style="margin-bottom:0;padding-bottom:0;border-bottom:none">
+    <p class="q-label" id="ql"></p>
+    <p class="q-text" id="qt"></p>
+    <p class="q-sub" id="qs" style="margin-top:8px;line-height:1.7"></p>
+  </div>
+</div>
+
 <div id="sa" class="slider-wrap hidden">
 <input type="range" id="slider" oninput="onSlide(this.value)">
+<div id="slider-labels" style="display:flex;justify-content:space-between;margin:-8px 0 12px;padding:0 2px"></div>
 <div class="slider-val"><span class="slider-num" id="sn">0</span><span class="slider-unit" id="su"></span></div>
 </div>
 <div id="ca" class="opt-list hidden"></div>
@@ -1495,14 +1514,95 @@ const SB='https://esfuazchkbbtccxtamwp.supabase.co',SK='eyJhbGciOiJIUzI1NiIsInR5
 
 const sb=supabase.createClient(SB,SK);
 const DIMS=["深度沟通","修复能力","共同体验","价值契合","情绪支持","爱意表达","整体契合"];
+
+// 每题的氛围色和层次标签
+const Q_LAYERS = [
+  {layer:"表层 · 日常节奏", color:"#5a7a5a", bg:"rgba(90,122,90,.06)", accent:"rgba(90,122,90,.18)"},
+  {layer:"表层 · 日常节奏", color:"#5a7a5a", bg:"rgba(90,122,90,.06)", accent:"rgba(90,122,90,.18)"},
+  {layer:"中层 · 共同生长", color:"#6a7a9a", bg:"rgba(106,122,154,.06)", accent:"rgba(106,122,154,.18)"},
+  {layer:"中层 · 共同生长", color:"#6a7a9a", bg:"rgba(106,122,154,.06)", accent:"rgba(106,122,154,.18)"},
+  {layer:"深层 · 内心渴望", color:"#7a5a7a", bg:"rgba(122,90,122,.06)", accent:"rgba(122,90,122,.18)"},
+  {layer:"深层 · 内心渴望", color:"#7a5a7a", bg:"rgba(122,90,122,.06)", accent:"rgba(122,90,122,.18)"},
+  {layer:"深层 · 内心渴望", color:"#7a5a7a", bg:"rgba(122,90,122,.06)", accent:"rgba(122,90,122,.18)"},
+];
+
 const QS=[
-{t:"slider",text:"理想状态下，每天深度聊多久？",sub:"说心里话、聊想法和感受——不是讲事务",min:0,max:120,step:5,unit:"分钟",def:0,fn:v=>Math.round(v/120*100)},
-{t:"choice",text:"你希望争执后多久和好？",opts:[["当天就好",100],["1–2 天",80],["3–7 天",50],["超过一周",10]]},
-{t:"choice",text:"你希望多久一起做一次新鲜的事？",sub:"旅行、新餐厅、第一次的体验……",opts:[["每周都想有新体验",100],["每月2–3次",80],["每月一次",60],["几个月一次就好",35],["不太在意新鲜感",15]]},
-{t:"slider",text:"价值观契合，对你有多重要？",sub:"金钱观、生活方式、未来规划",min:0,max:100,step:5,unit:"%",def:0,fn:v=>v},
-{t:"choice",text:"遇到困难时，你希望对方：",opts:[["先陪着我，不用急着解决",90],["帮我分析，一起想办法",80],["认真听，偶尔给些建议",70],["给我空间，等我准备好再说",55]]},
-{t:"choice",text:"爱意表达这件事，对你来说是什么样的？",opts:[["是日常必需，经常说出来",100],["重要，但不用天天挂嘴边",75],["行动比语言更重要",55],["不太擅长主动表达",25]]},
-{t:"slider",text:"你愿意为这段关系投入多少？",sub:"直觉打分，0 到 100",min:0,max:100,step:1,unit:"%",def:0,fn:v=>v}
+{
+  t:"slider",
+  text:"两个人在一起，你需要多少「真正的对话」？",
+  sub:"不是聊今天吃什么——是那种说完之后觉得被看见的对话",
+  guide:"想象一个理想的普通工作日",
+  min:0,max:120,step:5,unit:"分钟",def:30,
+  labels:["偶尔就好","每天一点","每天很多"],
+  fn:v=>Math.round(v/120*100)
+},
+{
+  t:"choice",
+  text:"吵架之后，你的内心在等什么？",
+  sub:"不是你觉得「应该」怎样——是你真实的感受",
+  guide:"闭上眼睛，想一次真实的争吵",
+  opts:[
+    ["等不了，我需要马上和好，冷战让我很难受",100],
+    ["给我一两天，我需要先消化一下",80],
+    ["我需要更长的时间，但我不会忘记这件事",50],
+    ["我习惯把事情放着，时间会解决",10]
+  ]
+},
+{
+  t:"choice",
+  text:"你希望这段关系里有多少「第一次」？",
+  sub:"第一次去的地方、第一次做的事、第一次的体验",
+  guide:"新鲜感对你来说是必需品，还是调味料？",
+  opts:[
+    ["是必需品——没有新鲜感我会感到窒息",100],
+    ["很重要，每个月都想有新的体验",80],
+    ["偶尔来一次就够了，稳定更重要",60],
+    ["我更享受熟悉的感觉，不太需要新鲜",35],
+    ["新不新鲜对我来说真的不重要",15]
+  ]
+},
+{
+  t:"slider",
+  text:"你们需要多「像」，才能让你安心？",
+  sub:"金钱观、生活方式、对未来的想象……",
+  guide:"不是外表，是内核",
+  min:0,max:100,step:5,unit:"%",def:50,
+  labels:["不同也没关系","有些共同就好","必须高度一致"],
+  fn:v=>v
+},
+{
+  t:"choice",
+  text:"你低落的时候，最需要对方做什么？",
+  sub:"不是TA能做什么——是你真正需要什么",
+  guide:"想一次你最需要被支持的时刻",
+  opts:[
+    ["就陪着我，什么都不用说，不用解决",90],
+    ["认真听我说，偶尔给点回应就够了",80],
+    ["帮我分析，一起想办法，行动比陪伴更有用",70],
+    ["给我空间，等我准备好了我会来找你",55]
+  ]
+},
+{
+  t:"choice",
+  text:"「我爱你」这三个字，对你意味着什么？",
+  sub:"不是你觉得应该怎样——是你内心真实的重量",
+  guide:"这道题没有对错，只有真实",
+  opts:[
+    ["是每天都需要听到的空气，说出来才算数",100],
+    ["很重要，但不用每天——偶尔说出来就够了",75],
+    ["行动比语言更真实，做到比说到更重要",55],
+    ["我不太擅长说，也不太需要听，懂得就好",25]
+  ]
+},
+{
+  t:"slider",
+  text:"此刻，你愿意为这段关系投入多少？",
+  sub:"不是你「应该」投入多少——是你现在真实愿意给的",
+  guide:"直觉作答，第一个数字往往最诚实",
+  min:0,max:100,step:1,unit:"%",def:50,
+  labels:["保留空间","适度投入","全力以赴"],
+  fn:v=>v
+}
 ];
 const PROF=[[88,"深度同频","","#5a7a5a","极高同频","在最关键的每一个维度你们都做到了，这不靠运气，靠的是两个人持续用心的选择。","偶尔停下来，认真告诉对方：有你在，我觉得很幸运。"],[73,"高度契合","","#5a7a5a","高度契合","扎实的情感基础，沟通质量和相互支持都处于很好的水准。","定期问对方：最近有什么想说但还没说的？"],[55,"频率相近","","#d4844a","基本同频","稳定基础不错，但新鲜感、深度对话、情感表达都可以再多一点。","这个月约一次「假装第一次约会」。"],[38,"调频中","","#b07830","部分契合","核心议题还有明显提升空间。现在投入，收益很大。","选一个一直回避的话题，这周聊一次。"],[0,"待对齐","","#8a6a3a","待调频","距离大于连结，多个维度都在发出需要关注的信号。","今天就做一件小事：告诉对方你欣赏 TA 的一点。"]];
 const TIPS={"深度沟通":"试试每周定一个「无手机聊天时间」，哪怕15分钟。","修复能力":"下次争吵后，先说「我感到…」而不是「你总是…」。","共同体验":"这个月一起做一件从没做过的事。","价值契合":"各自写下「五年后理想生活」，然后互相分享。","情绪支持":"在对方低落时先问「你需要倾听还是建议？」","爱意表达":"今天认真告诉对方你欣赏 TA 的一点。","整体满意":"聊聊：这段关系里最需要改善什么？"};
@@ -1559,38 +1659,85 @@ show('quiz');renderQ();
 }
 
 function renderQ(){
-  const qc=document.getElementById('qc');
-  if(qc){qc.style.animation='none';setTimeout(()=>qc.style.animation='fadeSlideIn .4s ease',10);}
-const q=QS[qi],pct=Math.round(qi/QS.length*100);
+const q=QS[qi], layer=Q_LAYERS[qi];
+const pct=Math.round(qi/QS.length*100);
+
+// 进度条颜色跟随层次
 document.getElementById('pb').style.width=pct+'%';
+document.getElementById('pb').style.background='linear-gradient(90deg,'+layer.color+','+layer.color+'aa)';
 document.getElementById('pn').innerHTML=(qi+1)+'<span style="opacity:.4">/'+QS.length+'</span>';
-document.getElementById('ql').textContent='Q '+String(qi+1).padStart(2,'0');
+
+// 层次标签
+const ql=document.getElementById('ql');
+ql.textContent=layer.layer;
+ql.style.color=layer.color;
+ql.style.opacity='0.7';
+
+// 题目文字
 document.getElementById('qt').textContent=q.text;
-document.getElementById('qs').textContent=q.sub||'';
+
+// 引导语（替换原来的sub）
+const qs=document.getElementById('qs');
+if(q.guide){
+  qs.innerHTML='<span style="font-style:italic;opacity:.55">'+q.guide+'</span>'+(q.sub?'<br><span style="opacity:.45;font-size:.72rem">'+q.sub+'</span>':'');
+}else{
+  qs.textContent=q.sub||'';
+}
+
+// 题目区背景氛围
+const qbox=document.getElementById('qbox-wrap');
+if(qbox){
+  qbox.style.background=layer.bg;
+  qbox.style.borderColor=layer.accent;
+  qbox.style.transition='background .5s ease, border-color .5s ease';
+}
+
 document.getElementById('bb').classList.toggle('hidden',qi===0);
 const nb=document.getElementById('bn');nb.classList.toggle('ml-auto',qi===0);
 nb.textContent=qi===QS.length-1?'完成 →':'下一题 →';nb.disabled=false;
+nb.style.background=qi===QS.length-1
+  ?'linear-gradient(135deg,'+layer.color+','+layer.color+'cc)'
+  :(R==='B'?'linear-gradient(135deg,#a07ed0,#7a5a7a)':'linear-gradient(135deg,#4a7a5a,#6a7a6a)');
+
 if(q.t==='slider'){
-document.getElementById('sa').classList.remove('hidden');
-document.getElementById('ca').classList.add('hidden');
-const s=document.getElementById('slider');s.min=q.min;s.max=q.max;s.step=q.step;
-const v=ans[qi]!=null?ans[qi]:q.def;s.value=sv=v;
-document.getElementById('sn').textContent=v;
-document.getElementById('sn').className='slider-num'+(R==='B'?' purple':'');
-document.getElementById('su').textContent=' '+q.unit;
-updTrack(v,q.min,q.max);
+  document.getElementById('sa').classList.remove('hidden');
+  document.getElementById('ca').classList.add('hidden');
+  const s=document.getElementById('slider');s.min=q.min;s.max=q.max;s.step=q.step;
+  const v=ans[qi]!=null?ans[qi]:q.def;s.value=sv=v;
+  document.getElementById('sn').textContent=v;
+  document.getElementById('sn').className='slider-num'+(R==='B'?' purple':'');
+  document.getElementById('su').textContent=' '+q.unit;
+  updTrack(v,q.min,q.max);
+
+  // 情感标签
+  const labelsEl=document.getElementById('slider-labels');
+  if(labelsEl && q.labels){
+    labelsEl.innerHTML=q.labels.map(l=>'<span style="font-size:.65rem;color:'+layer.color+';opacity:.55;flex:1;text-align:center">'+l+'</span>').join('');
+    labelsEl.style.display='flex';
+  } else if(labelsEl){
+    labelsEl.style.display='none';
+  }
 }else{
-document.getElementById('sa').classList.add('hidden');
-const area=document.getElementById('ca');area.classList.remove('hidden');area.innerHTML='';
-const cls=R==='B'?'sel-b':'sel-a';
-q.opts.forEach(([txt,sc],i)=>{
-const b=document.createElement('button');
-b.className='opt'+(ans[qi]===sc?' '+cls:'');b.style.animationDelay=i*.06+'s';
-b.innerHTML='<span class="opt-radio"></span><span class="opt-txt">'+txt+'</span>';
-b.onclick=()=>{ans[qi]=sc;area.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel-a','sel-b'));b.classList.add(cls)};
-area.appendChild(b);
-});
+  document.getElementById('sa').classList.add('hidden');
+  const area=document.getElementById('ca');area.classList.remove('hidden');area.innerHTML='';
+  const cls=R==='B'?'sel-b':'sel-a';
+  q.opts.forEach(([txt,sc],i)=>{
+    const b=document.createElement('button');
+    b.className='opt'+(ans[qi]===sc?' '+cls:'');b.style.animationDelay=i*.06+'s';
+    // 选中时用层次色
+    b.innerHTML='<span class="opt-radio"></span><span class="opt-txt">'+txt+'</span>';
+    b.onclick=()=>{
+      ans[qi]=sc;
+      area.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel-a','sel-b'));
+      b.classList.add(cls);
+    };
+    area.appendChild(b);
+  });
 }
+
+// 题目切换动画
+const qbox2=document.querySelector('#quiz .q-box');
+if(qbox2){qbox2.style.animation='none';void qbox2.offsetWidth;qbox2.style.animation='fadeSlideIn .4s ease';}
 }
 function onSlide(v){sv=+v;document.getElementById('sn').textContent=v;updTrack(v,QS[qi].min,QS[qi].max)}
 function updTrack(v,mn,mx){const p=((v-mn)/(mx-mn))*100;document.getElementById('slider').style.background='linear-gradient(to right,'+(R==='B'?'#7a5a7a':'#5a7a5a')+' '+p+'%,rgba(90,122,90,.15) '+p+'%)'}
