@@ -1251,16 +1251,60 @@ button:focus{outline:none!important;box-shadow:none!important}
   7 个问题<br>照见你们的频率
 </h1>
 
-<!-- 双圆图标 - 更鲜明 -->
-<div style="margin:28px 0;text-align:center">
-  <svg width="120" height="80" viewBox="0 0 120 80" fill="none">
-    <circle cx="36" cy="22" r="10" fill="rgba(90,122,90,.2)" stroke="#5a7a5a" stroke-width="1.5"/>
-    <path d="M18 60 C18 44 54 44 54 60" fill="rgba(90,122,90,.1)" stroke="#5a7a5a" stroke-width="1.5" stroke-linecap="round"/>
-    <circle cx="84" cy="22" r="10" fill="rgba(122,90,122,.2)" stroke="#7a5a7a" stroke-width="1.5"/>
-    <path d="M66 60 C66 44 102 44 102 60" fill="rgba(122,90,122,.1)" stroke="#7a5a7a" stroke-width="1.5" stroke-linecap="round"/>
-    <path d="M54 38 Q60 32 66 38" stroke="#a08090" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.5"/>
-    <path d="M57.5 31.5 C57.5 29,60 27,60 27 C60 27,62.5 29,62.5 31.5 C62.5 34.5,60 37,60 37 C60 37,57.5 34.5,57.5 31.5Z" fill="#a08090" opacity="0.45"/>
-  </svg>
+<!-- 双树图标 - 对齐卡牌设计语言 -->
+<div style="margin:24px 0 20px;text-align:center">
+<svg width="180" height="120" viewBox="0 0 180 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="glow-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5a7a5a" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5a7a5a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow-p" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#7a5a7a" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#7a5a7a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- 绿树光晕 -->
+  <ellipse cx="52" cy="52" rx="38" ry="42" fill="url(#glow-g)"/>
+  <!-- 紫树光晕 -->
+  <ellipse cx="128" cy="52" rx="38" ry="42" fill="url(#glow-p)"/>
+
+  <!-- 绿树（左，发起方）-->
+  <!-- 树干 -->
+  <rect x="49" y="82" width="6" height="28" rx="2" fill="#5a7a5a" opacity="0.35"/>
+  <!-- 树冠三层 -->
+  <polygon points="52,18 34,52 70,52" fill="#5a7a5a" opacity="0.18"/>
+  <polygon points="52,30 30,62 74,62" fill="#5a7a5a" opacity="0.22"/>
+  <polygon points="52,42 28,74 76,74" fill="#5a7a5a" opacity="0.28"/>
+  <!-- 树冠描边 -->
+  <polygon points="52,18 34,52 70,52" fill="none" stroke="#5a7a5a" stroke-width="1" opacity="0.5"/>
+  <polygon points="52,30 30,62 74,62" fill="none" stroke="#5a7a5a" stroke-width="1" opacity="0.45"/>
+  <polygon points="52,42 28,74 76,74" fill="none" stroke="#5a7a5a" stroke-width="1.2" opacity="0.55"/>
+  <!-- 绿树标签 -->
+  <text x="52" y="116" text-anchor="middle" font-family="sans-serif" font-size="8" letter-spacing="1.5" fill="#5a7a5a" opacity="0.55">深 林</text>
+
+  <!-- 紫树（右，受邀方）-->
+  <!-- 树干 -->
+  <rect x="125" y="82" width="6" height="28" rx="2" fill="#7a5a7a" opacity="0.35"/>
+  <!-- 树冠三层 -->
+  <polygon points="128,18 110,52 146,52" fill="#7a5a7a" opacity="0.18"/>
+  <polygon points="128,30 106,62 150,62" fill="#7a5a7a" opacity="0.22"/>
+  <polygon points="128,42 104,74 152,74" fill="#7a5a7a" opacity="0.28"/>
+  <!-- 树冠描边 -->
+  <polygon points="128,18 110,52 146,52" fill="none" stroke="#7a5a7a" stroke-width="1" opacity="0.5"/>
+  <polygon points="128,30 106,62 150,62" fill="none" stroke="#7a5a7a" stroke-width="1" opacity="0.45"/>
+  <polygon points="128,42 104,74 152,74" fill="none" stroke="#7a5a7a" stroke-width="1.2" opacity="0.55"/>
+  <!-- 紫树标签 -->
+  <text x="128" y="116" text-anchor="middle" font-family="sans-serif" font-size="8" letter-spacing="1.5" fill="#7a5a7a" opacity="0.55">幽 兰</text>
+
+  <!-- 中间连接线（频率波纹）-->
+  <path d="M76 74 Q90 64 104 74" stroke="#a08090" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.3"/>
+  <path d="M80 66 Q90 58 100 66" stroke="#a08090" stroke-width="0.8" fill="none" stroke-linecap="round" opacity="0.22"/>
+  <!-- 中心菱形 -->
+  <path d="M90 54 L94 60 L90 66 L86 60 Z" fill="#a08090" opacity="0.25"/>
+  <path d="M90 54 L94 60 L90 66 L86 60 Z" fill="none" stroke="#a08090" stroke-width="0.8" opacity="0.4"/>
+</svg>
 </div>
 
 <!-- 副标题 -->
@@ -1639,7 +1683,7 @@ function err(m){const e=document.getElementById('err');e.textContent=m;setTimeou
 function startA(){
 R='A';C=mkCode();ans=Array(QS.length).fill(null);qi=0;sv=0;
 document.getElementById('rd').style.background='#5a7a5a';
-document.getElementById('rl').textContent='深林（发起方）';
+document.getElementById('rl').innerHTML='<svg width="10" height="14" viewBox="0 0 10 14" style="vertical-align:middle;margin-right:4px"><polygon points="5,0 0,6 10,6" fill="#5a7a5a" opacity="0.7"/><polygon points="5,3 0,9 10,9" fill="#5a7a5a" opacity="0.8"/><rect x="4" y="9" width="2" height="5" rx="1" fill="#5a7a5a" opacity="0.5"/></svg>深林（发起方）';
 document.getElementById('bn').className='btn-next rose ml-auto';
 show('quiz');renderQ();
 }
@@ -1653,7 +1697,7 @@ const ba=await dbRead(c,'B');
 if(ba){R='A';C=c;myS=aa;theirS=ba;renderResult();return}
 R='B';C=c;ans=Array(QS.length).fill(null);qi=0;sv=0;
 document.getElementById('rd').style.background='#7a5a7a';
-document.getElementById('rl').textContent='幽兰（受邀方）';
+document.getElementById('rl').innerHTML='<svg width="10" height="14" viewBox="0 0 10 14" style="vertical-align:middle;margin-right:4px"><polygon points="5,0 0,6 10,6" fill="#7a5a7a" opacity="0.7"/><polygon points="5,3 0,9 10,9" fill="#7a5a7a" opacity="0.8"/><rect x="4" y="9" width="2" height="5" rx="1" fill="#7a5a7a" opacity="0.5"/></svg>幽兰（受邀方）';
 document.getElementById('bn').className='btn-next purple ml-auto';
 show('quiz');renderQ();
 }
