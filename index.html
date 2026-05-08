@@ -2328,23 +2328,35 @@ function generatePremiumInsight(sA, sB) {
     h += '</div>';
   }
 
-  // 定制对话问题
+  // 定制对话问题（5个，带背景说明）
   h += '<div style="margin-bottom:22px">';
   h += '<div style="font-size:.75rem;font-weight:600;color:#4a3a6a;margin-bottom:10px;display:flex;align-items:center;gap:6px">';
   h += '<span style="width:18px;height:18px;border-radius:50%;background:rgba(122,90,122,.1);display:inline-flex;align-items:center;justify-content:center;font-size:.6rem">💬</span>为你们量身定制的对话</div>';
-  getConvoQuestions(sorted.slice(0,3).map(x=>x.d)).forEach((q,i)=>{
-    h += '<div style="padding:14px;background:rgba(122,90,122,.04);border-left:3px solid rgba(122,90,122,.18);border-radius:0 10px 10px 0;margin-bottom:10px">';
-    h += '<div style="font-size:.66rem;color:rgba(90,70,90,.38);margin-bottom:4px;letter-spacing:.06em">问题 '+(i+1)+'</div>';
-    h += '<div style="font-size:.82rem;color:#3a2a4a;line-height:1.85;font-style:italic">「'+q+'」</div></div>';
+  h += '<div style="font-size:.72rem;color:rgba(90,70,90,.4);line-height:1.7;margin-bottom:14px">基于你们的频率差异，这5个问题是最值得聊的。找一个安静的晚上，一次聊一个。</div>';
+  getConvoQuestions(sorted.slice(0,5).map(x=>x.d)).forEach((item,i)=>{
+    h += '<div style="padding:16px;background:rgba(122,90,122,.04);border-left:3px solid rgba(122,90,122,.18);border-radius:0 12px 12px 0;margin-bottom:12px">';
+    h += '<div style="font-size:.66rem;color:rgba(90,70,90,.38);margin-bottom:6px;letter-spacing:.06em">问题 '+(i+1)+'</div>';
+    h += '<div style="font-size:.84rem;color:#3a2a4a;line-height:1.85;font-style:italic;margin-bottom:8px">「'+item.q+'」</div>';
+    h += '<div style="font-size:.72rem;color:rgba(90,70,90,.45);line-height:1.7;padding-top:8px;border-top:1px solid rgba(122,90,122,.08)">'+item.why+'</div>';
+    h += '</div>';
   });
   h += '</div>';
 
   // 最终画像
   const combo = getComboType(combined, sorted[0].df);
-  h += '<div style="background:linear-gradient(135deg,rgba(90,122,90,.05),rgba(122,90,122,.05));border:1px solid rgba(122,90,122,.1);border-radius:14px;padding:20px;text-align:center">';
+  h += '<div style="background:linear-gradient(135deg,rgba(90,122,90,.05),rgba(122,90,122,.05));border:1px solid rgba(122,90,122,.1);border-radius:14px;padding:20px;text-align:center;margin-bottom:20px">';
   h += '<div style="font-size:.66rem;letter-spacing:.12em;color:rgba(90,70,90,.38);margin-bottom:10px">你 们 的 频 率 组 合</div>';
   h += '<div style="font-family:\'Playfair Display\',serif;font-size:1.1rem;color:#3a2a4a;margin-bottom:10px">'+combo.name+'</div>';
   h += '<div style="font-size:.8rem;color:rgba(60,40,80,.65);line-height:1.9">'+combo.desc+'</div></div>';
+
+  // 关系预测板块
+  const prediction = getRelationshipPrediction(combined, sorted, sA, sB);
+  h += '<div style="margin-bottom:22px">';
+  h += '<div style="font-size:.75rem;font-weight:600;color:#3a4a3a;margin-bottom:12px;display:flex;align-items:center;gap:6px">';
+  h += '<span style="width:18px;height:18px;border-radius:50%;background:rgba(90,122,90,.1);display:inline-flex;align-items:center;justify-content:center;font-size:.6rem">◎</span>关系走向预测</div>';
+  h += '<div style="font-size:.72rem;color:rgba(90,70,90,.4);line-height:1.7;margin-bottom:14px">基于你们7个维度的数据，以及关系研究中的常见模式。</div>';
+  h += prediction;
+  h += '</div>';
 
   h += '</div>';
   return h;
@@ -2352,57 +2364,185 @@ function generatePremiumInsight(sA, sB) {
 
 function getPortrait(scores, name) {
   const n = name || '你';
-  const pts = [];
-  if (scores[0] >= 70) pts.push(n+'渴望高频的深度对话，言语是感受连接的核心方式');
-  else if (scores[0] >= 40) pts.push(n+'重视偶尔的深度交流，不需要每天都聊到很深的地方');
-  else pts.push(n+'更多通过陪伴和行动感受连接，不需要大量的语言表达');
+  const comm = scores[0], repair = scores[1], exp = scores[2], val = scores[3], emo = scores[4], love = scores[5], invest = scores[6];
 
-  if (scores[1] >= 80) pts.push('遇到摩擦时希望快速和解，冷战会带来明显的焦虑');
-  else if (scores[1] >= 50) pts.push('需要一点时间冷静，但不倾向于长期逃避');
-  else pts.push('需要较长时间消化冲突，独处是修复情绪的方式');
+  // 核心连接方式
+  let core = '';
+  if (comm >= 75 && love >= 75) core = n + '通过语言建立连接——深度对话和被说出口的爱，是感受到"真实存在"的方式。沉默对' + n + '来说不是安全，而是距离。';
+  else if (comm >= 75 && love < 50) core = n + '渴望深度对话，但不太习惯主动表达爱意。' + n + '更像一个倾听者——愿意接住对方，但自己的感受常常藏在行动里，等待被看见。';
+  else if (comm < 50 && love >= 75) core = n + '用语言表达爱，但不需要太多深度对话。' + n + '的爱是具体的、日常的——一句"我爱你"比一次长谈更让' + n + '感到踏实。';
+  else core = n + '更多通过陪伴和行动感受连接，不需要大量的语言来确认关系的存在。安静地在一起，对' + n + '来说就是一种完整。';
 
-  if (scores[5] >= 80) pts.push('爱意表达对'+n+'很重要，被说出来的爱是真实存在的证明');
-  else if (scores[5] >= 45) pts.push('行动和语言表达都能接受，不是特别执着于其中一种');
-  else pts.push(n+'习惯用行动而非言语表达爱，主动开口不是自然的事');
+  // 冲突模式
+  let conflict = '';
+  if (repair >= 80) conflict = '遇到摩擦时，' + n + '的本能是快速修复——冷战带来的不确定感会让' + n + '焦虑，甚至会主动打破僵局，哪怕还没完全想清楚。';
+  else if (repair >= 55) conflict = '冲突之后，' + n + '需要一点时间冷静，但不会无限期回避。' + n + '的节奏是：先消化，再靠近。';
+  else conflict = n + '需要较长时间处理冲突带来的情绪。独处不是逃避，而是' + n + '修复自己的方式——在准备好之前，被催促反而会让' + n + '关上门。';
 
-  if (scores[6] >= 70) pts.push(n+'愿意为这段关系深度投入，它是生活中很重要的部分');
-  else pts.push(n+'愿意适度投入，同时需要保有属于自己的空间和节奏');
+  // 投入状态
+  let inv = '';
+  if (invest >= 75) inv = '此刻，' + n + '愿意为这段关系深度投入。它在' + n + '的生活里占据重要位置——' + n + '不只是在参与，而是在建造。';
+  else if (invest >= 45) inv = n + '愿意适度投入，同时需要保有属于自己的空间和节奏。这不是距离，而是' + n + '保持自我的方式。';
+  else inv = '目前，' + n + '在这段关系里保持着一定的距离感。这可能是保护，也可能是还在观察——' + n + '需要足够的安全感，才会真正打开。';
 
-  return pts.join('；') + '。';
+  return core + '<br><br>' + conflict + '<br><br>' + inv;
 }
 
 function getFrictionDesc(dim, a, b, nA, nB) {
+  const hi = a > b ? nA : nB;
+  const lo = a > b ? nB : nA;
+  const hiV = Math.max(a,b), loV = Math.min(a,b);
+  const gap = hiV - loV;
+
   const map = {
-    '深度沟通': nA+'期望的深聊频率打了'+a+'分，'+nB+'是'+b+'——一方渴望的深谈，对另一方来说可能是"太沉重"',
-    '修复能力': nA+'希望以'+a+'分的速度和好，'+nB+'是'+b+'——一方想快速解决，另一方需要更多时间消化',
-    '共同体验': nA+'对新鲜体验的期待是'+a+'，'+nB+'是'+b+'——对"有趣"的定义不同，容易让一方觉得无聊或疲惫',
-    '价值契合': nA+'对价值观一致的重视程度是'+a+'，'+nB+'是'+b+'——遇到重大决策时，这个差距会被放大',
-    '情绪支持': nA+'需要的支持方式是'+a+'分，'+nB+'是'+b+'——你们对"被支持"的理解可能完全不同',
-    '爱意表达': nA+'对爱意表达的态度是'+a+'，'+nB+'是'+b+'——一方在等待被表达，另一方觉得懂得就够了',
-    '整体契合': nA+'的投入意愿是'+a+'分，'+nB+'是'+b+'——投入落差会带来"我更在乎"的委屈感'
+    '深度沟通': {
+      surface: nA + '对深度对话的渴望打了 ' + a + ' 分，' + nB + ' 是 ' + b + ' 分。',
+      root: hi + '把深度对话当作感受连接的核心方式；' + lo + '可能觉得"聊那么深"是一种压力，或者更习惯用行动而非语言来表达在乎。这不是谁的问题，而是两种不同的连接语言。',
+      action: '试试这个：下次' + hi + '想深聊时，先问一句"你现在有没有状态聊点认真的？"——给' + lo + '一个准备的空间，而不是突然进入深水区。'
+    },
+    '修复能力': {
+      surface: nA + '希望以 ' + a + ' 分的速度和好，' + nB + ' 是 ' + b + ' 分。',
+      root: hi + '在冲突后需要快速修复，冷战带来的不确定感会让' + hi + '焦虑；' + lo + '需要更长时间消化情绪，被催促反而会让' + lo + '更难开口。这是"追-逃"模式的经典来源。',
+      action: '约定一个"暂停信号"——当' + lo + '需要时间时，说"我需要X小时，X小时后我会来找你"。给' + hi + '一个确定的时间点，焦虑就会小很多。'
+    },
+    '共同体验': {
+      surface: nA + '对新鲜体验的期待是 ' + a + ' 分，' + nB + ' 是 ' + b + ' 分。',
+      root: hi + '通过新体验感受关系的活力，没有新鲜感会让' + hi + '觉得关系在原地踏步；' + lo + '在熟悉的事物里感到安全，被频繁拉去"新地方"反而会消耗能量。',
+      action: '每月一次"' + hi + '策划"的新体验，但规模和强度由' + lo + '来把关。这样' + hi + '有了期待，' + lo + '不会觉得被折腾。'
+    },
+    '价值契合': {
+      surface: nA + '对价值观一致的重视程度是 ' + a + ' 分，' + nB + ' 是 ' + b + ' 分。',
+      root: hi + '需要在核心议题上感受到"我们是同一类人"；' + lo + '可能觉得差异没那么重要，或者更相信"求同存异"。这个差距在日常不明显，但遇到重大决策（钱、未来、生活方式）时会被放大。',
+      action: '做一次"价值观排序"：各自列出5件"绝对不妥协"的事，然后对比。找到真正的底线，而不是猜测对方的底线。'
+    },
+    '情绪支持': {
+      surface: nA + '需要的支持方式打了 ' + a + ' 分，' + nB + ' 是 ' + b + ' 分。',
+      root: hi + '在低落时需要被陪伴、被倾听，沉默和解决方案都不够；' + lo + '可能更习惯用"帮你想办法"来表达在乎，或者需要独处来恢复能量。两种方式都是爱，但接收方感受不到。',
+      action: '低落时直接说出来："我现在需要的是你陪着我，不用说什么。"或者："我需要一个人待一会儿，不是因为你。"——把需求说清楚，比让对方猜更有效。'
+    },
+    '爱意表达': {
+      surface: nA + '对爱意表达的态度是 ' + a + ' 分，' + nB + ' 是 ' + b + ' 分。',
+      root: hi + '需要爱被说出来——语言是确认关系真实存在的方式；' + lo + '可能觉得"懂得就好"，或者主动开口不是自然的事。结果是：' + hi + '在等待，' + lo + '觉得自己已经表达了。',
+      action: '不是要求' + lo + '变成另一个人，而是找到' + lo + '自然的表达方式——可能是一条消息，可能是一个动作。让' + hi + '知道"这就是我在说我爱你"。'
+    },
+    '整体契合': {
+      surface: nA + '的投入意愿是 ' + a + ' 分，' + nB + ' 是 ' + b + ' 分。',
+      root: '投入落差是关系里最容易产生委屈的地方——' + hi + '可能觉得自己付出更多，' + lo + '可能觉得被期待太多。这不一定是感情深浅的问题，更多是两个人当下状态和需求的差异。',
+      action: '直接问对方："你现在对我们的期待是什么？"不是质问，而是真的想知道。很多投入落差，是因为从来没有说清楚各自的期待。'
+    }
   };
-  return map[dim] || (nA+'是'+a+'分，'+nB+'是'+b+'分');
+
+  const item = map[dim] || map['整体契合'];
+  return '<div style="margin-bottom:6px;font-size:.78rem;color:#5a3010;opacity:.7">' + item.surface + '</div>'
+    + '<div style="margin-bottom:8px;font-size:.8rem;color:#4a2a10;line-height:1.85">' + item.root + '</div>'
+    + '<div style="padding:10px 12px;background:rgba(230,140,60,.08);border-radius:8px;font-size:.76rem;color:#6a3a10;line-height:1.8">'
+    + '<span style="font-weight:600;letter-spacing:.04em">本周可以做的一件事：</span><br>' + item.action + '</div>';
 }
 
 function getConvoQuestions(topDims) {
   const qMap = {
-    '深度沟通': '对你来说，什么样的对话叫做"真正聊到心里"？可以给我举一个例子吗？',
-    '修复能力': '我们闹别扭的时候，你内心最真实的感受是什么？那个时刻你最需要我做什么？',
-    '共同体验': '你有没有一直想做但还没做的事？如果我们一起去，你觉得会是什么感觉？',
-    '价值契合': '有什么是你绝对不会妥协的？它对你这么重要，是因为什么？',
-    '情绪支持': '下次你很低落的时候，你希望我怎么回应？还是你更想先一个人待着？',
-    '爱意表达': '我做什么的时候，你最能感受到被爱？有一件具体的事吗？',
-    '整体契合': '你对我们之间的连接，有什么期待是还没说出口的？'
+    '深度沟通': {
+      q: '对你来说，什么样的对话叫做"真正聊到心里"？可以给我举一个例子吗？',
+      why: '帮助你们对齐"深度"的定义——很多时候一方觉得已经在深聊，另一方还没感受到。'
+    },
+    '修复能力': {
+      q: '我们闹别扭的时候，你内心最真实的感受是什么？那个时刻你最需要我做什么？',
+      why: '冲突后的需求往往说不出口，但说出来之后，很多"追-逃"模式就会自然松动。'
+    },
+    '共同体验': {
+      q: '你有没有一直想做但还没做的事？如果我们一起去，你觉得会是什么感觉？',
+      why: '让渴望新鲜感的一方说出具体的期待，而不是让另一方一直猜。'
+    },
+    '价值契合': {
+      q: '有什么是你绝对不会妥协的？它对你这么重要，是因为什么？',
+      why: '找到真正的底线，而不是在重大决策时才发现彼此的差距。'
+    },
+    '情绪支持': {
+      q: '下次你很低落的时候，你希望我怎么回应？还是你更想先一个人待着？',
+      why: '把支持方式说清楚，比让对方猜测更有效，也更不容易让人感到委屈。'
+    },
+    '爱意表达': {
+      q: '我做什么的时候，你最能感受到被爱？有一件具体的事吗？',
+      why: '爱的语言因人而异——知道对方的语言，才能真正被接收到。'
+    },
+    '整体契合': {
+      q: '你对我们之间的连接，有什么期待是还没说出口的？',
+      why: '很多关系里的委屈，来自从未被说出口的期待。这个问题打开的，往往是最重要的对话。'
+    }
   };
+
+  const fallback = [
+    { q: '你上一次感到真正被我看见，是什么时候？', why: '被看见的感受是关系里最深的滋养，也是最容易被忽略的。' },
+    { q: '如果可以改变我们之间的一件事，你希望是什么？', why: '一个安全的方式，说出那些平时不好意思开口的期待。' },
+    { q: '你觉得我们在哪件事上最像彼此？', why: '从相似之处出发，往往比从差异出发更容易打开真实的对话。' }
+  ];
+
   const result = [];
   const used = new Set();
   topDims.forEach(d => {
     if (qMap[d] && !used.has(d)) { result.push(qMap[d]); used.add(d); }
   });
-  // 补到3个
-  const fallback = ['你觉得我们在哪件事上最像彼此？', '你上一次感到真正被我看见，是什么时候？', '如果可以改变我们之间的一件事，你希望是什么？'];
-  fallback.forEach(q => { if (result.length < 3) result.push(q); });
-  return result.slice(0,3);
+  fallback.forEach(q => { if (result.length < 5) result.push(q); });
+  return result.slice(0, 5);
+}
+
+function getRelationshipPrediction(combined, sorted, sA, sB) {
+  const maxGap = sorted[0].df;
+  const invest = Math.round((sA[6] + sB[6]) / 2);
+  const repair = Math.round((sA[1] + sB[1]) / 2);
+  const investGap = Math.abs(sA[6] - sB[6]);
+
+  let h = '';
+
+  // 优势区
+  const strengths = [];
+  if (repair >= 65) strengths.push('修复能力强——你们不容易让问题积累成暗伤');
+  if (invest >= 65 && investGap <= 20) strengths.push('投入意愿接近——不容易出现"我更在乎"的委屈');
+  const topAligned2 = sorted.filter(g => g.df <= 15).slice(0, 2);
+  topAligned2.forEach(g => strengths.push('在「' + g.d + '」上高度一致，这是关系稳定的锚点'));
+
+  if (strengths.length > 0) {
+    h += '<div style="padding:14px 16px;background:rgba(90,122,90,.05);border:1px solid rgba(90,122,90,.12);border-radius:12px;margin-bottom:10px">';
+    h += '<div style="font-size:.72rem;font-weight:600;color:#3a5a3a;margin-bottom:8px;letter-spacing:.04em">▸ 稳定基础</div>';
+    strengths.forEach(s => {
+      h += '<div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:5px"><span style="color:#5a7a5a;font-size:.7rem;margin-top:2px">✓</span><span style="font-size:.78rem;color:#3a4a3a;line-height:1.75">' + s + '</span></div>';
+    });
+    h += '</div>';
+  }
+
+  // 风险区
+  const risks = [];
+  if (investGap >= 30) risks.push('投入落差 ' + investGap + ' 分——如果不说出来，容易累积成委屈');
+  if (maxGap >= 40) risks.push('「' + sorted[0].d + '」差距最大，是最需要对话的议题');
+  if (repair < 50) risks.push('冲突修复较慢——需要主动建立暂停和修复的约定');
+
+  if (risks.length > 0) {
+    h += '<div style="padding:14px 16px;background:rgba(230,140,60,.05);border:1px solid rgba(230,140,60,.15);border-radius:12px;margin-bottom:10px">';
+    h += '<div style="font-size:.72rem;font-weight:600;color:#7a4a1a;margin-bottom:8px;letter-spacing:.04em">▸ 需要关注</div>';
+    risks.forEach(r => {
+      h += '<div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:5px"><span style="color:#e68c3c;font-size:.7rem;margin-top:2px">⚡</span><span style="font-size:.78rem;color:#5a3a1a;line-height:1.75">' + r + '</span></div>';
+    });
+    h += '</div>';
+  }
+
+  // 总体走向
+  let outlook = '';
+  if (combined >= 75 && maxGap <= 25) {
+    outlook = '你们目前的频率状态很好。主要的挑战不是差距，而是如何在同频里保持各自的独特性——不要因为太相似而失去边界。';
+  } else if (combined >= 60) {
+    outlook = '扎实的基础加上几个值得关注的差距。这种组合最常见，也最有成长空间。差距本身不是问题，重要的是你们愿不愿意把它们拿出来聊——拿出来聊的关系，会越来越好。';
+  } else if (combined >= 45) {
+    outlook = '你们之间有真实的吸引，也有需要认真面对的频率错位。这个阶段是关键——问题放着不动会累积，但主动去聊，很多"无解"的差距其实有解。投入意愿是最重要的变量。';
+  } else {
+    outlook = '目前的频率差距较大。这不代表不合适，但代表你们需要比大多数人更多的沟通。如果双方都愿意，差距可以缩小；如果只有一方愿意，会很累。诚实地问自己：我们都想调频吗？';
+  }
+
+  h += '<div style="padding:14px 16px;background:rgba(122,90,122,.04);border:1px solid rgba(122,90,122,.1);border-radius:12px">';
+  h += '<div style="font-size:.72rem;font-weight:600;color:#4a3a6a;margin-bottom:8px;letter-spacing:.04em">▸ 整体走向</div>';
+  h += '<div style="font-size:.8rem;color:#3a2a4a;line-height:1.9">' + outlook + '</div>';
+  h += '</div>';
+
+  return h;
 }
 
 function getComboType(combined, maxGap) {
