@@ -1566,9 +1566,10 @@ button:focus{outline:none!important;box-shadow:none!important}
   <p style="font-size:.85rem;color:var(--faint);margin-bottom:20px">点击复制</p>
   
   <div style="display:flex;gap:12px;justify-content:center">
-    <button class="btn-copy" onclick="copyCode()" style="flex:1;max-width:160px;padding:12px 20px;background:#5a7a5a;color:white;border:none;border-radius:8px;cursor:pointer;font-size:.9rem;transition:all .2s">复制邀请码</button>
-    <button class="btn-copy" onclick="copyLink()" style="flex:1;max-width:160px;padding:12px 20px;background:white;color:#5a7a5a;border:2px solid #5a7a5a;border-radius:8px;cursor:pointer;font-size:.9rem;transition:all .2s">发送给TA</button>
+    <button class="btn-copy" onclick="copyCode()" style="flex:1;max-width:160px;padding:12px 20px;background:white;color:#5a7a5a;border:2px solid #5a7a5a;border-radius:8px;cursor:pointer;font-size:.9rem;transition:all .2s">复制邀请码</button>
+    <button class="btn-copy" onclick="copyLink()" style="flex:1;max-width:160px;padding:12px 20px;background:#5a7a5a;color:white;border:none;border-radius:8px;cursor:pointer;font-size:.9rem;transition:all .2s;font-weight:500">复制链接发给 TA →</button>
   </div>
+  <p style="font-size:.7rem;color:rgba(90,122,90,.4);margin-top:10px;letter-spacing:.02em">复制后直接粘贴到微信发给 TA</p>
 </div>
 
 <p style="font-size:.8rem;font-weight:500;letter-spacing:0.02em;color:var(--mid);margin-bottom:40px;line-height:1.7">TA 完成后，这里会自动打开你们的报告</p>
@@ -1585,6 +1586,7 @@ button:focus{outline:none!important;box-shadow:none!important}
 <div style="padding:20px 0;width:100%;overflow:hidden">
 
 <!-- 总分卡片 -->
+<div id="wait-notice"></div>
 <div class="score-card" style="background:linear-gradient(145deg,rgba(255,255,255,.75),rgba(242,236,255,.65));backdrop-filter:blur(20px);border:1px solid rgba(122,90,122,.1);border-radius:20px;padding:32px 24px;margin-bottom:20px;text-align:center;box-shadow:0 4px 24px rgba(122,90,122,.1)">
   <div class="score-label" style="font-size:.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(0,0,0,.4);margin-bottom:12px">关 系 频 率</div>
   <div id="rs" style="font-size:3.5rem;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-0.03em;background:linear-gradient(135deg,#5a7a5a,#7a5a7a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin:12px 0">0</div>
@@ -1983,17 +1985,31 @@ renderResult(unlocked);
 }catch(e){console.error('poll error',e);}
 },3000);
 }else{
+const pairData=await fetch(SB+'/rest/v1/pairs?code=eq.'+C+'&select=created_at',{headers:H}).then(r=>r.json());
+let waitMinutes=null;
+if(pairData&&pairData[0]&&pairData[0].created_at){
+  const created=new Date(pairData[0].created_at);
+  waitMinutes=Math.round((Date.now()-created.getTime())/60000);
+}
 theirS=await dbRead(C,'A');
 const unlocked=await checkUnlocked(C);
-renderResult(unlocked);
+renderResult(unlocked,waitMinutes);
 }
 }
 
 function copyCode(){navigator.clipboard.writeText(C).then(()=>showToast('邀请码已复制'))}
 function copyLink(){navigator.clipboard.writeText(location.origin+location.pathname+'?code='+C).then(()=>showToast('链接已复制，发给 TA 吧'))}
 
-function renderResult(unlocked){
+function renderResult(unlocked, waitMinutes){
 const sA=R==='A'?myS:theirS,sB=R==='A'?theirS:myS;
+// B方显示等待时间
+if(R==='B'&&waitMinutes!=null){
+  const wn=document.getElementById('wait-notice');
+  if(wn){
+    const txt=waitMinutes<1?'TA 刚刚完成，你来得正好':waitMinutes<60?'TA 等了你 '+waitMinutes+' 分钟':'TA 等了你超过 '+Math.floor(waitMinutes/60)+' 小时';
+    wn.innerHTML='<div style="text-align:center;padding:12px 0 4px;font-size:.78rem;color:rgba(90,70,90,.5);letter-spacing:.04em">'+txt+'</div>';
+  }
+}
 const tA=avg(sA),tB=avg(sB),combined=avg(sA.map((a,i)=>Math.round((a+sB[i])/2)));
 const pct=Math.min(99,Math.round(combined*.91+Math.sin(combined)*3));
 const pA=gp(tA),pB=gp(tB),pC=gp(combined);
@@ -2221,6 +2237,13 @@ async function unlockContent() {
   
   // 更新数据库解锁状态
   await fetch(SB+'/rest/v1/pairs?code=eq.'+C,{method:'PATCH',headers:H,body:JSON.stringify({unlocked:true})});
+  
+  // 加"通知TA"横幅
+  const notifyBanner = document.createElement('div');
+  notifyBanner.style.cssText='background:linear-gradient(135deg,rgba(90,122,90,.08),rgba(122,90,122,.08));border:1px solid rgba(122,90,122,.15);border-radius:12px;padding:14px 18px;margin:0 0 20px;display:flex;align-items:center;justify-content:space-between;gap:12px';
+  notifyBanner.innerHTML='<span style="font-size:.8rem;color:rgba(60,40,80,.65);line-height:1.6">报告已解锁<br><span style="font-size:.72rem;opacity:.7">让 TA 也来看看你们的频率</span></span>'
+    +'<button onclick="copyLink();this.textContent=\'已复制 ✓\';this.style.background=\'#5a7a5a\'" style="padding:8px 16px;background:#7a5a7a;color:white;border:none;border-radius:8px;font-size:.78rem;cursor:pointer;white-space:nowrap;flex-shrink:0">通知 TA →</button>';
+  ins.insertBefore(notifyBanner, ins.firstChild);
   
   // 2秒后显示反馈弹窗
   setTimeout(showFeedback,2000);
