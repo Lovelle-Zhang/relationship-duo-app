@@ -1863,7 +1863,7 @@ if(c.length<6){err('请输入完整的 6 位邀请码');return}
 const aa=await dbRead(c,'A');
 if(!aa){err('找不到这个邀请码');return}
 const ba=await dbRead(c,'B');
-if(ba){R='A';C=c;myS=aa;theirS=ba;renderResult();return}
+if(ba){R='B';C=c;myS=ba;theirS=aa;renderResult();return}
 R='B';C=c;ans=Array(QS.length).fill(null);qi=0;sv=0;
 document.getElementById('rd').style.background='#7a5a7a';
 document.getElementById('rl').innerHTML='<svg width="10" height="14" viewBox="0 0 10 14" style="vertical-align:middle;margin-right:4px"><polygon points="5,0 0,6 10,6" fill="#7a5a7a" opacity="0.7"/><polygon points="5,3 0,9 10,9" fill="#7a5a7a" opacity="0.8"/><rect x="4" y="9" width="2" height="5" rx="1" fill="#7a5a7a" opacity="0.5"/></svg>幽兰（受邀方）';
@@ -2024,10 +2024,10 @@ const ti=setInterval(()=>{
 },35);
 document.getElementById('rb').textContent=pct>=80?'比 '+pct+'% 的测试者更同频':pct>=60?'你们的频率还有对齐空间':'每一次沟通都在调频';
 document.getElementById('pa-e').textContent=R==='A'?(myName?myName[0]:'我'):(theirName?theirName[0]:'TA');
-document.getElementById('pa-l').textContent=R==='A'?(myName||'发起方'):(theirName||'受邀方');
+document.getElementById('pa-l').textContent=R==='A'?(myName||'发起方'):(theirName||'发起方');
 document.getElementById('pa-s').textContent=tA;
 document.getElementById('pb-e').textContent=R==='A'?(theirName?theirName[0]:'TA'):(myName?myName[0]:'我');
-document.getElementById('pb-l').textContent=R==='A'?(theirName||'受邀方'):(myName||'发起方');
+document.getElementById('pb-l').textContent=R==='A'?(theirName||'受邀方'):(myName||'受邀方');
 document.getElementById('pb-s').textContent=tB;
 drawRadar(sA,sB,280);
 const cmp=document.getElementById('tab-compare');
