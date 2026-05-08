@@ -1240,10 +1240,10 @@ button:focus{outline:none!important;box-shadow:none!important}
 <div class="wrap">
 
 <!-- ===== 引导页 ===== -->
-<div id="splash" class="screen" style="min-height:calc(100vh - 56px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 0 40px">
+<div id="splash" class="screen" style="min-height:calc(100vh - 56px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px 0 32px">
 
   <!-- 七维度森林 SVG -->
-  <div style="width:100%;max-width:420px;margin:0 auto 32px">
+  <div style="width:100%;max-width:420px;margin:0 auto 20px">
   <svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">
     <defs>
       <!-- 天空渐变 -->
@@ -1493,8 +1493,14 @@ button:focus{outline:none!important;box-shadow:none!important}
   已有 <b style="color:#5a7a5a;font-size:1.1rem;font-weight:600;font-variant-numeric:tabular-nums" id="couple-count">...</b> 对组合完成频率测试
 </p>
 
-<!-- 分隔线 -->
-<div style="width:60px;height:1px;background:linear-gradient(90deg,transparent,rgba(90,122,90,.3),transparent);margin:0 auto 32px"></div>
+<!-- 科学背书 -->
+<div style="max-width:340px;margin:0 auto 28px;padding:14px 16px;background:rgba(90,122,90,.04);border:1px solid rgba(90,122,90,.1);border-radius:10px">
+  <p style="font-size:.7rem;color:rgba(60,80,60,.55);line-height:1.85;text-align:center;margin:0">
+    测量维度参考 <b style="color:rgba(60,80,60,.7);font-weight:600">Gottman 研究所</b> 40 年关系研究<br>
+    及依恋理论（Bowlby）、爱的语言理论（Chapman）<br>
+    <span style="opacity:.7">· 数据仅用于生成你们的频率报告 ·</span>
+  </p>
+</div>
 
 <!-- A 发起测试 - 适当缩小 -->
 <button class="btn-main" onclick="startA()" style="width:100%;max-width:340px;margin:0 auto 14px;display:block;padding:14px;font-size:.88rem;font-weight:500;letter-spacing:-0.005em;background:#5a7a5a;color:white;border:none;border-radius:8px;cursor:pointer;transition:all .2s;font-weight:500">
@@ -1516,9 +1522,9 @@ button:focus{outline:none!important;box-shadow:none!important}
 <p style="margin-top:36px;text-align:center;font-size:.7rem;color:rgba(0,0,0,.4);letter-spacing:0.02em;line-height:1.8">
   双人同测 · 7 题 · 频率报告
 </p>
-<div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;font-size:.72rem;color:rgba(122,82,82,.5)">
+<div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;font-size:.72rem;color:rgba(90,80,90,.45)">
   <span style="color:#5a7a5a">✓</span>
-  <span>频率测量，不是算命</span>
+  <span>你们的答案彼此独立，结果才真实</span>
 </div>
 </div>
 
@@ -2286,6 +2292,7 @@ function generatePremiumInsight(sA, sB) {
   // SECTION 1: 频率画像
   h += '<div style="margin-bottom:28px">';
   h += '<div style="font-size:.68rem;letter-spacing:.14em;color:rgba(90,70,90,.38);text-align:center;margin-bottom:16px">你 们 各 自 的 频 率 画 像</div>';
+  h += '<div style="font-size:.7rem;color:rgba(90,70,90,.38);text-align:center;margin-bottom:18px;line-height:1.7">基于 Gottman 研究所依恋理论 · 爱的语言理论</div>';
   h += '<div style="background:linear-gradient(135deg,rgba(90,122,90,.06),rgba(90,122,90,.02));border:1px solid rgba(90,122,90,.12);border-radius:14px;padding:18px;margin-bottom:12px">';
   h += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><div style="width:8px;height:8px;border-radius:50%;background:#5a7a5a"></div>';
   h += '<span style="font-size:.78rem;font-weight:600;color:#3a5a3a;letter-spacing:.04em">'+_nA+'的频率</span></div>';
