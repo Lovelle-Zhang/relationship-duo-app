@@ -522,7 +522,7 @@ function makeCardSVG(card) {
   <line x1="22" y1="42" x2="64" y2="42" stroke="#7aaa88" stroke-width="0.8" opacity="0.4"/>
   <text x="22" y="74" font-family="serif" font-style="italic" font-size="13" fill="rgba(255,255,255,.32)" letter-spacing="0.5">${card.prompt}</text>
   ${card.text.split('\n').map((line, i) => `<text x="22" y="${118 + i*34}" font-size="20" letter-spacing="0.5" fill="rgba(255,255,255,.9)" font-family="sans-serif">${line}</text>`).join('')}
-  <image href="images/lin-watermark-green.png" x="190" y="296" width="30" height="30" opacity="0.32" style="filter:invert(1)"/>
+  <image href="images/lin-watermark-green.png" x="190" y="296" width="30" height="30" opacity="0.32"/>
 </svg>`;
   } else if (card.color === 'purple') {
     return `<svg width="220" height="308" viewBox="0 0 240 336" xmlns="http://www.w3.org/2000/svg">
