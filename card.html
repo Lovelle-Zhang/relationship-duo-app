@@ -156,9 +156,12 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
   inset: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 16px;
-  padding-bottom: 80px;
+  justify-content: flex-start;
+  gap: 20px;
+  padding: 0 24px 80px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
 }
 .duo-slot {
   display: flex;
@@ -166,11 +169,13 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
   align-items: center;
   gap: 10px;
   transition: opacity 0.3s;
+  flex-shrink: 0;
+  scroll-snap-align: center;
 }
 .duo-slot.inactive { opacity: 0.35; }
 .duo-slot .card-container {
-  width: min(160px, 42vw);
-  height: min(224px, 58.8vw);
+  width: min(280px, 72vw);
+  height: min(392px, 100.8vw);
 }
 .duo-label {
   font-size: 9px;
@@ -180,9 +185,10 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 .duo-slot.active .duo-label { color: rgba(255,255,255,0.55); }
 .duo-divider {
   width: 1px;
-  height: min(224px, 58.8vw);
+  height: min(392px, 100.8vw);
   background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.08), transparent);
   align-self: center;
+  flex-shrink: 0;
 }
 </style>
 </head>
