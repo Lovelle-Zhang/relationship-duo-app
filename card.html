@@ -384,7 +384,7 @@ function makeCardSVG(card) {
   <line x1="22" y1="42" x2="64" y2="42" stroke="#c47a7a" stroke-width="0.8" opacity="0.45"/>
   <text x="22" y="74" font-family="serif" font-style="italic" font-size="11" fill="rgba(255,255,255,.28)" letter-spacing="0.5">${card.prompt}</text>
   ${card.text.split('\n').map((line, i) => `<text x="22" y="${118 + i*30}" font-size="17" letter-spacing="0.5" fill="rgba(255,255,255,.88)" font-family="sans-serif">${line}</text>`).join('')}
-  <image href="images/lin-watermark-green.png" x="190" y="296" width="30" height="30" opacity="0.28" style="filter:invert(1)"/>
+  <image href="images/lin-watermark-green.png" x="20" y="296" width="30" height="30" opacity="0.28" style="filter:invert(1)"/>
 </svg>`;
   } else {
     // 特殊牌
@@ -403,7 +403,7 @@ function makeCardSVG(card) {
   <text x="120" y="178" text-anchor="middle" font-size="18" letter-spacing="0.5" fill="rgba(255,255,255,.85)" font-family="sans-serif">${card.text}</text>
   <text x="120" y="230" text-anchor="middle" font-family="serif" font-style="italic" font-size="12" fill="rgba(255,255,255,.25)" letter-spacing="1">${card.sub || ''}</text>
   <line x1="80" y1="244" x2="160" y2="244" stroke="rgba(200,170,100,.12)" stroke-width="0.6"/>
-  <image href="images/lin-watermark-green.png" x="190" y="296" width="30" height="30" opacity="0.22" style="filter:invert(1)"/>
+  <image href="images/lin-watermark-green.png" x="107" y="282" width="26" height="26" opacity="0.22" style="filter:invert(1)"/>
   <text x="120" y="320" text-anchor="middle" font-family="sans-serif" font-size="9" letter-spacing="3" fill="rgba(200,170,100,.2)">${card.id}</text>
 </svg>`;
   }
