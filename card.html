@@ -18,6 +18,7 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding-bottom: 80px;
   pointer-events: none;
 }
 
@@ -49,9 +50,9 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 /* 卡片容器 */
 .card-container {
   position: relative;
-  width: 220px;
-  height: 308px;
-  perspective: 800px;
+  width: min(280px, 72vw);
+  height: min(392px, 100.8vw);
+  perspective: 1000px;
   pointer-events: auto;
   cursor: pointer;
 }
