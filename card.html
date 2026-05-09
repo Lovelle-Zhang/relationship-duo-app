@@ -109,10 +109,80 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 }
 .btn-another:hover { color: rgba(255,255,255,0.7); }
 
-.card-type-label {
+/* 模式选择覆盖层 */
+.mode-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8,14,10,0.96);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  gap: 12px;
+}
+.mode-title {
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 24px;
+}
+.mode-btn {
+  width: 200px;
+  padding: 16px 0;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.7);
+  font-size: 14px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Noto Serif SC', serif;
+}
+.mode-btn:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.95);
+}
+.mode-btn.green { border-color: rgba(120,200,100,0.2); }
+.mode-btn.green:hover { background: rgba(90,160,80,0.12); border-color: rgba(120,200,100,0.4); }
+.mode-btn.purple { border-color: rgba(160,120,200,0.2); }
+.mode-btn.purple:hover { background: rgba(120,80,160,0.12); border-color: rgba(160,120,200,0.4); }
+
+/* 双人模式布局 */
+.duo-ui {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding-bottom: 80px;
+}
+.duo-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  transition: opacity 0.3s;
+}
+.duo-slot.inactive { opacity: 0.35; }
+.duo-slot .card-container {
+  width: min(160px, 42vw);
+  height: min(224px, 58.8vw);
+}
+.duo-label {
   font-size: 9px;
   letter-spacing: 3px;
-  color: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.25);
+}
+.duo-slot.active .duo-label { color: rgba(255,255,255,0.55); }
+.duo-divider {
+  width: 1px;
+  height: min(224px, 58.8vw);
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.08), transparent);
+  align-self: center;
 }
 </style>
 </head>
@@ -121,21 +191,52 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 <canvas id="bg"></canvas>
 
 <div class="back" onclick="window.location.href='forest.html'">← 林</div>
-<div class="top-label">今 日 对 话</div>
+<div class="top-label" id="topLabel">今 日 对 话</div>
 
-<div class="ui">
+<!-- 模式选择 -->
+<div class="mode-overlay" id="modeOverlay">
+  <div class="mode-title">选择模式</div>
+  <button class="mode-btn green" onclick="startMode('solo')">单人探索</button>
+  <button class="mode-btn purple" onclick="startMode('duo')">双人对话</button>
+</div>
+
+<!-- 单人模式 -->
+<div class="ui" id="soloUI" style="display:none">
   <div class="card-container" id="cardWrap">
     <div class="card-inner" id="cardInner">
-      <div class="card-face" id="cardFace">
-        <!-- SVG 卡片由 JS 渲染 -->
-      </div>
+      <div class="card-face" id="cardFace"></div>
     </div>
   </div>
 </div>
 
-<div class="actions">
+<!-- 双人模式 -->
+<div class="duo-ui" id="duoUI" style="display:none">
+  <div class="duo-slot" id="slotGreen">
+    <div class="card-container" onclick="duoDraw('green')">
+      <div class="card-inner" id="innerGreen">
+        <div class="card-face" id="faceGreen"></div>
+      </div>
+    </div>
+    <div class="duo-label" id="labelGreen">你</div>
+  </div>
+  <div class="duo-divider"></div>
+  <div class="duo-slot" id="slotPurple">
+    <div class="card-container" onclick="duoDraw('purple')">
+      <div class="card-inner" id="innerPurple">
+        <div class="card-face" id="facePurple"></div>
+      </div>
+    </div>
+    <div class="duo-label" id="labelPurple">TA</div>
+  </div>
+</div>
+
+<div class="actions" id="soloActions" style="display:none">
   <div class="card-type-label" id="typeLabel"></div>
   <button class="btn-another" onclick="drawCard()">再抽一张</button>
+</div>
+
+<div class="actions" id="duoActions" style="display:none">
+  <div class="card-type-label" id="duoTurnLabel"></div>
 </div>
 
 <script>
@@ -438,7 +539,83 @@ function drawCard() {
   }, 280);
 }
 
-drawCard();
+// ── 模式控制 ──
+const GREEN_CARDS = CARDS.filter(c => c.color === 'green');
+const PURPLE_CARDS = CARDS.filter(c => c.color === 'purple');
+
+let duoTurn = 'green'; // 当前轮到谁
+let lastGreenIdx = -1, lastPurpleIdx = -1;
+let isAnimatingGreen = false, isAnimatingPurple = false;
+
+function startMode(mode) {
+  document.getElementById('modeOverlay').style.display = 'none';
+  if (mode === 'solo') {
+    document.getElementById('soloUI').style.display = 'flex';
+    document.getElementById('soloActions').style.display = 'flex';
+    document.getElementById('topLabel').textContent = '今 日 对 话';
+    drawCard();
+  } else {
+    document.getElementById('duoUI').style.display = 'flex';
+    document.getElementById('duoActions').style.display = 'flex';
+    document.getElementById('topLabel').textContent = '双 人 对 话';
+    duoInit();
+  }
+}
+
+function duoInit() {
+  // 初始各抽一张
+  duoFlip('green', true);
+  duoFlip('purple', true);
+  updateDuoTurn();
+}
+
+function duoDraw(color) {
+  if (color !== duoTurn) return; // 不是你的轮次
+  duoFlip(color, false);
+  duoTurn = color === 'green' ? 'purple' : 'green';
+  updateDuoTurn();
+}
+
+function duoFlip(color, init) {
+  const isGreen = color === 'green';
+  if (isGreen && isAnimatingGreen) return;
+  if (!isGreen && isAnimatingPurple) return;
+  if (isGreen) isAnimatingGreen = true; else isAnimatingPurple = true;
+
+  const inner = document.getElementById(isGreen ? 'innerGreen' : 'innerPurple');
+  const face = document.getElementById(isGreen ? 'faceGreen' : 'facePurple');
+  const pool = isGreen ? GREEN_CARDS : PURPLE_CARDS;
+  let lastIdx = isGreen ? lastGreenIdx : lastPurpleIdx;
+
+  inner.classList.add('flipping');
+  setTimeout(() => {
+    let idx;
+    do { idx = Math.floor(Math.random() * pool.length); } while (idx === lastIdx && pool.length > 1);
+    if (isGreen) lastGreenIdx = idx; else lastPurpleIdx = idx;
+    face.innerHTML = makeCardSVG(pool[idx]);
+    inner.classList.remove('flipping');
+    setTimeout(() => {
+      if (isGreen) isAnimatingGreen = false; else isAnimatingPurple = false;
+    }, 560);
+  }, init ? 0 : 280);
+}
+
+function updateDuoTurn() {
+  const slotG = document.getElementById('slotGreen');
+  const slotP = document.getElementById('slotPurple');
+  const label = document.getElementById('duoTurnLabel');
+  if (duoTurn === 'green') {
+    slotG.className = 'duo-slot active';
+    slotP.className = 'duo-slot inactive';
+    label.textContent = '你 来 抽';
+  } else {
+    slotG.className = 'duo-slot inactive';
+    slotP.className = 'duo-slot active';
+    label.textContent = 'TA 来 抽';
+  }
+}
+
+// 单人模式 drawCard 已在上方定义，不自动调用
 </script>
 </body>
 </html>
