@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>林 Link · 双人频率测试</title>
+  <link rel="icon" type="image/png" href="https://www.zenfit.art/images/lin-watermark.png" />
+  <style>
+    :root {
+      --bg:#040a07;--surface:#060d09;--card:#08120a;
+      --border:rgba(255,255,255,0.055);--text:rgba(255,255,255,0.78);
+      --muted:rgba(255,255,255,0.32);--wood:#62b070;--wood2:#2d6b3a;--gold:#c4a255;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;overflow-x:hidden}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    body{background:var(--bg);color:var(--text);font-family:-apple-system,'PingFang SC','Hiragino Sans GB',sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
+    .page-wrap{animation:fadeIn .5s ease forwards}
+    body::before{content:'';position:fixed;inset:0;z-index:9;pointer-events:none;opacity:.022;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:22px 56px;background:rgba(4,10,7,.82);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+    .nav-back{font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:.18em;display:flex;align-items:center;gap:10px;transition:color .3s}
+    .nav-back::before{content:'←';font-size:14px}.nav-back:hover{color:var(--text)}
+    .nav-title{font-size:13px;font-weight:600;letter-spacing:.22em;color:rgba(255,255,255,.38);display:flex;align-items:center}
+    .nav-cta{padding:9px 24px;background:rgba(98,176,112,.1);color:var(--wood);border:1px solid rgba(98,176,112,.18);border-radius:100px;font-size:12px;letter-spacing:.1em;cursor:pointer;text-decoration:none;transition:background .3s}
+    .nav-cta:hover{background:rgba(98,176,112,.18)}
+    @media(max-width:640px){nav{padding:16px 20px}.nav-cta{display:none}.nav-title span{display:none}.nav-title img{margin-right:0}}
+
+    #hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 100px;position:relative;overflow:visible}
+    @media(max-width:640px){#hero{padding:100px 20px 80px}}
+    .hero-deep{position:absolute;inset:0;background:radial-gradient(ellipse 100% 70% at 50% 100%,rgba(45,107,58,.12) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 50% 50%,rgba(98,176,112,.05) 0%,transparent 60%)}
+
+    .hero-eyebrow{position:relative;z-index:1;font-size:10px;letter-spacing:.4em;color:var(--wood);opacity:.55;text-transform:uppercase;margin-bottom:52px}
+    .hero-char{position:relative;z-index:1;display:block;font-size:clamp(110px,24vw,220px);font-weight:900;line-height:1;letter-spacing:-.04em;background:linear-gradient(170deg,rgba(255,255,255,.95) 0%,rgba(98,176,112,.5) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px;padding-top:8px}
+    .hero-en{position:relative;z-index:1;display:block;font-size:clamp(12px,2vw,16px);letter-spacing:.22em;color:var(--muted);font-weight:300;margin-bottom:60px}
+    .hero-divline{position:relative;z-index:1;width:1px;height:52px;background:linear-gradient(to bottom,rgba(98,176,112,.25),transparent);margin:0 auto 44px}
+    .hero-tagline{position:relative;z-index:1;font-size:clamp(15px,2.4vw,20px);color:rgba(255,255,255,.36);font-weight:300;letter-spacing:.1em;line-height:2.1;max-width:380px;margin-bottom:52px}
+    .hero-tagline em{font-style:normal;color:rgba(255,255,255,.7)}
+    .hero-actions{position:relative;z-index:1;display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+    .btn-p{padding:13px 32px;background:rgba(98,176,112,.1);color:var(--wood);border:1px solid rgba(98,176,112,.2);border-radius:100px;font-size:12px;letter-spacing:.12em;cursor:pointer;text-decoration:none;transition:background .3s,border-color .3s}
+    .btn-p:hover{background:rgba(98,176,112,.18);border-color:rgba(98,176,112,.32)}
+    .btn-g{padding:13px 32px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:100px;font-size:12px;letter-spacing:.1em;cursor:pointer;text-decoration:none;transition:color .3s,border-color .3s}
+    .btn-g:hover{color:var(--text);border-color:rgba(255,255,255,.14)}
+    .scroll-hint{position:absolute;bottom:44px;left:50%;transform:translateX(-50%);z-index:1;display:flex;flex-direction:column;align-items:center;gap:10px;animation:float 3s ease-in-out infinite}
+    .scroll-hint-line{width:1px;height:44px;background:linear-gradient(to bottom,transparent,rgba(98,176,112,.2))}
+    .scroll-hint-dot{width:4px;height:4px;border-radius:50%;background:rgba(98,176,112,.3)}
+    @keyframes float{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)}}
+
+    .divider{height:1px;background:var(--border);max-width:1080px;margin:0 auto}
+    section{padding:120px 24px}
+    .inner{max-width:1080px;margin:0 auto}
+    .s-label{font-size:10px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:18px}
+    .s-title{font-size:clamp(26px,5vw,42px);font-weight:700;line-height:1.15;color:#fff;letter-spacing:-.02em}
+    .s-desc{margin-top:16px;font-size:14px;color:var(--muted);max-width:480px;line-height:2}
+    @media(max-width:640px){section{padding:80px 24px}}
+
+    /* HOW IT WORKS */
+    .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:60px}
+    @media(max-width:640px){.steps{grid-template-columns:1fr}}
+    .step{padding:40px 32px;background:var(--card);position:relative}
+    .step:first-child{border-radius:12px 0 0 12px}
+    .step:last-child{border-radius:0 12px 12px 0}
+    @media(max-width:640px){.step{border-radius:0!important}.step:first-child{border-radius:12px 12px 0 0!important}.step:last-child{border-radius:0 0 12px 12px!important}}
+    .step-num{font-size:11px;letter-spacing:.2em;color:rgba(98,176,112,.4);margin-bottom:20px}
+    .step-title{font-size:16px;font-weight:600;color:rgba(255,255,255,.82);margin-bottom:10px}
+    .step-desc{font-size:13px;color:var(--muted);line-height:1.9}
+    .step-accent{position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(98,176,112,.3),transparent)}
+
+    /* DIMENSIONS */
+    .dims{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:48px}
+    .dim{padding:24px;background:var(--card);border:1px solid var(--border);border-radius:10px;transition:border-color .3s}
+    .dim:hover{border-color:rgba(98,176,112,.2)}
+    .dim-icon{font-size:11px;letter-spacing:.15em;color:rgba(98,176,112,.5);margin-bottom:12px}
+    .dim-name{font-size:14px;font-weight:600;color:rgba(255,255,255,.78);margin-bottom:6px}
+    .dim-desc{font-size:12px;color:var(--muted);line-height:1.8}
+
+    /* UNLOCK */
+    .unlock-box{margin-top:60px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:48px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+    @media(max-width:640px){.unlock-box{grid-template-columns:1fr;padding:32px 24px;gap:32px}}
+    .unlock-tag{display:inline-block;padding:5px 14px;background:rgba(196,162,85,.08);border:1px solid rgba(196,162,85,.16);border-radius:100px;font-size:10px;letter-spacing:.18em;color:var(--gold);margin-bottom:20px}
+    .unlock-title{font-size:clamp(20px,3vw,28px);font-weight:700;color:#fff;line-height:1.3;margin-bottom:16px}
+    .unlock-desc{font-size:13px;color:var(--muted);line-height:2;margin-bottom:24px}
+    .unlock-price{font-size:13px;color:rgba(255,255,255,.35);letter-spacing:.08em}
+    .unlock-price strong{font-size:22px;color:var(--gold);font-weight:700;margin-right:6px}
+    .unlock-features{display:flex;flex-direction:column;gap:14px}
+    .unlock-feat{display:flex;gap:14px;align-items:flex-start}
+    .unlock-feat-dot{width:6px;height:6px;border-radius:50%;background:rgba(98,176,112,.5);flex-shrink:0;margin-top:7px}
+    .unlock-feat-text{font-size:13px;color:var(--muted);line-height:1.8}
+    .unlock-feat-text strong{color:rgba(255,255,255,.65);display:block;margin-bottom:2px}
+
+    /* QUOTE */
+    .quote-section{text-align:center;padding:100px 24px}
+    .quote-text{font-size:clamp(18px,3vw,28px);color:rgba(255,255,255,.45);font-weight:300;letter-spacing:.06em;line-height:2;max-width:600px;margin:0 auto}
+    .quote-text em{font-style:normal;color:rgba(98,176,112,.8)}
+
+    /* FOOTER */
+    footer{padding:72px 56px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+    .footer-brand{font-size:12px;font-weight:600;letter-spacing:.25em;color:rgba(255,255,255,.18)}
+    .footer-note{font-size:11px;color:rgba(196,162,85,.45);letter-spacing:.15em}
+    @media(max-width:640px){footer{padding:48px 24px;flex-direction:column;align-items:center;gap:12px;text-align:center}}
+
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
+    .reveal.visible{opacity:1;transform:none}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="https://zenfit.art" class="nav-back">zenfix</a>
+  <div class="nav-title">
+    <img src="https://www.zenfit.art/images/lin-watermark.png" alt="林" style="height:22px;opacity:.6;vertical-align:middle;margin-right:8px;" />
+    <span>LINK</span>
+  </div>
+  <a href="/forest" class="nav-cta">开始测试</a>
+</nav>
+
+<div class="page-wrap">
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-deep"></div>
+  <!-- 背景水印 -->
+  <img src="https://www.zenfit.art/images/lin-watermark.png" alt="" aria-hidden="true"
+    style="position:absolute;z-index:0;width:min(600px,90vw);height:auto;opacity:0.045;pointer-events:none;top:50%;left:50%;transform:translate(-50%,-54%);filter:blur(1px);" />
+  <div class="hero-eyebrow">Wood · 木 · 人际</div>
+  <span class="hero-char">林</span>
+  <span class="hero-en">LINK</span>
+  <div class="hero-divline"></div>
+  <p class="hero-tagline">
+    两个人的<em>频率</em>，<br/>
+    值得被看见。
+  </p>
+  <div class="hero-actions">
+    <a href="/forest" class="btn-p">开始频率测试</a>
+    <a href="#how" class="btn-g">了解更多</a>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-hint-line"></div>
+    <div class="scroll-hint-dot"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PHILOSOPHY -->
+<section>
+  <div class="inner reveal">
+    <div class="quote-text">
+      不是找对的人，<br/>
+      是<em>看见</em>你们各自的频率。
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="inner">
+    <div class="reveal">
+      <div class="s-label">测试流程</div>
+      <h2 class="s-title">三步，看见彼此的频率</h2>
+      <p class="s-desc">每个人独立作答，不受对方影响。结果出来前，谁也不知道对方的答案。</p>
+    </div>
+    <div class="steps reveal">
+      <div class="step">
+        <div class="step-accent"></div>
+        <div class="step-num">01</div>
+        <div class="step-title">发起 · 邀请</div>
+        <div class="step-desc">A 方开始测试，获得6位邀请码，发给 TA。两人各自独立作答，互不干扰。</div>
+      </div>
+      <div class="step">
+        <div class="step-accent"></div>
+        <div class="step-num">02</div>
+        <div class="step-title">各自 · 作答</div>
+        <div class="step-desc">7 道题，测量你们在深度沟通、修复方式、共同体验等维度上真实的期望频率。</div>
+      </div>
+      <div class="step">
+        <div class="step-accent"></div>
+        <div class="step-num">03</div>
+        <div class="step-title">对比 · 看见</div>
+        <div class="step-desc">双方完成后，报告自动生成。雷达图、差异对比、以及为你们量身写的完整频率报告。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DIMENSIONS -->
+<section>
+  <div class="inner">
+    <div class="reveal">
+      <div class="s-label">测量维度</div>
+      <h2 class="s-title">七个频率坐标</h2>
+      <p class="s-desc">每一题都在问同一件事：你真正期望的是什么样的节奏？</p>
+    </div>
+    <div class="dims reveal">
+      <div class="dim">
+        <div class="dim-icon">01 · 深度沟通</div>
+        <div class="dim-name">你需要多深的对话？</div>
+        <div class="dim-desc">语言是你们感受连接的方式吗？</div>
+      </div>
+      <div class="dim">
+        <div class="dim-icon">02 · 修复能力</div>
+        <div class="dim-name">摩擦之后，你需要多久？</div>
+        <div class="dim-desc">和解的速度，透露了各自的节奏。</div>
+      </div>
+      <div class="dim">
+        <div class="dim-icon">03 · 共同体验</div>
+        <div class="dim-name">你们需要多少新鲜感？</div>
+        <div class="dim-desc">对"有趣"的定义，可以很不一样。</div>
+      </div>
+      <div class="dim">
+        <div class="dim-icon">04 · 价值契合</div>
+        <div class="dim-name">价值观一致，对你有多重要？</div>
+        <div class="dim-desc">大决策时，这个差距会被放大。</div>
+      </div>
+      <div class="dim">
+        <div class="dim-icon">05 · 情绪支持</div>
+        <div class="dim-name">你希望对方如何陪你？</div>
+        <div class="dim-desc">支持的语言不同，容易彼此错过。</div>
+      </div>
+      <div class="dim">
+        <div class="dim-icon">06 · 爱意表达</div>
+        <div class="dim-name">爱意，需要被说出来吗？</div>
+        <div class="dim-desc">一方在等待，另一方觉得懂得就够了。</div>
+      </div>
+      <div class="dim">
+        <div class="dim-icon">07 · 整体契合</div>
+        <div class="dim-name">你愿意为这段关系投入多少？</div>
+        <div class="dim-desc">投入的落差，是委屈的根源。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- UNLOCK -->
+<section>
+  <div class="inner reveal">
+    <div class="unlock-box">
+      <div>
+        <div class="unlock-tag">完整频率报告 · ¥29</div>
+        <div class="unlock-title">不只是分数，<br/>是一份专属地图</div>
+        <div class="unlock-desc">免费报告告诉你差在哪里。完整报告告诉你，为什么会这样，以及你们可以怎么聊。</div>
+        <div class="unlock-price"><strong>¥ 29</strong>一次性 · 永久保存</div>
+      </div>
+      <div class="unlock-features">
+        <div class="unlock-feat">
+          <div class="unlock-feat-dot"></div>
+          <div class="unlock-feat-text">
+            <strong>你们各自的频率画像</strong>
+            被精确描述的那种被看见感——不是算法，是真实的你。
+          </div>
+        </div>
+        <div class="unlock-feat">
+          <div class="unlock-feat-dot"></div>
+          <div class="unlock-feat-text">
+            <strong>最同频 & 最容易摩擦的维度</strong>
+            知道在哪里用力，比到处用力更有效。
+          </div>
+        </div>
+        <div class="unlock-feat">
+          <div class="unlock-feat-dot"></div>
+          <div class="unlock-feat-text">
+            <strong>为你们量身定制的对话题</strong>
+            三个问题，专为你们当前的频率错位而写。
+          </div>
+        </div>
+        <div class="unlock-feat">
+          <div class="unlock-feat-dot"></div>
+          <div class="unlock-feat-text">
+            <strong>频率组合类型</strong>
+            深度共鸣 / 互补流动 / 磁场探索 / 等待调频——你们是哪一种？
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FINAL QUOTE -->
+<section class="quote-section">
+  <div class="reveal">
+    <div class="quote-text">
+      频率不是对错，<br/>
+      是<em>看见</em>之后，才有的选择。
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">林 LINK</div>
+  <div class="footer-note">木 · 人际 · 共生</div>
+</footer>
+
+</div>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
