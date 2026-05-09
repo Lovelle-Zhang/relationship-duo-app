@@ -499,18 +499,18 @@ function makeCardSVG(card) {
   if (card.color === 'green') {
     return `<svg width="220" height="308" viewBox="0 0 240 336" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <radialGradient id="bg-g" cx="30%" cy="20%" r="80%">
+    <radialGradient id="bg" cx="30%" cy="20%" r="80%">
       <stop offset="0%" stop-color="#1e4a28"/>
       <stop offset="55%" stop-color="#163820"/>
       <stop offset="100%" stop-color="#102818"/>
     </radialGradient>
-    <radialGradient id="gw-g" cx="30%" cy="25%" r="55%">
+    <radialGradient id="gw" cx="30%" cy="25%" r="55%">
       <stop offset="0%" stop-color="#4aaa5a" stop-opacity="0.35"/>
       <stop offset="100%" stop-color="#3a8a4a" stop-opacity="0"/>
     </radialGradient>
   </defs>
-  <rect width="240" height="336" fill="url(#bg-g)"/>
-  <ellipse cx="72" cy="80" rx="110" ry="95" fill="url(#gw-g)"/>
+  <rect width="240" height="336" fill="url(#bg)"/>
+  <ellipse cx="72" cy="80" rx="110" ry="95" fill="url(#gw)"/>
   <rect x="22" y="240" width="7" height="96" fill="#4aaa5a" opacity="0.2"/>
   <ellipse cx="26" cy="222" rx="30" ry="26" fill="#4aaa5a" opacity="0.15"/>
   <line x1="18" y1="18" x2="54" y2="18" stroke="rgba(255,255,255,.06)" stroke-width="0.6"/>
@@ -526,18 +526,18 @@ function makeCardSVG(card) {
   } else if (card.color === 'purple') {
     return `<svg width="220" height="308" viewBox="0 0 240 336" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <radialGradient id="bg-p" cx="70%" cy="20%" r="80%">
+    <radialGradient id="bg" cx="70%" cy="20%" r="80%">
       <stop offset="0%" stop-color="#3a1a5a"/>
       <stop offset="55%" stop-color="#2a1248"/>
       <stop offset="100%" stop-color="#1e0e38"/>
     </radialGradient>
-    <radialGradient id="gw-p" cx="70%" cy="25%" r="55%">
+    <radialGradient id="gw" cx="70%" cy="25%" r="55%">
       <stop offset="0%" stop-color="#aa7aee" stop-opacity="0.35"/>
       <stop offset="100%" stop-color="#8a5acc" stop-opacity="0"/>
     </radialGradient>
   </defs>
-  <rect width="240" height="336" fill="url(#bg-p)"/>
-  <ellipse cx="168" cy="80" rx="110" ry="95" fill="url(#gw-p)"/>
+  <rect width="240" height="336" fill="url(#bg)"/>
+  <ellipse cx="168" cy="80" rx="110" ry="95" fill="url(#gw)"/>
   <rect x="211" y="240" width="7" height="96" fill="#aa7aee" opacity="0.2"/>
   <ellipse cx="214" cy="222" rx="30" ry="26" fill="#aa7aee" opacity="0.15"/>
   <line x1="186" y1="18" x2="222" y2="18" stroke="rgba(255,255,255,.06)" stroke-width="0.6"/>
