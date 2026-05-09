@@ -153,6 +153,26 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 .mode-btn.purple { border-color: rgba(160,120,200,0.2); }
 .mode-btn.purple:hover { background: rgba(120,80,160,0.12); border-color: rgba(160,120,200,0.4); }
 
+/* 卡片正反面 */
+.card-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08),
+    0 24px 64px rgba(0,0,0,0.8),
+    0 0 32px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at 50% 40%, #1a2e1a 0%, #0e1a0e 60%, #0a1208 100%);
+}
+.card-back svg { width: 100%; height: 100%; display: block; }
+
 /* 双人模式布局 */
 .duo-ui {
   position: fixed;
@@ -160,8 +180,8 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
-  padding: 60px 16px 100px;
+  gap: clamp(12px, 3vw, 28px);
+  padding: 60px 12px 100px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -169,26 +189,53 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  transition: opacity 0.3s;
+  gap: 14px;
+  transition: opacity 0.4s;
   flex-shrink: 0;
 }
-.duo-slot.inactive { opacity: 0.65; cursor: pointer; }
+/* 暗的那张：背面朝上，可点击 */
+.duo-slot.inactive { opacity: 1; cursor: pointer; }
+/* 亮的那张：正面朝上，不可点击 */
 .duo-slot.active { opacity: 1; cursor: default; }
+
 .duo-slot .card-container {
-  width: min(240px, 44vw);
-  height: min(336px, 61.6vw);
+  width: 280px;
+  height: 392px;
 }
 .duo-label {
-  font-size: 14px;
+  font-size: 13px;
   letter-spacing: 3px;
   color: rgba(255,255,255,0.28);
+  cursor: pointer;
+  transition: color 0.2s;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
+.duo-label:hover { color: rgba(255,255,255,0.55); }
 .duo-slot.active .duo-label { color: rgba(255,255,255,0.65); }
+.duo-label-edit {
+  font-size: 10px;
+  opacity: 0.4;
+  letter-spacing: 1px;
+}
+.duo-label input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.8);
+  font-size: 13px;
+  letter-spacing: 3px;
+  width: 80px;
+  text-align: center;
+  outline: none;
+  font-family: sans-serif;
+}
 .duo-divider {
   width: 1px;
-  height: min(336px, 61.6vw);
-  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.08), transparent);
+  height: 392px;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.06), transparent);
   align-self: center;
   flex-shrink: 0;
 }
@@ -220,21 +267,29 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 <!-- 双人模式 -->
 <div class="duo-ui" id="duoUI" style="display:none">
   <div class="duo-slot" id="slotGreen">
-    <div class="card-container" onclick="duoDraw('green')">
+    <div class="card-container" id="containerGreen" onclick="duoDraw('green')">
       <div class="card-inner" id="innerGreen">
         <div class="card-face" id="faceGreen"></div>
+        <div class="card-back" id="backGreen"></div>
       </div>
     </div>
-    <div class="duo-label" id="labelGreen">你</div>
+    <div class="duo-label" id="labelGreen" onclick="editLabel('green')">
+      <span id="labelTextGreen">你</span>
+      <span class="duo-label-edit">✎</span>
+    </div>
   </div>
   <div class="duo-divider"></div>
   <div class="duo-slot" id="slotPurple">
-    <div class="card-container" onclick="duoDraw('purple')">
+    <div class="card-container" id="containerPurple" onclick="duoDraw('purple')">
       <div class="card-inner" id="innerPurple">
         <div class="card-face" id="facePurple"></div>
+        <div class="card-back" id="backPurple"></div>
       </div>
     </div>
-    <div class="duo-label" id="labelPurple">TA</div>
+    <div class="duo-label" id="labelPurple" onclick="editLabel('purple')">
+      <span id="labelTextPurple">TA</span>
+      <span class="duo-label-edit">✎</span>
+    </div>
   </div>
 </div>
 
@@ -551,9 +606,31 @@ function drawCard() {
 const GREEN_CARDS = CARDS.filter(c => c.color === 'green');
 const PURPLE_CARDS = CARDS.filter(c => c.color === 'purple');
 
-let duoTurn = 'green'; // 当前轮到谁
+// duoTurn: 当前"正面朝上"（亮）的那张是谁
+// 另一张是背面（暗），等待点击翻转
+let duoTurn = 'green';
 let lastGreenIdx = -1, lastPurpleIdx = -1;
-let isAnimatingGreen = false, isAnimatingPurple = false;
+let isAnimatingDuo = false;
+
+function makeBackSVG(color) {
+  const isGreen = color === 'green';
+  const bg1 = isGreen ? '#1e3020' : '#28183a';
+  const bg2 = isGreen ? '#0e1a10' : '#180e28';
+  const accent = isGreen ? 'rgba(100,180,100,0.15)' : 'rgba(160,100,200,0.15)';
+  return `<svg width="240" height="336" viewBox="0 0 240 336" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bbg" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="${bg1}"/>
+      <stop offset="100%" stop-color="${bg2}"/>
+    </radialGradient>
+  </defs>
+  <rect width="240" height="336" rx="12" fill="url(#bbg)"/>
+  <rect x="12" y="12" width="216" height="312" rx="8" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <ellipse cx="120" cy="148" rx="70" ry="70" fill="${accent}"/>
+  <text x="120" y="168" text-anchor="middle" font-family="serif" font-size="52" fill="rgba(255,255,255,0.12)">林</text>
+  <text x="120" y="310" text-anchor="middle" font-family="sans-serif" font-size="9" letter-spacing="4" fill="rgba(255,255,255,0.1)">LINK</text>
+</svg>`;
+}
 
 function startMode(mode) {
   document.getElementById('modeOverlay').style.display = 'none';
@@ -571,56 +648,111 @@ function startMode(mode) {
 }
 
 function duoInit() {
-  // 初始各抽一张
-  duoFlip('green', true);
-  duoFlip('purple', true);
-  updateDuoTurn();
+  // 预填内容（背面不可见，但内容已就绪）
+  duoLoadCard('green');
+  duoLoadCard('purple');
+  // 初始状态：green正面朝上（亮），purple背面朝上（暗）
+  duoTurn = 'green';
+  applyDuoState(false);
+  updateDuoTurnLabel();
+}
+
+function duoLoadCard(color) {
+  const isGreen = color === 'green';
+  const pool = isGreen ? GREEN_CARDS : PURPLE_CARDS;
+  let lastIdx = isGreen ? lastGreenIdx : lastPurpleIdx;
+  let idx;
+  do { idx = Math.floor(Math.random() * pool.length); } while (idx === lastIdx && pool.length > 1);
+  if (isGreen) lastGreenIdx = idx; else lastPurpleIdx = idx;
+  const face = document.getElementById(isGreen ? 'faceGreen' : 'facePurple');
+  const back = document.getElementById(isGreen ? 'backGreen' : 'backPurple');
+  face.innerHTML = makeCardSVG(pool[idx]);
+  back.innerHTML = makeBackSVG(color);
+}
+
+function applyDuoState(animate) {
+  const innerG = document.getElementById('innerGreen');
+  const innerP = document.getElementById('innerPurple');
+  const slotG = document.getElementById('slotGreen');
+  const slotP = document.getElementById('slotPurple');
+
+  const applyTransform = () => {
+    if (duoTurn === 'green') {
+      innerG.style.transform = 'rotateY(0deg)';
+      innerP.style.transform = 'rotateY(180deg)';
+      slotG.className = 'duo-slot active';
+      slotP.className = 'duo-slot inactive';
+    } else {
+      innerG.style.transform = 'rotateY(180deg)';
+      innerP.style.transform = 'rotateY(0deg)';
+      slotG.className = 'duo-slot inactive';
+      slotP.className = 'duo-slot active';
+    }
+  };
+
+  if (!animate) {
+    innerG.style.transition = 'none';
+    innerP.style.transition = 'none';
+    applyTransform();
+    // 下一帧恢复动画
+    requestAnimationFrame(() => {
+      innerG.style.transition = '';
+      innerP.style.transition = '';
+    });
+  } else {
+    applyTransform();
+  }
 }
 
 function duoDraw(color) {
-  if (color === duoTurn) return; // 亮的那张不能点，暗的才能抽
-  duoFlip(color, false);
-  duoTurn = color === 'green' ? 'purple' : 'green';
-  updateDuoTurn();
+  // 只有背面那张（inactive）可以点击
+  if (color === duoTurn) return;
+  if (isAnimatingDuo) return;
+  isAnimatingDuo = true;
+
+  // 先换新内容（在背面，用户看不见）
+  duoLoadCard(color);
+
+  // 翻转：当前正面翻到背面，点击的背面翻到正面
+  duoTurn = color;
+  applyDuoState(true);
+
+  setTimeout(() => { isAnimatingDuo = false; }, 600);
+  updateDuoTurnLabel();
 }
 
-function duoFlip(color, init) {
-  const isGreen = color === 'green';
-  if (isGreen && isAnimatingGreen) return;
-  if (!isGreen && isAnimatingPurple) return;
-  if (isGreen) isAnimatingGreen = true; else isAnimatingPurple = true;
-
-  const inner = document.getElementById(isGreen ? 'innerGreen' : 'innerPurple');
-  const face = document.getElementById(isGreen ? 'faceGreen' : 'facePurple');
-  const pool = isGreen ? GREEN_CARDS : PURPLE_CARDS;
-  let lastIdx = isGreen ? lastGreenIdx : lastPurpleIdx;
-
-  inner.classList.add('flipping');
-  setTimeout(() => {
-    let idx;
-    do { idx = Math.floor(Math.random() * pool.length); } while (idx === lastIdx && pool.length > 1);
-    if (isGreen) lastGreenIdx = idx; else lastPurpleIdx = idx;
-    face.innerHTML = makeCardSVG(pool[idx]);
-    inner.classList.remove('flipping');
-    setTimeout(() => {
-      if (isGreen) isAnimatingGreen = false; else isAnimatingPurple = false;
-    }, 560);
-  }, init ? 0 : 280);
-}
-
-function updateDuoTurn() {
-  const slotG = document.getElementById('slotGreen');
-  const slotP = document.getElementById('slotPurple');
+function updateDuoTurnLabel() {
   const label = document.getElementById('duoTurnLabel');
-  if (duoTurn === 'green') {
-    slotG.className = 'duo-slot active';
-    slotP.className = 'duo-slot inactive';
-    label.textContent = '你 来 抽';
-  } else {
-    slotG.className = 'duo-slot inactive';
-    slotP.className = 'duo-slot active';
-    label.textContent = 'TA 来 抽';
+  const nameG = document.getElementById('labelTextGreen').textContent;
+  const nameP = document.getElementById('labelTextPurple').textContent;
+  label.textContent = duoTurn === 'green'
+    ? `${nameP} 来 抽`
+    : `${nameG} 来 抽`;
+}
+
+// ── 名称编辑 ──
+function editLabel(color) {
+  const spanId = color === 'green' ? 'labelTextGreen' : 'labelTextPurple';
+  const labelEl = document.getElementById(color === 'green' ? 'labelGreen' : 'labelPurple');
+  const span = document.getElementById(spanId);
+  const current = span.textContent;
+
+  const input = document.createElement('input');
+  input.value = current;
+  input.maxLength = 6;
+  labelEl.innerHTML = '';
+  labelEl.appendChild(input);
+  input.focus();
+  input.select();
+
+  function commit() {
+    const val = input.value.trim() || current;
+    labelEl.innerHTML = `<span id="${spanId}">${val}</span><span class="duo-label-edit">✎</span>`;
+    labelEl.onclick = () => editLabel(color);
+    updateDuoTurnLabel();
   }
+  input.addEventListener('blur', commit);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') input.blur(); });
 }
 
 // 单人模式 drawCard 已在上方定义，不自动调用
