@@ -612,23 +612,59 @@ let duoTurn = 'green';
 let lastGreenIdx = -1, lastPurpleIdx = -1;
 let isAnimatingDuo = false;
 
-function makeBackSVG(color) {
-  const isGreen = color === 'green';
-  const bg1 = isGreen ? '#1e3020' : '#28183a';
-  const bg2 = isGreen ? '#0e1a10' : '#180e28';
-  const accent = isGreen ? 'rgba(100,180,100,0.15)' : 'rgba(160,100,200,0.15)';
-  return `<svg width="240" height="336" viewBox="0 0 240 336" xmlns="http://www.w3.org/2000/svg">
+function makeBackSVG() {
+  return `<svg viewBox="0 0 250 350" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
   <defs>
-    <radialGradient id="bbg" cx="50%" cy="40%" r="70%">
-      <stop offset="0%" stop-color="${bg1}"/>
-      <stop offset="100%" stop-color="${bg2}"/>
+    <linearGradient id="cardGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e3a2e;stop-opacity:1" />
+      <stop offset="40%" style="stop-color:#1e3832;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#1e2f38;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e2535;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="treeGreen" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#4a7a5a;stop-opacity:0.5" />
+      <stop offset="100%" style="stop-color:#2a5a3a;stop-opacity:0.25" />
     </radialGradient>
+    <radialGradient id="treePurple" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#5a4a6a;stop-opacity:0.5" />
+      <stop offset="100%" style="stop-color:#3a2a4a;stop-opacity:0.25" />
+    </radialGradient>
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" />
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
   </defs>
-  <rect width="240" height="336" rx="12" fill="url(#bbg)"/>
-  <rect x="12" y="12" width="216" height="312" rx="8" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-  <ellipse cx="120" cy="148" rx="70" ry="70" fill="${accent}"/>
-  <text x="120" y="168" text-anchor="middle" font-family="serif" font-size="52" fill="rgba(255,255,255,0.12)">林</text>
-  <text x="120" y="310" text-anchor="middle" font-family="sans-serif" font-size="9" letter-spacing="4" fill="rgba(255,255,255,0.1)">LINK</text>
+  <rect width="250" height="350" fill="url(#cardGradient)"/>
+  <g opacity="0.25">
+    <circle cx="125" cy="45" r="15" fill="#6a8a7a"/>
+    <circle cx="132" cy="45" r="15" fill="#1e3a2e"/>
+    <circle cx="95" cy="40" r="1.5" fill="#6a8a7a"/>
+    <circle cx="155" cy="38" r="2" fill="#6a8a7a"/>
+    <circle cx="110" cy="55" r="1" fill="#6a8a7a"/>
+  </g>
+  <g transform="translate(125, 210)">
+    <g transform="translate(-40, 0)">
+      <rect x="-3" y="35" width="6" height="105" fill="#3a5a4a" opacity="0.5"/>
+      <circle cx="0" cy="0" r="48" fill="url(#treeGreen)"/>
+      <circle cx="-15" cy="-8" r="40" fill="url(#treeGreen)" opacity="0.7"/>
+      <circle cx="15" cy="8" r="42" fill="url(#treeGreen)" opacity="0.6"/>
+      <circle cx="-8" cy="12" r="35" fill="url(#treeGreen)" opacity="0.5"/>
+      <circle cx="10" cy="-10" r="38" fill="url(#treeGreen)" opacity="0.55"/>
+    </g>
+    <g transform="translate(40, 0)">
+      <rect x="-3" y="35" width="6" height="105" fill="#4a3a5a" opacity="0.5"/>
+      <circle cx="0" cy="0" r="50" fill="url(#treePurple)"/>
+      <circle cx="-12" cy="10" r="42" fill="url(#treePurple)" opacity="0.7"/>
+      <circle cx="18" cy="-5" r="40" fill="url(#treePurple)" opacity="0.6"/>
+      <circle cx="-10" cy="-12" r="38" fill="url(#treePurple)" opacity="0.55"/>
+      <circle cx="8" cy="15" r="36" fill="url(#treePurple)" opacity="0.5"/>
+    </g>
+  </g>
+  <g opacity="0.35">
+    <circle cx="55" cy="320" r="4" fill="#4a7a5a"/>
+    <circle cx="195" cy="320" r="4" fill="#5a4a6a"/>
+  </g>
+  <rect width="250" height="350" filter="url(#noise)" opacity="0.02"/>
 </svg>`;
 }
 
@@ -667,7 +703,7 @@ function duoLoadCard(color) {
   const face = document.getElementById(isGreen ? 'faceGreen' : 'facePurple');
   const back = document.getElementById(isGreen ? 'backGreen' : 'backPurple');
   face.innerHTML = makeCardSVG(pool[idx]);
-  back.innerHTML = makeBackSVG(color);
+  back.innerHTML = makeBackSVG();
 }
 
 function applyDuoState(animate) {
