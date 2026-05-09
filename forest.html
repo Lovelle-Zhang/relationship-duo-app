@@ -178,40 +178,68 @@ function resize() {
 // 树的数据
 function initForest() {
   trees = [];
-  // 前景树（大）
+
+  // 前景树（大，底部）
   const bigTrees = [
-    { x: 0.12, y: 1.0, h: 0.52, w: 0.06, layers: 5, color: '#2a4a2a', glow: false },
-    { x: 0.28, y: 1.0, h: 0.44, w: 0.05, layers: 4, color: '#1e3a1e', glow: false },
-    { x: 0.72, y: 1.0, h: 0.48, w: 0.055, layers: 5, color: '#243824', glow: false },
-    { x: 0.88, y: 1.0, h: 0.40, w: 0.045, layers: 4, color: '#1a301a', glow: false },
-    // 发光的树（入口附近）
-    { x: 0.20, y: 1.0, h: 0.58, w: 0.065, layers: 6, color: '#3a6a3a', glow: true, glowColor: 'rgba(120,200,100,0.12)' },
-    { x: 0.82, y: 1.0, h: 0.62, w: 0.07, layers: 6, color: '#2e5a2e', glow: true, glowColor: 'rgba(140,200,120,0.10)' },
+    { x: 0.12, y: 1.0, h: 0.55, w: 0.06, layers: 5, color: '#2a4a2a', glow: false },
+    { x: 0.28, y: 1.0, h: 0.46, w: 0.05, layers: 4, color: '#1e3a1e', glow: false },
+    { x: 0.72, y: 1.0, h: 0.50, w: 0.055, layers: 5, color: '#243824', glow: false },
+    { x: 0.88, y: 1.0, h: 0.42, w: 0.045, layers: 4, color: '#1a301a', glow: false },
+    { x: 0.20, y: 1.0, h: 0.62, w: 0.065, layers: 6, color: '#3a6a3a', glow: true, glowColor: 'rgba(120,200,100,0.12)' },
+    { x: 0.82, y: 1.0, h: 0.68, w: 0.07, layers: 6, color: '#2e5a2e', glow: true, glowColor: 'rgba(140,200,120,0.10)' },
   ];
   // 中景树
   const midTrees = [
-    { x: 0.05, y: 0.82, h: 0.32, w: 0.04, layers: 4, color: '#1a2e1a', glow: false },
-    { x: 0.35, y: 0.80, h: 0.28, w: 0.035, layers: 3, color: '#162614', glow: false },
-    { x: 0.50, y: 0.78, h: 0.30, w: 0.038, layers: 4, color: '#1c301c', glow: true, glowColor: 'rgba(180,220,140,0.08)' },
-    { x: 0.62, y: 0.82, h: 0.26, w: 0.032, layers: 3, color: '#142212', glow: false },
-    { x: 0.78, y: 0.79, h: 0.29, w: 0.036, layers: 3, color: '#182a18', glow: false },
-    { x: 0.93, y: 0.81, h: 0.25, w: 0.03, layers: 3, color: '#142012', glow: false },
+    { x: 0.05, y: 0.82, h: 0.34, w: 0.04, layers: 4, color: '#1a2e1a', glow: false },
+    { x: 0.35, y: 0.80, h: 0.30, w: 0.035, layers: 3, color: '#162614', glow: false },
+    { x: 0.50, y: 0.78, h: 0.32, w: 0.038, layers: 4, color: '#1c301c', glow: true, glowColor: 'rgba(180,220,140,0.08)' },
+    { x: 0.62, y: 0.82, h: 0.28, w: 0.032, layers: 3, color: '#142212', glow: false },
+    { x: 0.78, y: 0.79, h: 0.31, w: 0.036, layers: 3, color: '#182a18', glow: false },
+    { x: 0.93, y: 0.81, h: 0.27, w: 0.03, layers: 3, color: '#142012', glow: false },
   ];
-  // 远景树（小，雾气中）
-  const farTrees = [];
-  for (let i = 0; i < 14; i++) {
-    farTrees.push({
-      x: 0.02 + i * 0.07 + Math.random() * 0.04,
-      y: 0.62 + Math.random() * 0.08,
-      h: 0.14 + Math.random() * 0.10,
-      w: 0.018 + Math.random() * 0.012,
+  // 远景树（中层，填充中部天空）
+  const midFarTrees = [];
+  for (let i = 0; i < 10; i++) {
+    midFarTrees.push({
+      x: 0.03 + i * 0.10 + Math.random() * 0.05,
+      y: 0.70 + Math.random() * 0.06,
+      h: 0.22 + Math.random() * 0.12,
+      w: 0.022 + Math.random() * 0.014,
       layers: 3,
-      color: '#0e1e0e',
+      color: '#0f2010',
       glow: false,
       far: true
     });
   }
-  trees = [...farTrees, ...midTrees, ...bigTrees];
+  // 远景树（深层，填充上部）
+  const farTrees = [];
+  for (let i = 0; i < 16; i++) {
+    farTrees.push({
+      x: 0.01 + i * 0.065 + Math.random() * 0.04,
+      y: 0.58 + Math.random() * 0.07,
+      h: 0.12 + Math.random() * 0.09,
+      w: 0.014 + Math.random() * 0.010,
+      layers: 2,
+      color: '#0b1a0c',
+      glow: false,
+      far: true
+    });
+  }
+  // 极远景（更上方，接近地平线）
+  const ultraFar = [];
+  for (let i = 0; i < 20; i++) {
+    ultraFar.push({
+      x: i * 0.052 + Math.random() * 0.03,
+      y: 0.50 + Math.random() * 0.06,
+      h: 0.07 + Math.random() * 0.06,
+      w: 0.010 + Math.random() * 0.008,
+      layers: 2,
+      color: '#091508',
+      glow: false,
+      far: true
+    });
+  }
+  trees = [...ultraFar, ...farTrees, ...midFarTrees, ...midTrees, ...bigTrees];
 
   // 粒子（萤火虫）
   particles = [];
@@ -302,13 +330,20 @@ function draw() {
   ctx.fillStyle = 'rgba(220,240,200,0.08)';
   ctx.fill();
 
-  // 远处雾气
-  const fog = ctx.createLinearGradient(0, H * 0.55, 0, H * 0.72);
-  fog.addColorStop(0, 'rgba(20,40,20,0)');
-  fog.addColorStop(0.5, 'rgba(15,30,15,0.4)');
-  fog.addColorStop(1, 'rgba(10,20,10,0)');
-  ctx.fillStyle = fog;
-  ctx.fillRect(0, H * 0.55, W, H * 0.17);
+  // 远处雾气（多层，填充中上部）
+  const fog1 = ctx.createLinearGradient(0, H * 0.42, 0, H * 0.58);
+  fog1.addColorStop(0, 'rgba(10,20,10,0)');
+  fog1.addColorStop(0.5, 'rgba(8,18,8,0.25)');
+  fog1.addColorStop(1, 'rgba(10,20,10,0)');
+  ctx.fillStyle = fog1;
+  ctx.fillRect(0, H * 0.42, W, H * 0.16);
+
+  const fog2 = ctx.createLinearGradient(0, H * 0.52, 0, H * 0.68);
+  fog2.addColorStop(0, 'rgba(15,30,15,0)');
+  fog2.addColorStop(0.5, 'rgba(12,24,12,0.35)');
+  fog2.addColorStop(1, 'rgba(10,20,10,0)');
+  ctx.fillStyle = fog2;
+  ctx.fillRect(0, H * 0.52, W, H * 0.16);
 
   // 画树
   trees.forEach(tree => drawTree(tree, t));
