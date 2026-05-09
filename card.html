@@ -537,55 +537,55 @@ function makeCardSVG(card) {
     return `<svg width="220" height="308" viewBox="0 0 240 336" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <radialGradient id="bg-${uid}" cx="30%" cy="20%" r="80%">
-      <stop offset="0%" stop-color="#1e3d24"/>
-      <stop offset="55%" stop-color="#16301c"/>
-      <stop offset="100%" stop-color="#0e2014"/>
+      <stop offset="0%" stop-color="#2d4a3a"/>
+      <stop offset="55%" stop-color="#243e30"/>
+      <stop offset="100%" stop-color="#1e3428"/>
     </radialGradient>
     <radialGradient id="gw-${uid}" cx="30%" cy="25%" r="55%">
-      <stop offset="0%" stop-color="#7aaa88" stop-opacity="0.22"/>
-      <stop offset="100%" stop-color="#5a8a68" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#6a8a7a" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#5a7a6a" stop-opacity="0"/>
     </radialGradient>
   </defs>
   <rect width="240" height="336" fill="url(#bg-${uid})"/>
   <ellipse cx="72" cy="80" rx="110" ry="95" fill="url(#gw-${uid})"/>
-  <rect x="22" y="240" width="7" height="96" fill="#7aaa88" opacity="0.14"/>
-  <ellipse cx="26" cy="222" rx="30" ry="26" fill="#5a8a68" opacity="0.1"/>
+  <rect x="22" y="240" width="7" height="96" fill="#5a7a6a" opacity="0.18"/>
+  <ellipse cx="26" cy="222" rx="30" ry="26" fill="#5a7a6a" opacity="0.12"/>
   <line x1="186" y1="18" x2="222" y2="18" stroke="rgba(255,255,255,.06)" stroke-width="0.6"/>
   <line x1="222" y1="18" x2="222" y2="46" stroke="rgba(255,255,255,.06)" stroke-width="0.6"/>
-  <text x="22" y="28" font-family="sans-serif" font-size="10" letter-spacing="2" fill="#7aaa88" opacity="0.6">绿牌</text>
-  <text x="218" y="24" text-anchor="end" font-family="sans-serif" font-size="9" fill="#c47a7a" opacity="0.55">${card.type.split('·')[1]}</text>
-  <text x="218" y="36" text-anchor="end" font-family="sans-serif" font-size="9" fill="#c47a7a" opacity="0.7">${card.id}</text>
-  <line x1="22" y1="42" x2="64" y2="42" stroke="#7aaa88" stroke-width="0.8" opacity="0.4"/>
-  <text x="22" y="74" font-family="serif" font-style="italic" font-size="13" fill="rgba(255,255,255,.32)" letter-spacing="0.5">${card.prompt}</text>
-  ${card.text.split('\n').map((line, i) => `<text x="22" y="${118 + i*34}" font-size="20" letter-spacing="0.5" fill="rgba(255,255,255,.9)" font-family="sans-serif">${line}</text>`).join('')}
-  <image href="images/lin-watermark-green.png" x="190" y="296" width="30" height="30" opacity="0.32"/>
+  <text x="22" y="28" font-family="sans-serif" font-size="10" letter-spacing="2" fill="#6a8a7a" opacity="0.9">绿牌</text>
+  <text x="218" y="24" text-anchor="end" font-family="sans-serif" font-size="9" fill="#8a9a8a" opacity="0.8">${card.type.split('·')[1]}</text>
+  <text x="218" y="36" text-anchor="end" font-family="sans-serif" font-size="9" fill="#8a9a8a" opacity="0.9">${card.id}</text>
+  <line x1="22" y1="42" x2="64" y2="42" stroke="#6a8a7a" stroke-width="0.8" opacity="0.5"/>
+  <text x="22" y="74" font-family="serif" font-style="italic" font-size="13" fill="rgba(232,240,232,.35)" letter-spacing="0.5">${card.prompt}</text>
+  ${card.text.split('\n').map((line, i) => `<text x="22" y="${118 + i*34}" font-size="20" letter-spacing="0.5" fill="#e8f0e8" font-family="sans-serif">${line}</text>`).join('')}
+  <image href="images/lin-watermark-green.png" x="190" y="296" width="30" height="30" opacity="0.35"/>
 </svg>`;
   } else if (card.color === 'purple') {
     return `<svg width="220" height="308" viewBox="0 0 240 336" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <radialGradient id="bg-${uid}" cx="70%" cy="20%" r="80%">
-      <stop offset="0%" stop-color="#352248"/>
-      <stop offset="55%" stop-color="#28203a"/>
-      <stop offset="100%" stop-color="#1e1628"/>
+      <stop offset="0%" stop-color="#3a2d4a"/>
+      <stop offset="55%" stop-color="#30243e"/>
+      <stop offset="100%" stop-color="#281e34"/>
     </radialGradient>
     <radialGradient id="gw-${uid}" cx="70%" cy="25%" r="55%">
-      <stop offset="0%" stop-color="#b09acc" stop-opacity="0.28"/>
-      <stop offset="100%" stop-color="#9a7aaa" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#7a6a8a" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#7a5a8a" stop-opacity="0"/>
     </radialGradient>
   </defs>
   <rect width="240" height="336" fill="url(#bg-${uid})"/>
   <ellipse cx="168" cy="80" rx="110" ry="95" fill="url(#gw-${uid})"/>
-  <rect x="211" y="240" width="7" height="96" fill="#9a7aaa" opacity="0.16"/>
+  <rect x="211" y="240" width="7" height="96" fill="#7a5a8a" opacity="0.18"/>
   <ellipse cx="214" cy="222" rx="30" ry="26" fill="#7a5a8a" opacity="0.12"/>
   <line x1="186" y1="18" x2="222" y2="18" stroke="rgba(255,255,255,.06)" stroke-width="0.6"/>
   <line x1="222" y1="18" x2="222" y2="46" stroke="rgba(255,255,255,.06)" stroke-width="0.6"/>
-  <text x="22" y="28" font-family="sans-serif" font-size="10" letter-spacing="2" fill="#9a7aaa" opacity="0.6">紫牌</text>
-  <text x="218" y="24" text-anchor="end" font-family="sans-serif" font-size="9" fill="#c47a7a" opacity="0.55">${card.type.split('·')[1]}</text>
-  <text x="218" y="36" text-anchor="end" font-family="sans-serif" font-size="9" fill="#c47a7a" opacity="0.7">${card.id}</text>
-  <line x1="22" y1="42" x2="64" y2="42" stroke="#c47a7a" stroke-width="0.8" opacity="0.45"/>
-  <text x="22" y="74" font-family="serif" font-style="italic" font-size="13" fill="rgba(255,255,255,.32)" letter-spacing="0.5">${card.prompt}</text>
-  ${card.text.split('\n').map((line, i) => `<text x="22" y="${118 + i*34}" font-size="20" letter-spacing="0.5" fill="rgba(255,255,255,.9)" font-family="sans-serif">${line}</text>`).join('')}
-  <image href="images/lin-watermark-green.png" x="20" y="296" width="30" height="30" opacity="0.28" style="filter:invert(1)"/>
+  <text x="22" y="28" font-family="sans-serif" font-size="10" letter-spacing="2" fill="#7a6a8a" opacity="0.9">紫牌</text>
+  <text x="218" y="24" text-anchor="end" font-family="sans-serif" font-size="9" fill="#9a8a9a" opacity="0.8">${card.type.split('·')[1]}</text>
+  <text x="218" y="36" text-anchor="end" font-family="sans-serif" font-size="9" fill="#9a8a9a" opacity="0.9">${card.id}</text>
+  <line x1="22" y1="42" x2="64" y2="42" stroke="#7a6a8a" stroke-width="0.8" opacity="0.5"/>
+  <text x="22" y="74" font-family="serif" font-style="italic" font-size="13" fill="rgba(240,232,240,.35)" letter-spacing="0.5">${card.prompt}</text>
+  ${card.text.split('\n').map((line, i) => `<text x="22" y="${118 + i*34}" font-size="20" letter-spacing="0.5" fill="#f0e8f0" font-family="sans-serif">${line}</text>`).join('')}
+  <image href="images/lin-watermark-green.png" x="20" y="296" width="30" height="30" opacity="0.3" style="filter:invert(1)"/>
 </svg>`;
   } else {
     // 特殊牌
