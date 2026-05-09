@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>浠婃棩瀵硅瘽 路 鏋?Link</title>
+<title>今日对话 · 林 Link</title>
 <link rel="icon" type="image/png" href="images/lin-watermark-green.png">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -22,7 +22,7 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
   pointer-events: none;
 }
 
-/* 椤堕儴杩斿洖 */
+/* 顶部返回 */
 .back {
   position: fixed;
   top: 32px; left: 24px;
@@ -36,7 +36,7 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 }
 .back:hover { color: rgba(255,255,255,0.6); }
 
-/* 椤堕儴鏍囩 */
+/* 顶部标签 */
 .top-label {
   position: fixed;
   top: 36px;
@@ -49,7 +49,7 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
   z-index: 50;
 }
 
-/* 鍗＄墖瀹瑰櫒 */
+/* 卡片容器 */
 .card-container {
   position: relative;
   width: min(280px, 72vw);
@@ -64,18 +64,15 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
   height: 100%;
   position: relative;
   transform-style: preserve-3d;
-  transition: transform 0.6s cubic-bezier(0.22,1,0.36,1);
+  transition: transform 0.55s cubic-bezier(0.22,1,0.36,1);
   border-radius: 12px;
 }
 
-/* 姝ｉ潰鏈濅笂锛堥粯璁わ級 */
-.card-inner.face-up { transform: rotateY(0deg); }
-/* 鑳岄潰鏈濅笂 */
-.card-inner.face-down { transform: rotateY(180deg); }
-/* 缈昏浆鍔ㄧ敾涓棿鎬?*/
-.card-inner.flipping { transform: rotateY(90deg) scale(0.95); }
+.card-inner.flipping {
+  transform: rotateY(90deg) scale(0.95);
+}
 
-.card-face, .card-back {
+.card-face {
   position: absolute;
   inset: 0;
   border-radius: 12px;
@@ -88,19 +85,9 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
   backface-visibility: hidden;
 }
 
-/* 鑳岄潰鏃嬭浆 180掳 浣垮叾鍦ㄨ儗闈㈡椂鍙 */
-.card-back {
-  transform: rotateY(180deg);
-  background: #0e1a14;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.card-back svg { width: 100%; height: 100%; display: block; }
 .card-face svg { width: 100%; height: 100%; display: block; }
 
-/* 搴曢儴鎿嶄綔 */
+/* 底部操作 */
 .actions {
   position: fixed;
   bottom: 60px;
@@ -125,7 +112,7 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 }
 .btn-another:hover { color: rgba(255,255,255,0.75); }
 
-/* 妯″紡閫夋嫨瑕嗙洊灞?*/
+/* 模式选择覆盖层 */
 .mode-overlay {
   position: fixed;
   inset: 0;
@@ -166,15 +153,17 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 .mode-btn.purple { border-color: rgba(160,120,200,0.2); }
 .mode-btn.purple:hover { background: rgba(120,80,160,0.12); border-color: rgba(160,120,200,0.4); }
 
-/* 鍙屼汉妯″紡甯冨眬 */
+/* 双人模式布局 */
 .duo-ui {
   position: fixed;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  padding: 60px 12px 100px;
+  gap: 20px;
+  padding: 60px 16px 100px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .duo-slot {
   display: flex;
@@ -184,29 +173,21 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
   transition: opacity 0.3s;
   flex-shrink: 0;
 }
-.duo-slot.inactive { opacity: 0.45; cursor: pointer; }
+.duo-slot.inactive { opacity: 0.65; cursor: pointer; }
 .duo-slot.active { opacity: 1; cursor: default; }
 .duo-slot .card-container {
-  width: min(160px, 42vw);
-  height: min(224px, 58.8vw);
-  perspective: 800px;
+  width: min(240px, 44vw);
+  height: min(336px, 61.6vw);
 }
 .duo-label {
   font-size: 14px;
-  letter-spacing: 2px;
-  color: rgba(255,255,255,0.35);
-  cursor: pointer;
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.2s, color 0.2s;
-  min-width: 40px;
-  text-align: center;
-  outline: none;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.28);
 }
-.duo-label:hover { border-bottom-color: rgba(255,255,255,0.2); }
-.duo-slot.active .duo-label { color: rgba(255,255,255,0.7); }
+.duo-slot.active .duo-label { color: rgba(255,255,255,0.65); }
 .duo-divider {
   width: 1px;
-  height: min(224px, 58.8vw);
+  height: min(336px, 61.6vw);
   background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.08), transparent);
   align-self: center;
   flex-shrink: 0;
@@ -217,17 +198,17 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 
 <canvas id="bg"></canvas>
 
-<div class="back" onclick="window.location.href='forest.html'">鈫?鏋?/div>
-<div class="top-label" id="topLabel">浠?鏃?瀵?璇?/div>
+<div class="back" onclick="window.location.href='forest.html'">← 林</div>
+<div class="top-label" id="topLabel">今 日 对 话</div>
 
-<!-- 妯″紡閫夋嫨 -->
+<!-- 模式选择 -->
 <div class="mode-overlay" id="modeOverlay">
-  <div class="mode-title">閫夋嫨妯″紡</div>
-  <button class="mode-btn green" onclick="startMode('solo')">鍗曚汉鎺㈢储</button>
-  <button class="mode-btn purple" onclick="startMode('duo')">鍙屼汉瀵硅瘽</button>
+  <div class="mode-title">选择模式</div>
+  <button class="mode-btn green" onclick="startMode('solo')">单人探索</button>
+  <button class="mode-btn purple" onclick="startMode('duo')">双人对话</button>
 </div>
 
-<!-- 鍗曚汉妯″紡 -->
+<!-- 单人模式 -->
 <div class="ui" id="soloUI" style="display:none">
   <div class="card-container" id="cardWrap">
     <div class="card-inner" id="cardInner">
@@ -236,32 +217,30 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
   </div>
 </div>
 
-<!-- 鍙屼汉妯″紡 -->
+<!-- 双人模式 -->
 <div class="duo-ui" id="duoUI" style="display:none">
   <div class="duo-slot" id="slotGreen">
     <div class="card-container" onclick="duoDraw('green')">
-      <div class="card-inner face-up" id="innerGreen">
+      <div class="card-inner" id="innerGreen">
         <div class="card-face" id="faceGreen"></div>
-        <div class="card-back" id="backGreen"></div>
       </div>
     </div>
-    <div class="duo-label" id="labelGreen" contenteditable="true" spellcheck="false">浣?/div>
+    <div class="duo-label" id="labelGreen">你</div>
   </div>
   <div class="duo-divider"></div>
   <div class="duo-slot" id="slotPurple">
     <div class="card-container" onclick="duoDraw('purple')">
-      <div class="card-inner face-down" id="innerPurple">
+      <div class="card-inner" id="innerPurple">
         <div class="card-face" id="facePurple"></div>
-        <div class="card-back" id="backPurple"></div>
       </div>
     </div>
-    <div class="duo-label" id="labelPurple" contenteditable="true" spellcheck="false">TA</div>
+    <div class="duo-label" id="labelPurple">TA</div>
   </div>
 </div>
 
 <div class="actions" id="soloActions" style="display:none">
   <div class="card-type-label" id="typeLabel"></div>
-  <button class="btn-another" onclick="drawCard()">鍐嶆娊涓€寮?/button>
+  <button class="btn-another" onclick="drawCard()">再抽一张</button>
 </div>
 
 <div class="actions" id="duoActions" style="display:none">
@@ -269,7 +248,7 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 </div>
 
 <script>
-// ============ 鑳屾櫙妫灄鍔ㄧ敾 ============
+// ============ 背景森林动画 ============
 const canvas = document.getElementById('bg');
 const ctx = canvas.getContext('2d');
 let W, H, t = 0, trees = [], particles = [];
@@ -282,7 +261,7 @@ function resize() {
 
 function initBg() {
   trees = [];
-  // 杩滄櫙鏍戯紙灏忋€佹殫銆佸皯鎽囷級
+  // 远景树（小、暗、少摇）
   for (let i = 0; i < 14; i++) {
     trees.push({
       x: Math.random(),
@@ -295,7 +274,7 @@ function initBg() {
       far: true
     });
   }
-  // 杩戞櫙鏍戯紙澶с€佺◢浜€佹憞鎽嗭級
+  // 近景树（大、稍亮、摇摆）
   for (let i = 0; i < 10; i++) {
     trees.push({
       x: Math.random(),
@@ -325,7 +304,7 @@ function drawBg() {
   t += 0.016;
   ctx.clearRect(0, 0, W, H);
 
-  // 娣辫摑澶滅┖
+  // 深蓝夜空
   const sky = ctx.createLinearGradient(0, 0, 0, H);
   sky.addColorStop(0, '#0d1520');
   sky.addColorStop(0.4, '#111e2a');
@@ -333,7 +312,7 @@ function drawBg() {
   sky.addColorStop(1, '#0a1410');
   ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
 
-  // 鏄熸槦
+  // 星星
   if (!drawBg._stars) {
     drawBg._stars = Array.from({length: 60}, () => ({
       x: Math.random(), y: Math.random() * 0.55,
@@ -350,7 +329,7 @@ function drawBg() {
     ctx.fill();
   });
 
-  // 鏈堜寒
+  // 月亮
   const mx = W * 0.75, my = H * 0.10;
   const mg = ctx.createRadialGradient(mx, my, 0, mx, my, H * 0.3);
   mg.addColorStop(0, 'rgba(200,220,255,0.12)');
@@ -361,7 +340,8 @@ function drawBg() {
   ctx.fillStyle = 'rgba(230,240,255,0.22)';
   ctx.fill();
 
-  // 鏍戝壀褰?  trees.forEach(tr => {
+  // 树剪影
+  trees.forEach(tr => {
     const x = tr.x * W, by = tr.y * H, th = tr.h * H, tw = tr.w * W;
     const sw = Math.sin(t * 0.35 + tr.phase) * (tr.far ? 0.5 : 1.4);
     ctx.fillStyle = tr.c;
@@ -380,18 +360,21 @@ function drawBg() {
     ctx.globalAlpha = 1;
   });
 
-  // 鍦伴潰闆?  const gf = ctx.createLinearGradient(0, H*0.78, 0, H);
+  // 地面雾
+  const gf = ctx.createLinearGradient(0, H*0.78, 0, H);
   gf.addColorStop(0, 'rgba(0,0,0,0)');
   gf.addColorStop(0.5, 'rgba(8,14,10,0.7)');
   gf.addColorStop(1, 'rgba(5,10,7,0.95)');
   ctx.fillStyle = gf; ctx.fillRect(0, H*0.78, W, H*0.22);
 
-  // 鑱氱劍锛堣交锛?  const focus = ctx.createRadialGradient(W/2, H/2, H*0.15, W/2, H/2, H*0.72);
+  // 聚焦（轻）
+  const focus = ctx.createRadialGradient(W/2, H/2, H*0.15, W/2, H/2, H*0.72);
   focus.addColorStop(0, 'rgba(0,0,0,0)');
   focus.addColorStop(1, 'rgba(0,0,0,0.35)');
   ctx.fillStyle = focus; ctx.fillRect(0, 0, W, H);
 
-  // 钀ょ伀铏?  particles.forEach(p => {
+  // 萤火虫
+  particles.forEach(p => {
     p.x += p.dr + Math.sin(t * p.sp * 100 + p.ph) * 0.0002;
     p.y += Math.cos(t * p.sp * 80 + p.ph) * 0.0001;
     if (p.x < 0) p.x = 1; if (p.x > 1) p.x = 0;
@@ -410,48 +393,51 @@ window.addEventListener('resize', resize);
 resize();
 drawBg();
 
-// ============ 鍗＄墝鏁版嵁 ============
+// ============ 卡牌数据 ============
 const CARDS = [
-  // 缁跨墝路浜插瘑
-  { type: '缁跨墝路浜插瘑', color: 'green', prompt: '璇翠竴浠垛€斺€?, text: '鏈夋病鏈夊摢浠跺皬浜嬶紝鏄痋n浣犲仛浜嗕絾娌℃兂鍒版垜浼歕n璁颁綇鐨勶紵', id: 'I路01' },
-  { type: '缁跨墝路浜插瘑', color: 'green', prompt: '璇村疄璇濃€斺€?, text: '浣犱笂娆″伔鍋风湅鎴戯紝\n鍦ㄧ湅浠€涔堬紵', id: 'I路02' },
-  { type: '缁跨墝路浜插瘑', color: 'green', prompt: '闅忎究涓€鍙モ€斺€?, text: '鎴戣杩囧摢鍙ヨ瘽锛孿n浣犺寰楁渶鍍忔垜锛?, id: 'I路04' },
-  { type: '缁跨墝路浜插瘑', color: 'green', prompt: '璇翠竴涓€斺€?, text: '鎴戝仛浠€涔堬紝浼氳浣犵獊\n鐒跺緢鎯抽潬杩戞垜锛?, id: 'I路05' },
-  { type: '缁跨墝路浜插瘑', color: 'green', prompt: '璇寸湡鐨勨€斺€?, text: '浣犺寰楋紝鎴戠煡閬揬n浣犵埍鎴戝悧锛?, id: 'I路06' },
-  { type: '缁跨墝路浜插瘑', color: 'green', prompt: '闅忎究鈥斺€?, text: '鐗垫墜鐨勬椂鍊欙紝\n浣犲湪鎯充粈涔堬紵', id: 'I路07' },
-  // 缁跨墝路鏃ュ父
-  { type: '缁跨墝路鏃ュ父', color: 'green', prompt: '闅忎究涓€浠垛€斺€?, text: '浠婂ぉ鎴戝仛浜嗕粈涔堬紝\n浣犳病璇翠絾蹇冮噷璁颁簡涓€涓嬶紵', id: 'D路01' },
-  { type: '缁跨墝路鏃ュ父', color: 'green', prompt: '璇磋鈥斺€?, text: '鍜屾垜鍦ㄤ竴璧凤紝浣犳渶瀹筡n鏄撳繕璁版椂闂存槸浠€涔堟椂鍊欙紵', id: 'D路06' },
-  { type: '缁跨墝路鏃ュ父', color: 'green', prompt: '璇磋鈥斺€?, text: '浣犳湁娌℃湁娉ㄦ剰杩嘰n鎴戠潯鐫€鐨勬牱瀛愶紵', id: 'D路07' },
-  // 缁跨墝路娌熼€?  { type: '缁跨墝路娌熼€?, color: 'green', prompt: '璇翠釜鍦烘櫙鈥斺€?, text: '浣犱粈涔堟椂鍊欐渶涓嶆兂\n鍜屾垜璇磋瘽锛?, id: 'C路04' },
-  { type: '缁跨墝路娌熼€?, color: 'green', prompt: '璇村疄璇濃€斺€?, text: '鎴戣銆屾病浜嬨€嶇殑鏃跺€欙紝\n浣犱俊鍚楋紵', id: 'C路06' },
-  { type: '缁跨墝路娌熼€?, color: 'green', prompt: '闂惂鈥斺€?, text: '鐜板湪鍙互闂垜涓€涓棶棰橈紝\n鎴戜繚璇佽瀹炶瘽', id: 'C路07' },
-  // 缁跨墝路淇
-  { type: '缁跨墝路淇', color: 'green', prompt: '璇存竻妤氣€斺€?, text: '浣犵敓姘旂殑鏃跺€欙紝闇€瑕乗n鎴戞秷澶辫繕鏄湪鍦猴紵', id: 'R路04' },
-  { type: '缁跨墝路淇', color: 'green', prompt: '鎱㈡參璇粹€斺€?, text: '鎴戜滑涔嬮棿锛屾湁娌℃湁涓€\n浠朵簨涓€鐩存病璇存竻妤氾紵', id: 'R路06' },
-  // 缁跨墝路鏀寔
-  { type: '缁跨墝路鏀寔', color: 'green', prompt: '璇存竻妤氣€斺€?, text: '浣犲帇鍔涘ぇ鐨勬椂鍊欙紝闇€\n瑕佹垜璇磋瘽杩樻槸瀹夐潤锛?, id: 'S路01' },
-  { type: '缁跨墝路鏀寔', color: 'green', prompt: '璇村疄璇濃€斺€?, text: '浣犳渶鎷呭績鎴戠殑锛孿n鏄粈涔堬紵', id: 'S路04' },
-  // 缁跨墝路淇′换
-  { type: '缁跨墝路淇′换', color: 'green', prompt: '璇寸洿鎺モ€斺€?, text: '浣犳渶淇′换鎴戠殑锛孿n鏄摢涓€闈紵', id: 'T路02' },
-  { type: '缁跨墝路淇′换', color: 'green', prompt: '璇村疄璇濃€斺€?, text: '浣犱細璁╂垜鐪嬭浣燶n鏈€鍧忕殑閭ｉ潰鍚楋紵', id: 'T路07' },
-  // 绱墝路浜插瘑
-  { type: '绱墝路浜插瘑', color: 'purple', prompt: '璇磋鈥斺€?, text: '鏈夋病鏈夊摢浠跺皬浜嬶紝鏄痋n鎴戝仛浜嗕絾浣犳病鎯冲埌鑷猏n宸变細涓€鐩磋鐫€锛?, id: 'I路01' },
-  { type: '绱墝路浜插瘑', color: 'purple', prompt: '璇翠竴鏍封€斺€?, text: '浣犲摢閲屾瘮鎴戞兂璞′腑\n鏇村ソ涓€鐐癸紵', id: 'I路03' },
-  { type: '绱墝路浜插瘑', color: 'purple', prompt: '闅忎究鈥斺€?, text: '鍜屼綘鍦ㄤ竴璧凤紝\n鎴戞槸浠€涔堟劅瑙夛紵', id: 'I路05' },
-  // 绱墝路娌熼€?  { type: '绱墝路娌熼€?, color: 'purple', prompt: '闅忎究涓€鍙モ€斺€?, text: '浣犺杩囧摢鍙ヨ瘽锛孿n鎴戣鍒扮幇鍦紵', id: 'C路02' },
-  { type: '绱墝路娌熼€?, color: 'purple', prompt: '璇翠竴浠垛€斺€?, text: '鏈夋病鏈変竴浠朵簨锛屼綘璇痋n瑙ｄ簡鎴戯紝鎴戞病鏈夎В閲婏紵', id: 'C路05' },
-  // 绱墝路淇
-  { type: '绱墝路淇', color: 'purple', prompt: '璇村疄璇濃€斺€?, text: '鎴戦亾姝夌殑鏂瑰紡锛孿n瀵逛綘鏈夌敤鍚楋紵', id: 'R路02' },
-  { type: '绱墝路淇', color: 'purple', prompt: '璇翠釜淇″彿鈥斺€?, text: '浠€涔堟椂鍊欙紝浣犱細瑙夊緱\n鎴戜滑濂戒簡锛?, id: 'R路07' },
-  // 绱墝路鏀寔
-  { type: '绱墝路鏀寔', color: 'purple', prompt: '璇翠竴娆♀€斺€?, text: '鏈€杩戞湁娌℃湁涓€鍒伙紝\n浣犺鎴戣寰椾笉瀛ゅ崟锛?, id: 'S路05' },
-  // 绱墝路浣撻獙
-  { type: '绱墝路浣撻獙', color: 'purple', prompt: '鐬庢兂鈥斺€?, text: '濡傛灉鍙互娑堝け涓€鍛紝\n浣犳兂甯︽垜鍘诲摢閲岋紵', id: 'E路02' },
-  { type: '绱墝路浣撻獙', color: 'purple', prompt: '鏈夌殑璇濊鈥斺€?, text: '鏈夋病鏈変竴棣栨瓕锛孿n鏄垜浠殑姝岋紵', id: 'E路07' },
-  // 鐗规畩鐗?  { type: '鐗规畩鐗?, color: 'special', prompt: '', text: '涓嶈璇濅簡', sub: '鎶变竴浼氬効鍐嶇户缁?, id: 'S路01' },
-  { type: '鐗规畩鐗?, color: 'special', prompt: '', text: '浠婃櫄鍙濂戒簨', sub: '鍚勮涓変欢', id: 'S路03' },
-  { type: '鐗规畩鐗?, color: 'special', prompt: '', text: '浠婂ぉ锛屽じ鎴戜竴浠朵簨', sub: '璁ょ湡鐨?, id: 'S路05' },
+  // 绿牌·亲密
+  { type: '绿牌·亲密', color: 'green', prompt: '说一件——', text: '有没有哪件小事，是\n你做了但没想到我会\n记住的？', id: 'I·01' },
+  { type: '绿牌·亲密', color: 'green', prompt: '说实话——', text: '你上次偷偷看我，\n在看什么？', id: 'I·02' },
+  { type: '绿牌·亲密', color: 'green', prompt: '随便一句——', text: '我说过哪句话，\n你觉得最像我？', id: 'I·04' },
+  { type: '绿牌·亲密', color: 'green', prompt: '说一个——', text: '我做什么，会让你突\n然很想靠近我？', id: 'I·05' },
+  { type: '绿牌·亲密', color: 'green', prompt: '说真的——', text: '你觉得，我知道\n你爱我吗？', id: 'I·06' },
+  { type: '绿牌·亲密', color: 'green', prompt: '随便——', text: '牵手的时候，\n你在想什么？', id: 'I·07' },
+  // 绿牌·日常
+  { type: '绿牌·日常', color: 'green', prompt: '随便一件——', text: '今天我做了什么，\n你没说但心里记了一下？', id: 'D·01' },
+  { type: '绿牌·日常', color: 'green', prompt: '说说——', text: '和我在一起，你最容\n易忘记时间是什么时候？', id: 'D·06' },
+  { type: '绿牌·日常', color: 'green', prompt: '说说——', text: '你有没有注意过\n我睡着的样子？', id: 'D·07' },
+  // 绿牌·沟通
+  { type: '绿牌·沟通', color: 'green', prompt: '说个场景——', text: '你什么时候最不想\n和我说话？', id: 'C·04' },
+  { type: '绿牌·沟通', color: 'green', prompt: '说实话——', text: '我说「没事」的时候，\n你信吗？', id: 'C·06' },
+  { type: '绿牌·沟通', color: 'green', prompt: '问吧——', text: '现在可以问我一个问题，\n我保证说实话', id: 'C·07' },
+  // 绿牌·修复
+  { type: '绿牌·修复', color: 'green', prompt: '说清楚——', text: '你生气的时候，需要\n我消失还是在场？', id: 'R·04' },
+  { type: '绿牌·修复', color: 'green', prompt: '慢慢说——', text: '我们之间，有没有一\n件事一直没说清楚？', id: 'R·06' },
+  // 绿牌·支持
+  { type: '绿牌·支持', color: 'green', prompt: '说清楚——', text: '你压力大的时候，需\n要我说话还是安静？', id: 'S·01' },
+  { type: '绿牌·支持', color: 'green', prompt: '说实话——', text: '你最担心我的，\n是什么？', id: 'S·04' },
+  // 绿牌·信任
+  { type: '绿牌·信任', color: 'green', prompt: '说直接——', text: '你最信任我的，\n是哪一面？', id: 'T·02' },
+  { type: '绿牌·信任', color: 'green', prompt: '说实话——', text: '你会让我看见你\n最坏的那面吗？', id: 'T·07' },
+  // 紫牌·亲密
+  { type: '紫牌·亲密', color: 'purple', prompt: '说说——', text: '有没有哪件小事，是\n我做了但你没想到自\n己会一直记着？', id: 'I·01' },
+  { type: '紫牌·亲密', color: 'purple', prompt: '说一样——', text: '你哪里比我想象中\n更好一点？', id: 'I·03' },
+  { type: '紫牌·亲密', color: 'purple', prompt: '随便——', text: '和你在一起，\n我是什么感觉？', id: 'I·05' },
+  // 紫牌·沟通
+  { type: '紫牌·沟通', color: 'purple', prompt: '随便一句——', text: '你说过哪句话，\n我记到现在？', id: 'C·02' },
+  { type: '紫牌·沟通', color: 'purple', prompt: '说一件——', text: '有没有一件事，你误\n解了我，我没有解释？', id: 'C·05' },
+  // 紫牌·修复
+  { type: '紫牌·修复', color: 'purple', prompt: '说实话——', text: '我道歉的方式，\n对你有用吗？', id: 'R·02' },
+  { type: '紫牌·修复', color: 'purple', prompt: '说个信号——', text: '什么时候，你会觉得\n我们好了？', id: 'R·07' },
+  // 紫牌·支持
+  { type: '紫牌·支持', color: 'purple', prompt: '说一次——', text: '最近有没有一刻，\n你让我觉得不孤单？', id: 'S·05' },
+  // 紫牌·体验
+  { type: '紫牌·体验', color: 'purple', prompt: '瞎想——', text: '如果可以消失一周，\n你想带我去哪里？', id: 'E·02' },
+  { type: '紫牌·体验', color: 'purple', prompt: '有的话说——', text: '有没有一首歌，\n是我们的歌？', id: 'E·07' },
+  // 特殊牌
+  { type: '特殊牌', color: 'special', prompt: '', text: '不说话了', sub: '抱一会儿再继续', id: 'S·01' },
+  { type: '特殊牌', color: 'special', prompt: '', text: '今晚只说好事', sub: '各说三件', id: 'S·03' },
+  { type: '特殊牌', color: 'special', prompt: '', text: '今天，夸我一件事', sub: '认真的', id: 'S·05' },
 ];
 
 function makeCardSVG(card) {
@@ -474,8 +460,8 @@ function makeCardSVG(card) {
   <ellipse cx="26" cy="222" rx="30" ry="26" fill="#5a7a5a" opacity="0.12"/>
   <line x1="18" y1="18" x2="54" y2="18" stroke="rgba(255,255,255,.06)" stroke-width="0.6"/>
   <line x1="18" y1="18" x2="18" y2="46" stroke="rgba(255,255,255,.06)" stroke-width="0.6"/>
-  <text x="22" y="28" font-family="sans-serif" font-size="10" letter-spacing="2" fill="#5a7a5a" opacity="0.6">缁跨墝</text>
-  <text x="218" y="24" text-anchor="end" font-family="sans-serif" font-size="9" fill="#c47a7a" opacity="0.55">${card.type.split('路')[1]}</text>
+  <text x="22" y="28" font-family="sans-serif" font-size="10" letter-spacing="2" fill="#5a7a5a" opacity="0.6">绿牌</text>
+  <text x="218" y="24" text-anchor="end" font-family="sans-serif" font-size="9" fill="#c47a7a" opacity="0.55">${card.type.split('·')[1]}</text>
   <text x="218" y="36" text-anchor="end" font-family="sans-serif" font-size="9" fill="#c47a7a" opacity="0.7">${card.id}</text>
   <line x1="22" y1="42" x2="64" y2="42" stroke="#c47a7a" stroke-width="0.8" opacity="0.45"/>
   <text x="22" y="74" font-family="serif" font-style="italic" font-size="13" fill="rgba(255,255,255,.32)" letter-spacing="0.5">${card.prompt}</text>
@@ -501,8 +487,8 @@ function makeCardSVG(card) {
   <ellipse cx="214" cy="222" rx="30" ry="26" fill="#7a5a7a" opacity="0.12"/>
   <line x1="186" y1="18" x2="222" y2="18" stroke="rgba(255,255,255,.06)" stroke-width="0.6"/>
   <line x1="222" y1="18" x2="222" y2="46" stroke="rgba(255,255,255,.06)" stroke-width="0.6"/>
-  <text x="22" y="28" font-family="sans-serif" font-size="10" letter-spacing="2" fill="#9a7aaa" opacity="0.6">绱墝</text>
-  <text x="218" y="24" text-anchor="end" font-family="sans-serif" font-size="9" fill="#c47a7a" opacity="0.55">${card.type.split('路')[1]}</text>
+  <text x="22" y="28" font-family="sans-serif" font-size="10" letter-spacing="2" fill="#9a7aaa" opacity="0.6">紫牌</text>
+  <text x="218" y="24" text-anchor="end" font-family="sans-serif" font-size="9" fill="#c47a7a" opacity="0.55">${card.type.split('·')[1]}</text>
   <text x="218" y="36" text-anchor="end" font-family="sans-serif" font-size="9" fill="#c47a7a" opacity="0.7">${card.id}</text>
   <line x1="22" y1="42" x2="64" y2="42" stroke="#c47a7a" stroke-width="0.8" opacity="0.45"/>
   <text x="22" y="74" font-family="serif" font-style="italic" font-size="13" fill="rgba(255,255,255,.32)" letter-spacing="0.5">${card.prompt}</text>
@@ -510,7 +496,8 @@ function makeCardSVG(card) {
   <image href="images/lin-watermark-green.png" x="20" y="296" width="30" height="30" opacity="0.28" style="filter:invert(1)"/>
 </svg>`;
   } else {
-    // 鐗规畩鐗?    return `<svg width="220" height="308" viewBox="0 0 240 336" xmlns="http://www.w3.org/2000/svg">
+    // 特殊牌
+    return `<svg width="220" height="308" viewBox="0 0 240 336" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <radialGradient id="bg" cx="50%" cy="50%" r="70%">
       <stop offset="0%" stop-color="#302a1e"/>
@@ -521,7 +508,7 @@ function makeCardSVG(card) {
   <ellipse cx="120" cy="140" rx="110" ry="100" fill="rgba(200,170,100,.06)"/>
   <circle cx="42" cy="32" r="1" fill="rgba(255,255,255,.15)"/>
   <circle cx="198" cy="26" r="1.2" fill="rgba(255,255,255,.12)"/>
-  <text x="120" y="128" text-anchor="middle" font-family="serif" font-size="40" fill="rgba(200,170,100,.22)">鉁?/text>
+  <text x="120" y="128" text-anchor="middle" font-family="serif" font-size="40" fill="rgba(200,170,100,.22)">✦</text>
   <text x="120" y="178" text-anchor="middle" font-size="18" letter-spacing="0.5" fill="rgba(255,255,255,.85)" font-family="sans-serif">${card.text}</text>
   <text x="120" y="230" text-anchor="middle" font-family="serif" font-style="italic" font-size="12" fill="rgba(255,255,255,.25)" letter-spacing="1">${card.sub || ''}</text>
   <line x1="80" y1="244" x2="160" y2="244" stroke="rgba(200,170,100,.12)" stroke-width="0.6"/>
@@ -542,10 +529,11 @@ function drawCard() {
   const face = document.getElementById('cardFace');
   const typeLabel = document.getElementById('typeLabel');
 
-  // 缈诲嚭鍘?  inner.classList.add('flipping');
+  // 翻出去
+  inner.classList.add('flipping');
 
   setTimeout(() => {
-    // 鎹㈠唴瀹癸紙鍦ㄧ炕杞腑閫旓紝鐢ㄦ埛鐪嬩笉瑙侊級
+    // 换内容（在翻转中途，用户看不见）
     let idx;
     do { idx = Math.floor(Math.random() * CARDS.length); } while (idx === lastIndex && CARDS.length > 1);
     lastIndex = idx;
@@ -553,113 +541,86 @@ function drawCard() {
     face.innerHTML = makeCardSVG(card);
     typeLabel.textContent = card.type;
 
-    // 缈诲洖鏉?    inner.classList.remove('flipping');
+    // 翻回来
+    inner.classList.remove('flipping');
     setTimeout(() => { isAnimating = false; }, 560);
   }, 280);
 }
 
-// 鈹€鈹€ 妯″紡鎺у埗 鈹€鈹€
+// ── 模式控制 ──
 const GREEN_CARDS = CARDS.filter(c => c.color === 'green');
 const PURPLE_CARDS = CARDS.filter(c => c.color === 'purple');
 
-// 鍗¤儗 SVG锛堢豢/绱悇涓€绉嶏級
-function makeCardBackSVG(color) {
-  const isGreen = color === 'green';
-  const bg1 = isGreen ? '#1a2e1a' : '#1e1428';
-  const bg2 = isGreen ? '#0e1a0e' : '#120e1c';
-  const accent = isGreen ? 'rgba(120,200,100,0.12)' : 'rgba(160,120,220,0.12)';
-  const line = isGreen ? 'rgba(120,200,100,0.18)' : 'rgba(160,120,220,0.18)';
-  return `<svg width="240" height="336" viewBox="0 0 240 336" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <radialGradient id="cbg" cx="50%" cy="50%" r="70%">
-      <stop offset="0%" stop-color="${bg1}"/>
-      <stop offset="100%" stop-color="${bg2}"/>
-    </radialGradient>
-  </defs>
-  <rect width="240" height="336" fill="url(#cbg)"/>
-  <rect x="16" y="16" width="208" height="304" rx="8" fill="none" stroke="${line}" stroke-width="1"/>
-  <rect x="24" y="24" width="192" height="288" rx="6" fill="none" stroke="${accent}" stroke-width="0.5"/>
-  <line x1="120" y1="40" x2="120" y2="296" stroke="${accent}" stroke-width="0.4"/>
-  <line x1="40" y1="168" x2="200" y2="168" stroke="${accent}" stroke-width="0.4"/>
-  <circle cx="120" cy="168" r="32" fill="none" stroke="${line}" stroke-width="0.8"/>
-  <circle cx="120" cy="168" r="18" fill="none" stroke="${accent}" stroke-width="0.5"/>
-  <text x="120" y="174" text-anchor="middle" font-family="serif" font-size="18" fill="${line}">鏋?/text>
-  <circle cx="40" cy="40" r="3" fill="${accent}"/>
-  <circle cx="200" cy="40" r="3" fill="${accent}"/>
-  <circle cx="40" cy="296" r="3" fill="${accent}"/>
-  <circle cx="200" cy="296" r="3" fill="${accent}"/>
-</svg>`;
-}
-
-// duoTurn = 褰撳墠鑳岄潰鏈濅笂锛堟殫鐨勶級閭ｅ紶锛岀偣瀹冪炕鍒版闈?let duoTurn = 'purple'; // 鍒濆缁挎闈㈢传鑳岄潰
+let duoTurn = 'green'; // 当前轮到谁
 let lastGreenIdx = -1, lastPurpleIdx = -1;
-let isAnimatingDuo = false;
+let isAnimatingGreen = false, isAnimatingPurple = false;
 
 function startMode(mode) {
   document.getElementById('modeOverlay').style.display = 'none';
   if (mode === 'solo') {
     document.getElementById('soloUI').style.display = 'flex';
     document.getElementById('soloActions').style.display = 'flex';
-    document.getElementById('topLabel').textContent = '浠?鏃?瀵?璇?;
+    document.getElementById('topLabel').textContent = '今 日 对 话';
     drawCard();
   } else {
     document.getElementById('duoUI').style.display = 'flex';
     document.getElementById('duoActions').style.display = 'flex';
-    document.getElementById('topLabel').textContent = '鍙?浜?瀵?璇?;
+    document.getElementById('topLabel').textContent = '双 人 对 话';
     duoInit();
   }
 }
 
 function duoInit() {
-  // 缁跨墝鎶戒竴寮狅紝姝ｉ潰鏈濅笂
-  const gPool = GREEN_CARDS;
-  let gi = Math.floor(Math.random() * gPool.length);
-  lastGreenIdx = gi;
-  document.getElementById('faceGreen').innerHTML = makeCardSVG(gPool[gi]);
-  document.getElementById('backGreen').innerHTML = makeCardBackSVG('green');
-  document.getElementById('innerGreen').className = 'card-inner face-up';
-
-  // 绱墝鎶戒竴寮狅紝鑳岄潰鏈濅笂
-  const pPool = PURPLE_CARDS;
-  let pi = Math.floor(Math.random() * pPool.length);
-  lastPurpleIdx = pi;
-  document.getElementById('facePurple').innerHTML = makeCardSVG(pPool[pi]);
-  document.getElementById('backPurple').innerHTML = makeCardBackSVG('purple');
-  document.getElementById('innerPurple').className = 'card-inner face-down';
-
-  duoTurn = 'purple'; // 绱槸鑳岄潰锛岀瓑寰呰缈?  updateDuoTurn();
+  // 初始各抽一张
+  duoFlip('green', true);
+  duoFlip('purple', true);
+  updateDuoTurn();
 }
 
 function duoDraw(color) {
-  if (color !== duoTurn) return; // 鍙兘鐐硅儗闈㈤偅寮?  if (isAnimatingDuo) return;
-  isAnimatingDuo = true;
+  if (color === duoTurn) return; // 亮的那张不能点，暗的才能抽
+  duoFlip(color, false);
+  duoTurn = color === 'green' ? 'purple' : 'green';
+  updateDuoTurn();
+}
 
-  const flipIn = document.getElementById(color === 'green' ? 'innerGreen' : 'innerPurple');
-  const flipOut = document.getElementById(color === 'green' ? 'innerPurple' : 'innerGreen');
-  const otherColor = color === 'green' ? 'purple' : 'green';
+function duoFlip(color, init) {
+  const isGreen = color === 'green';
+  if (isGreen && isAnimatingGreen) return;
+  if (!isGreen && isAnimatingPurple) return;
+  if (isGreen) isAnimatingGreen = true; else isAnimatingPurple = true;
 
-  // 缈诲紑褰撳墠鑳岄潰 鈫?姝ｉ潰
-  flipIn.classList.add('flipping');
+  const inner = document.getElementById(isGreen ? 'innerGreen' : 'innerPurple');
+  const face = document.getElementById(isGreen ? 'faceGreen' : 'facePurple');
+  const pool = isGreen ? GREEN_CARDS : PURPLE_CARDS;
+  let lastIdx = isGreen ? lastGreenIdx : lastPurpleIdx;
+
+  inner.classList.add('flipping');
   setTimeout(() => {
-    // 鎹㈡柊鐗屽唴瀹?    const pool = color === 'green' ? GREEN_CARDS : PURPLE_CARDS;
-    const lastIdx = color === 'green' ? lastGreenIdx : lastPurpleIdx;
     let idx;
     do { idx = Math.floor(Math.random() * pool.length); } while (idx === lastIdx && pool.length > 1);
-    if (color === 'green') lastGreenIdx = idx; else lastPurpleIdx = idx;
-    document.getElementById(color === 'green' ? 'faceGreen' : 'facePurple').innerHTML = makeCardSVG(pool[idx]);
-    flipIn.className = 'card-inner face-up';
-    flipIn.classList.remove('flipping');
-
-    // 鍚屾椂缈昏浆鍙︿竴寮犲埌鑳岄潰
-    flipOut.classList.add('flipping');
+    if (isGreen) lastGreenIdx = idx; else lastPurpleIdx = idx;
+    face.innerHTML = makeCardSVG(pool[idx]);
+    inner.classList.remove('flipping');
     setTimeout(() => {
-      flipOut.className = 'card-inner face-down';
-      flipOut.classList.remove('flipping');
-      duoTurn = otherColor;
-      updateDuoTurn();
-      isAnimatingDuo = false;
-    }, 300);
-  }, 280);
+      if (isGreen) isAnimatingGreen = false; else isAnimatingPurple = false;
+    }, 560);
+  }, init ? 0 : 280);
+}
+
+function updateDuoTurn() {
+  const slotG = document.getElementById('slotGreen');
+  const slotP = document.getElementById('slotPurple');
+  const label = document.getElementById('duoTurnLabel');
+  if (duoTurn === 'green') {
+    slotG.className = 'duo-slot active';
+    slotP.className = 'duo-slot inactive';
+    label.textContent = '你 来 抽';
+  } else {
+    slotG.className = 'duo-slot inactive';
+    slotP.className = 'duo-slot active';
+    label.textContent = 'TA 来 抽';
+  }
 }
 
 // 单人模式 drawCard 已在上方定义，不自动调用
