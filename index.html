@@ -2120,6 +2120,7 @@ const ins=document.getElementById('tab-insight');
     // 检查是否已解锁
   if(unlocked){
     ins.innerHTML = generatePremiumInsight(sA, sB);
+    renderUnlockedExtras(ins);
   }else{
     ins.innerHTML=h;
     if(window._unlockPollTimer) clearInterval(window._unlockPollTimer);
@@ -2128,7 +2129,9 @@ const ins=document.getElementById('tab-insight');
         const isUnlocked = await checkUnlocked(C);
         if(isUnlocked){
           clearInterval(window._unlockPollTimer);
-          document.getElementById('tab-insight').innerHTML = generatePremiumInsight(sA, sB);
+          const _ins = document.getElementById('tab-insight');
+          _ins.innerHTML = generatePremiumInsight(sA, sB);
+          renderUnlockedExtras(_ins);
           showToast('已解锁完整频率报告 ✨');
         }
       }catch(e){}
@@ -2239,6 +2242,28 @@ function showQRCode(url, orderNo) {
   }, 5000); // 每5秒检查一次
 }
 
+function renderUnlockedExtras(ins) {
+  // 顶部：通知 TA + 配对码找回说明
+  const notifyBanner = document.createElement('div');
+  notifyBanner.style.cssText='background:linear-gradient(135deg,rgba(90,122,90,.08),rgba(122,90,122,.08));border:1px solid rgba(122,90,122,.15);border-radius:12px;padding:14px 18px;margin:0 0 20px';
+  notifyBanner.innerHTML=''
+    +'<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px">'
+    +'<span style="font-size:.8rem;color:rgba(60,40,80,.65);line-height:1.6">报告已解锁<br><span style="font-size:.72rem;opacity:.7">让 TA 也来看看你们的频率</span></span>'
+    +'<button onclick="copyLink();this.textContent=\'已复制 ✓\';this.style.background=\'#5a7a5a\'" style="padding:8px 16px;background:#7a5a7a;color:white;border:none;border-radius:8px;font-size:.78rem;cursor:pointer;white-space:nowrap;flex-shrink:0">通知 TA →</button>'
+    +'</div>'
+    +'<div style="font-size:.7rem;color:rgba(90,70,90,.38);letter-spacing:.02em">配对码 <span style="font-family:monospace;font-size:.78rem;color:rgba(90,70,90,.55);letter-spacing:.12em">'+C+'</span> · 永久保存，下次输入配对码可直接查看</div>';
+  ins.insertBefore(notifyBanner, ins.firstChild);
+
+  // 底部：收口 — 抽一张对话卡
+  const footer = document.createElement('div');
+  footer.style.cssText='margin-top:32px;padding:20px 0 8px;border-top:1px solid rgba(122,90,122,.08);text-align:center';
+  footer.innerHTML=''
+    +'<div style="font-size:.72rem;color:rgba(90,70,90,.38);letter-spacing:.08em;margin-bottom:14px">报 告 读 完 了</div>'
+    +'<button onclick="window.location.href=\'card.html?code='+C+'\'" style="display:inline-block;padding:13px 28px;background:linear-gradient(135deg,#5a7a5a,#7a5a7a);border:none;border-radius:12px;color:white;font-family:\'Noto Serif SC\',serif;font-size:.88rem;font-weight:500;letter-spacing:.06em;cursor:pointer;box-shadow:0 6px 20px rgba(90,122,90,.2)">抽一张对话卡 →</button>'
+    +'<div style="font-size:.68rem;color:rgba(90,70,90,.3);margin-top:10px;letter-spacing:.04em">把报告里的洞察，变成今天的一次真实对话</div>';
+  ins.appendChild(footer);
+}
+
 async function unlockContent() {
   const ins = document.getElementById('tab-insight');
   ins.innerHTML = '';
@@ -2249,26 +2274,7 @@ async function unlockContent() {
   // 更新数据库解锁状态
   await fetch(SB+'/rest/v1/pairs?code=eq.'+C,{method:'PATCH',headers:H,body:JSON.stringify({unlocked:true})});
   
-  // 加"通知TA"横幅
-  const notifyBanner = document.createElement('div');
-  notifyBanner.style.cssText='background:linear-gradient(135deg,rgba(90,122,90,.08),rgba(122,90,122,.08));border:1px solid rgba(122,90,122,.15);border-radius:12px;padding:14px 18px;margin:0 0 20px;display:flex;align-items:center;justify-content:space-between;gap:12px';
-  notifyBanner.innerHTML='<span style="font-size:.8rem;color:rgba(60,40,80,.65);line-height:1.6">报告已解锁<br><span style="font-size:.72rem;opacity:.7">让 TA 也来看看你们的频率</span></span>'
-    +'<button onclick="copyLink();this.textContent=\'已复制 ✓\';this.style.background=\'#5a7a5a\'" style="padding:8px 16px;background:#7a5a7a;color:white;border:none;border-radius:8px;font-size:.78rem;cursor:pointer;white-space:nowrap;flex-shrink:0">通知 TA →</button>';
-  ins.insertBefore(notifyBanner, ins.firstChild);
-
-  // 加底部锚点，滚到底部才弹评分
-  const anchor = document.createElement('div');
-  anchor.id = 'report-end';
-  ins.appendChild(anchor);
-
-  // IntersectionObserver 监听锚点
-  const observer = new IntersectionObserver((entries) => {
-    if(entries[0].isIntersecting) {
-      observer.disconnect();
-      setTimeout(showFeedback, 800);
-    }
-  }, { threshold: 0.5 });
-  observer.observe(anchor);
+  renderUnlockedExtras(ins);
 }
 
 function showFeedback(){
