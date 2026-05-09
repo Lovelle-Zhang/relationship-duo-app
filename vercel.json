@@ -1,1 +1,1 @@
-{"rewrites":[{"source":"/forest","destination":"/forest.html"},{"source":"/app","destination":"/index.html"},{"source":"/card","destination":"/card.html"}]}
+{"rewrites":[{"source":"/forest","destination":"/forest.html"},{"source":"/app","destination":"/index.html"},{"source":"/card","destination":"/card.html"},{"source":"/archive","destination":"/archive.html"}]}

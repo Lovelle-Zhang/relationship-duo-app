@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>关系档案 · 林 Link</title>
+<link rel="icon" type="image/png" href="images/lin-watermark-green.png">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;min-height:100%;background:#0a0f0a;font-family:'Noto Serif SC',serif;color:rgba(255,255,255,.85)}
+canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
+.page{position:relative;z-index:1;min-height:100vh;padding:60px 24px 80px;max-width:480px;margin:0 auto}
+.back{position:fixed;top:28px;left:20px;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,.3);cursor:pointer;z-index:10}
+.back:hover{color:rgba(255,255,255,.6)}
+.top-label{position:fixed;top:32px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:4px;color:rgba(255,255,255,.18);white-space:nowrap;z-index:10}
+h1{font-size:1.5rem;font-weight:400;letter-spacing:.12em;color:rgba(255,255,255,.75);margin-bottom:6px;margin-top:20px}
+.sub{font-size:.72rem;letter-spacing:.08em;color:rgba(255,255,255,.25);margin-bottom:36px}
+.search-box{display:flex;gap:10px;margin-bottom:32px}
+.search-input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 16px;color:rgba(255,255,255,.8);font-family:monospace;font-size:1rem;letter-spacing:.12em;outline:none;transition:border-color .2s}
+.search-input::placeholder{color:rgba(255,255,255,.2);font-family:'Noto Serif SC',serif;font-size:.82rem;letter-spacing:.06em}
+.search-input:focus{border-color:rgba(120,200,100,.3)}
+.search-btn{padding:12px 20px;background:rgba(90,122,90,.25);border:1px solid rgba(90,180,90,.2);border-radius:10px;color:rgba(180,230,140,.8);font-size:.82rem;letter-spacing:.06em;cursor:pointer;white-space:nowrap}
+.search-btn:hover{background:rgba(90,122,90,.4)}
+.empty{text-align:center;padding:60px 0;color:rgba(255,255,255,.2);font-size:.82rem;letter-spacing:.06em;line-height:2}
+.record-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:20px;margin-bottom:14px}
+.record-card:hover{border-color:rgba(120,200,100,.15)}
+.record-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.record-names{font-size:.95rem;letter-spacing:.04em;color:rgba(255,255,255,.75)}
+.record-names span{color:rgba(180,230,140,.6);margin:0 6px;font-size:.75rem}
+.record-code{font-family:monospace;font-size:.72rem;letter-spacing:.12em;color:rgba(255,255,255,.2)}
+.record-meta{display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.tag{font-size:.68rem;letter-spacing:.06em;padding:3px 10px;border-radius:99px;border:1px solid}
+.tag-done{color:rgba(180,230,140,.6);border-color:rgba(180,230,140,.15);background:rgba(90,180,90,.06)}
+.tag-waiting{color:rgba(255,200,100,.5);border-color:rgba(255,200,100,.12);background:rgba(255,180,50,.04)}
+.tag-unlocked{color:rgba(200,160,255,.6);border-color:rgba(180,120,255,.15);background:rgba(150,90,255,.06)}
+.record-date{font-size:.68rem;color:rgba(255,255,255,.2);letter-spacing:.04em}
+.record-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn-view{padding:8px 18px;background:linear-gradient(135deg,rgba(90,122,90,.3),rgba(122,90,122,.3));border:1px solid rgba(120,180,120,.2);border-radius:8px;color:rgba(200,230,180,.8);font-size:.76rem;letter-spacing:.06em;cursor:pointer;font-family:inherit}
+.btn-view:hover{background:linear-gradient(135deg,rgba(90,122,90,.5),rgba(122,90,122,.5))}
+.btn-retest{padding:8px 18px;background:transparent;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:rgba(255,255,255,.35);font-size:.76rem;letter-spacing:.06em;cursor:pointer;font-family:inherit}
+.btn-retest:hover{border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.6)}
+.loading{text-align:center;padding:40px 0;color:rgba(255,255,255,.2);font-size:.8rem;letter-spacing:.08em}
+.error-msg{background:rgba(200,80,80,.08);border:1px solid rgba(200,80,80,.15);border-radius:10px;padding:12px 16px;color:rgba(255,160,140,.6);font-size:.78rem;margin-bottom:16px}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div class="back" onclick="window.location.href='forest.html'">← 林</div>
+<div class="top-label">关 系 档 案</div>
+<div class="page">
+  <h1>已有的树</h1>
+  <div class="sub">输入配对码，找回你们的记录</div>
+  <div class="search-box">
+    <input class="search-input" id="codeInput" placeholder="配对码（6位）" maxlength="6" oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter')searchRecord()">
+    <button class="search-btn" onclick="searchRecord()">查找</button>
+  </div>
+  <div id="errorMsg"></div>
+  <div id="results"></div>
+</div>
+<script>
+const SB='https://esfuazchkbbtccxtamwp.supabase.co';
+const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVzZnVhemNoa2JidGNjeHRhbXdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3OTg2ODUsImV4cCI6MjA5MjM3NDY4NX0.xV6Vvv4P0W4ky853yC9OvqOaSAyDErZVTM9UfCUidpQ';
+const H={'apikey':SK,'Authorization':'Bearer '+SK,'Content-Type':'application/json'};
+const urlCode=new URLSearchParams(location.search).get('code');
+if(urlCode){document.getElementById('codeInput').value=urlCode.toUpperCase();setTimeout(searchRecord,100)}
+async function searchRecord(){
+  const code=document.getElementById('codeInput').value.trim().toUpperCase();
+  const errEl=document.getElementById('errorMsg');
+  const resEl=document.getElementById('results');
+  errEl.innerHTML='';
+  if(code.length!==6){errEl.innerHTML='<div class="error-msg">请输入6位配对码</div>';return}
+  resEl.innerHTML='<div class="loading">查找中...</div>';
+  try{
+    const res=await fetch(SB+'/rest/v1/pairs?code=eq.'+code,{headers:H});
+    const data=await res.json();
+    if(!data||data.length===0){resEl.innerHTML='<div class="empty">没有找到这个配对码<br><span style="font-size:.68rem;opacity:.6">请确认配对码是否正确</span></div>';return}
+    renderRecords(data);
+  }catch(e){resEl.innerHTML='<div class="error-msg">查找失败，请稍后重试</div>'}
+}
+function formatDate(s){if(!s)return'';const d=new Date(s);return d.getFullYear()+'/'+(d.getMonth()+1).toString().padStart(2,'0')+'/'+d.getDate().toString().padStart(2,'0')}
+function renderRecords(records){
+  const el=document.getElementById('results');
+  el.innerHTML=records.map(r=>{
+    const done=r.status==='paired'||r.status==='complete';
+    const statusTag=done?'<span class="tag tag-done">双方已完成</span>':'<span class="tag tag-waiting">等待对方</span>';
+    const unlockedTag=r.unlocked?'<span class="tag tag-unlocked">已解锁</span>':'';
+    const viewBtn=done?'<button class="btn-view" onclick="viewReport(\''+r.code+'\')">'+( r.unlocked?'查看报告':'解锁报告')+'</button>':'';
+    const retestBtn='<button class="btn-retest" onclick="retest(\''+r.code+'\')">重新测试</button>';
+    return '<div class="record-card">'
+      +'<div class="record-header"><div class="record-names">'+(r.user1_name||'—')+'<span>×</span>'+(r.user2_name||'等待中')+'</div><div class="record-code">'+r.code+'</div></div>'
+      +'<div class="record-meta">'+statusTag+unlockedTag+'<span class="record-date">'+formatDate(r.created_at)+'</span></div>'
+      +'<div class="record-actions">'+viewBtn+retestBtn+'</div>'
+      +'</div>';
+  }).join('');
+}
+function viewReport(code){window.location.href='index.html?code='+code+'&view=result'}
+function retest(code){if(confirm('重新测试会保留原配对码，双方需要重新答题。继续吗？')){window.location.href='index.html?code='+code+'&retest=1'}}
+</script>
+<script>
+const canvas=document.getElementById('bg');const ctx=canvas.getContext('2d');let W,H,t=0,trees=[],particles=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;initBg()}
+function initBg(){trees=[];for(let i=0;i<14;i++){trees.push({x:Math.random(),y:.55+Math.random()*.45,h:.12+Math.random()*.22,w:.018+Math.random()*.014,layers:2+Math.floor(Math.random()*2),color:'#0f2010'})}particles=[];for(let i=0;i<25;i++){particles.push({x:Math.random(),y:.3+Math.random()*.6,r:.4+Math.random()*.8,sp:.0002+Math.random()*.0002,ph:Math.random()*Math.PI*2,dr:(Math.random()-.5)*.00008,col:Math.random()>.5?'rgba(180,230,140,':'rgba(140,210,160,'})}}
+function drawBg(){t+=.008;ctx.fillStyle='#0a0f0a';ctx.fillRect(0,0,W,H);trees.forEach(tr=>{const x=tr.x*W,bY=tr.y*H,tH=tr.h*H,tW=tr.w*Math.min(W,H),sw=Math.sin(t*.4+tr.x*10)*1.2;ctx.globalAlpha=.45;ctx.fillStyle=tr.color;ctx.fillRect(x-tW*.08+sw*.3,bY-tH*.18,tW*.16,tH*.2);for(let l=0;l<tr.layers;l++){const p=l/tr.layers,lY=bY-tH*(.15+p*.85),lW=tW*(1-p*.5),lH=tH*.28;ctx.globalAlpha=.4+p*.25;ctx.beginPath();ctx.moveTo(x+sw*(.3+p*.7),lY-lH);ctx.lineTo(x-lW+sw*.2,lY+lH*.3);ctx.lineTo(x+lW+sw*.2,lY+lH*.3);ctx.closePath();ctx.fill()}ctx.globalAlpha=1});particles.forEach(p=>{p.x+=p.dr+Math.sin(t*p.sp*100+p.ph)*.0002;p.y+=Math.cos(t*p.sp*80+p.ph)*.0001;if(p.x<0)p.x=1;if(p.x>1)p.x=0;if(p.y<0.2)p.y=0.9;if(p.y>0.95)p.y=0.2;const fl=.3+Math.sin(t*1.8+p.ph)*.3;ctx.beginPath();ctx.arc(p.x*W,p.y*H,p.r,0,Math.PI*2);ctx.fillStyle=p.col+fl+')';ctx.fill()});requestAnimationFrame(drawBg)}
+window.addEventListener('resize',resize);resize();drawBg();
+</script>
+</body>
+</html>
