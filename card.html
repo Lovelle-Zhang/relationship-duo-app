@@ -98,16 +98,16 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
   pointer-events: auto;
 }
 .btn-another {
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 3px;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.45);
   cursor: pointer;
   transition: color 0.2s;
   background: none;
   border: none;
-  padding: 8px 20px;
+  padding: 10px 24px;
 }
-.btn-another:hover { color: rgba(255,255,255,0.7); }
+.btn-another:hover { color: rgba(255,255,255,0.75); }
 
 /* 模式选择覆盖层 */
 .mode-overlay {
@@ -456,8 +456,8 @@ function makeCardSVG(card) {
   <text x="218" y="24" text-anchor="end" font-family="sans-serif" font-size="9" fill="#c47a7a" opacity="0.55">${card.type.split('·')[1]}</text>
   <text x="218" y="36" text-anchor="end" font-family="sans-serif" font-size="9" fill="#c47a7a" opacity="0.7">${card.id}</text>
   <line x1="22" y1="42" x2="64" y2="42" stroke="#c47a7a" stroke-width="0.8" opacity="0.45"/>
-  <text x="22" y="74" font-family="serif" font-style="italic" font-size="11" fill="rgba(255,255,255,.28)" letter-spacing="0.5">${card.prompt}</text>
-  ${card.text.split('\n').map((line, i) => `<text x="22" y="${118 + i*30}" font-size="17" letter-spacing="0.5" fill="rgba(255,255,255,.88)" font-family="sans-serif">${line}</text>`).join('')}
+  <text x="22" y="74" font-family="serif" font-style="italic" font-size="13" fill="rgba(255,255,255,.32)" letter-spacing="0.5">${card.prompt}</text>
+  ${card.text.split('\n').map((line, i) => `<text x="22" y="${118 + i*34}" font-size="20" letter-spacing="0.5" fill="rgba(255,255,255,.9)" font-family="sans-serif">${line}</text>`).join('')}
   <image href="images/lin-watermark-green.png" x="190" y="296" width="30" height="30" opacity="0.32" style="filter:invert(1)"/>
 </svg>`;
   } else if (card.color === 'purple') {
@@ -483,8 +483,8 @@ function makeCardSVG(card) {
   <text x="218" y="24" text-anchor="end" font-family="sans-serif" font-size="9" fill="#c47a7a" opacity="0.55">${card.type.split('·')[1]}</text>
   <text x="218" y="36" text-anchor="end" font-family="sans-serif" font-size="9" fill="#c47a7a" opacity="0.7">${card.id}</text>
   <line x1="22" y1="42" x2="64" y2="42" stroke="#c47a7a" stroke-width="0.8" opacity="0.45"/>
-  <text x="22" y="74" font-family="serif" font-style="italic" font-size="11" fill="rgba(255,255,255,.28)" letter-spacing="0.5">${card.prompt}</text>
-  ${card.text.split('\n').map((line, i) => `<text x="22" y="${118 + i*30}" font-size="17" letter-spacing="0.5" fill="rgba(255,255,255,.88)" font-family="sans-serif">${line}</text>`).join('')}
+  <text x="22" y="74" font-family="serif" font-style="italic" font-size="13" fill="rgba(255,255,255,.32)" letter-spacing="0.5">${card.prompt}</text>
+  ${card.text.split('\n').map((line, i) => `<text x="22" y="${118 + i*34}" font-size="20" letter-spacing="0.5" fill="rgba(255,255,255,.9)" font-family="sans-serif">${line}</text>`).join('')}
   <image href="images/lin-watermark-green.png" x="20" y="296" width="30" height="30" opacity="0.28" style="filter:invert(1)"/>
 </svg>`;
   } else {
