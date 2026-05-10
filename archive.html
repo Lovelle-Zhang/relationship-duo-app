@@ -46,7 +46,7 @@ h1{font-size:1.5rem;font-weight:400;letter-spacing:.12em;color:rgba(255,255,255,
 </head>
 <body>
 <canvas id="bg"></canvas>
-<div class="back" onclick="window.location.href='forest.html'">← 林</div>
+<div class="back" onclick="window.location.href='forest.html'">← lin</div>
 <div class="top-label">关 系 档 案</div>
 <div class="page">
   <h1>已有的树</h1>
@@ -75,7 +75,19 @@ async function searchRecord(){
     const res=await fetch(SB+'/rest/v1/pairs?code=eq.'+code,{headers:H});
     const data=await res.json();
     if(!data||data.length===0){resEl.innerHTML='<div class="empty">没有找到这个配对码<br><span style="font-size:.68rem;opacity:.6">请确认配对码是否正确</span></div>';return}
-    renderRecords(data);
+    // 合并同一 code 的两条记录为一条
+    const merged={};
+    data.forEach(r=>{
+      if(!merged[r.code]){merged[r.code]=Object.assign({},r)}
+      else{
+        const m=merged[r.code];
+        if(!m.user1_name&&r.user1_name)m.user1_name=r.user1_name;
+        if(!m.user2_name&&r.user2_name)m.user2_name=r.user2_name;
+        if(r.unlocked)m.unlocked=true;
+        if(r.status==='paired'||r.status==='complete')m.status=r.status;
+      }
+    });
+    renderRecords(Object.values(merged));
   }catch(e){resEl.innerHTML='<div class="error-msg">查找失败，请稍后重试</div>'}
 }
 function formatDate(s){if(!s)return'';const d=new Date(s);return d.getFullYear()+'/'+(d.getMonth()+1).toString().padStart(2,'0')+'/'+d.getDate().toString().padStart(2,'0')}
