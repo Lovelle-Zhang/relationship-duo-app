@@ -135,7 +135,12 @@ body::before {
   border-bottom: 1px solid rgba(255,255,255,0.04);
   position: relative;
   animation: fadeIn 0.4s ease both;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: opacity .15s;
+  cursor: pointer;
 }
+.note-item.pressing { opacity: 0.5; }
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
@@ -252,11 +257,14 @@ function loadNotes() {
       <div style="margin-top:6px;text-align:center;font-size:.6rem;color:rgba(255,255,255,.12);letter-spacing:.06em">长按删除</div>
     `;
     let timer;
-    item.addEventListener('touchstart',()=>{timer=setTimeout(()=>{if(confirm('删除这条记录？'))deleteNote(n.id)},700)},{passive:true});
-    item.addEventListener('touchend',()=>clearTimeout(timer),{passive:true});
-    item.addEventListener('touchmove',()=>clearTimeout(timer),{passive:true});
-    item.addEventListener('mousedown',()=>{timer=setTimeout(()=>{if(confirm('删除这条记录？'))deleteNote(n.id)},700)});
-    item.addEventListener('mouseup',()=>clearTimeout(timer));
+    const press=()=>{item.classList.add('pressing');timer=setTimeout(()=>{item.classList.remove('pressing');if(confirm('删除这条记录？'))deleteNote(n.id)},700)};
+    const cancel=()=>{clearTimeout(timer);item.classList.remove('pressing')};
+    item.addEventListener('touchstart',press,{passive:true});
+    item.addEventListener('touchend',cancel,{passive:true});
+    item.addEventListener('touchmove',cancel,{passive:true});
+    item.addEventListener('mousedown',press);
+    item.addEventListener('mouseup',cancel);
+    item.addEventListener('mouseleave',cancel);
     timeline.appendChild(item);
   });
 }

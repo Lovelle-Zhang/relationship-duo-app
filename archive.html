@@ -63,7 +63,8 @@ body{animation:pageFadeIn 0.3s ease-out}
   #mobile-bg{display:block;position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;background:#0d1a14}
   #mobile-bg svg{width:100%;height:100%;position:absolute;bottom:0;left:0}
   .page{padding-top:72px}
-  .record-card{border-radius:16px;padding:18px;background:rgba(255,255,255,0.04);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .record-card{border-radius:16px;padding:18px;background:rgba(255,255,255,0.04);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);user-select:none;-webkit-user-select:none;transition:transform .15s,background .15s;cursor:pointer}
+.record-card.pressing{background:rgba(200,80,80,.08);transform:scale(0.98)}
 }
 </style>
 </head>
@@ -218,11 +219,14 @@ function renderRecords(records){
   // 长按删除
   el.querySelectorAll('.record-card').forEach(card=>{
     let timer;
-    card.addEventListener('touchstart',()=>{timer=setTimeout(()=>{if(confirm('从本地记录中移除？'))deleteRecord(card.dataset.code)},700)},{passive:true});
-    card.addEventListener('touchend',()=>clearTimeout(timer),{passive:true});
-    card.addEventListener('touchmove',()=>clearTimeout(timer),{passive:true});
-    card.addEventListener('mousedown',()=>{timer=setTimeout(()=>{if(confirm('从本地记录中移除？'))deleteRecord(card.dataset.code)},700)});
-    card.addEventListener('mouseup',()=>clearTimeout(timer));
+    const press=()=>{card.classList.add('pressing');timer=setTimeout(()=>{card.classList.remove('pressing');if(confirm('从本地记录中移除？'))deleteRecord(card.dataset.code)},700)};
+    const cancel=()=>{clearTimeout(timer);card.classList.remove('pressing')};
+    card.addEventListener('touchstart',press,{passive:true});
+    card.addEventListener('touchend',cancel,{passive:true});
+    card.addEventListener('touchmove',cancel,{passive:true});
+    card.addEventListener('mousedown',press);
+    card.addEventListener('mouseup',cancel);
+    card.addEventListener('mouseleave',cancel);
   });
 }
 function toggleScores(id,btn){
