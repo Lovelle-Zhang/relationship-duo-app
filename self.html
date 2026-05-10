@@ -273,7 +273,7 @@ function loadNotes() {
       <div style="margin-top:6px;text-align:center;font-size:.6rem;color:rgba(255,255,255,.12);letter-spacing:.06em">长按删除</div>
     `;
     let timer;
-    const press=()=>{item.classList.add('pressing');timer=setTimeout(()=>{item.classList.remove('pressing');deleteNote(n.id)},700)};
+    const press=()=>{item.classList.add('pressing');timer=setTimeout(()=>{item.classList.remove('pressing');deleteNote(n.id, item)},700)};
     const cancel=()=>{clearTimeout(timer);item.classList.remove('pressing')};
     item.addEventListener('touchstart',press,{passive:true});
     item.addEventListener('touchend',cancel,{passive:true});
@@ -285,15 +285,16 @@ function loadNotes() {
   });
 }
 
-function deleteNote(id) {
-  const scrollY = window.scrollY;
+function deleteNote(id, el) {
   showConfirm().then(ok=>{
     if(!ok)return;
     let notes = JSON.parse(localStorage.getItem('lin_self_notes') || '[]');
     notes = notes.filter(n => n.id !== id);
     localStorage.setItem('lin_self_notes', JSON.stringify(notes));
-    loadNotes();
-    window.scrollTo(0, scrollY);
+    el.remove();
+    const remaining = document.querySelectorAll('.note-item').length;
+    document.getElementById('noteCount').textContent = remaining ? remaining + ' 条' : '';
+    if(!remaining) document.getElementById('emptyState').style.display = 'flex';
   });
 }
 
