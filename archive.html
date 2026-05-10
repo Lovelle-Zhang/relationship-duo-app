@@ -118,10 +118,11 @@ async function searchRecord(){
 function formatDate(s){if(!s)return'';const d=new Date(s);return d.getFullYear()+'/'+(d.getMonth()+1).toString().padStart(2,'0')+'/'+d.getDate().toString().padStart(2,'0')}
 function renderScores(scores){
   if(!Array.isArray(scores)||scores.length<7)return'';
-  const dims=['连接','沟通','信任','成长','空间','冲突','愿景'];
+  const dims=['深度沟通','修复能力','共同体验','价值契合','情绪支持','爱意表达','整体契合'];
+  const max=scores[0]>10?100:10;
   const bars=dims.map((label,i)=>{
     const v=scores[i]||0;
-    const pct=Math.round(v/10*100);
+    const pct=Math.round(v/max*100);
     return '<div class="score-bar-row">'
       +'<div class="score-bar-label">'+label+'</div>'
       +'<div class="score-bar-track"><div class="score-bar-fill" style="width:'+pct+'%"></div></div>'
@@ -129,8 +130,9 @@ function renderScores(scores){
       +'</div>';
   }).join('');
   const total=scores.slice(0,7).reduce((a,b)=>a+b,0);
+  const maxTotal=max*7;
   return '<div class="score-bar-wrap">'+bars
-    +'<div class="score-total"><span class="score-total-num">'+total+'</span><span class="score-total-label">/ 70 · 频率总分</span></div>'
+    +'<div class="score-total"><span class="score-total-num">'+total+'</span><span class="score-total-label">/ '+maxTotal+' · 频率总分</span></div>'
     +'</div>';
 }
 function renderRecords(records){
