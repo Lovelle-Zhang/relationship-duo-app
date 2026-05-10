@@ -206,9 +206,25 @@ body{animation:pageFadeIn 0.3s ease-out}
   .nav{background:rgba(13,26,20,0.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.05)}
   .content{padding-top:80px}
 }
+.confirm-mask{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:999;display:flex;align-items:center;justify-content:center}
+.confirm-box{background:#1a2a1e;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:24px 20px;width:260px;text-align:center}
+.confirm-box p{font-size:.88rem;color:rgba(255,255,255,.7);margin-bottom:20px;line-height:1.6}
+.confirm-btns{display:flex;gap:10px}
+.confirm-btns button{flex:1;padding:10px;border-radius:10px;border:none;font-size:.82rem;cursor:pointer;font-family:inherit}
+.confirm-cancel{background:rgba(255,255,255,.08);color:rgba(255,255,255,.5)}
+.confirm-ok{background:rgba(200,80,80,.3);color:rgba(255,150,150,.9)}
 </style>
 </head>
 <body>
+<div id="confirmMask" class="confirm-mask" style="display:none">
+  <div class="confirm-box">
+    <p>删除这条记录？</p>
+    <div class="confirm-btns">
+      <button class="confirm-cancel" onclick="confirmResolve(false)">取消</button>
+      <button class="confirm-ok" onclick="confirmResolve(true)">删除</button>
+    </div>
+  </div>
+</div>
 
 <div id="mobile-bg"><svg viewBox="0 0 390 844" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="ssk" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#0d1a14"/><stop offset="100%" style="stop-color:#1a2d24"/></linearGradient><linearGradient id="st1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#3d5a4a;stop-opacity:0.3"/><stop offset="100%" style="stop-color:#1e3428;stop-opacity:0.5"/></linearGradient><linearGradient id="st2" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#4a6a5a;stop-opacity:0.45"/><stop offset="100%" style="stop-color:#2d4a3a;stop-opacity:0.65"/></linearGradient><linearGradient id="st3" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#5a8a6a;stop-opacity:0.55"/><stop offset="100%" style="stop-color:#3d5a4a;stop-opacity:0.75"/></linearGradient><linearGradient id="sfog" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#0d1a14;stop-opacity:0"/><stop offset="100%" style="stop-color:#0d1a14;stop-opacity:0.85"/></linearGradient></defs><rect width="390" height="844" fill="url(#ssk)"/><circle cx="80" cy="60" r="1" fill="rgba(232,240,232,0.5)"/><circle cx="200" cy="40" r="1.2" fill="rgba(232,240,232,0.4)"/><circle cx="310" cy="80" r="0.8" fill="rgba(232,240,232,0.6)"/><polygon points="40,844 80,580 120,844" fill="url(#st1)"/><polygon points="160,844 200,560 240,844" fill="url(#st1)"/><polygon points="270,844 310,590 350,844" fill="url(#st1)"/><polygon points="10,844 60,500 110,844" fill="url(#st2)"/><polygon points="140,844 185,480 230,844" fill="url(#st2)"/><polygon points="260,844 310,510 360,844" fill="url(#st2)"/><polygon points="0,844 55,400 110,844" fill="url(#st3)"/><polygon points="130,844 180,380 230,844" fill="url(#st3)"/><polygon points="260,844 315,390 370,844" fill="url(#st3)"/><polygon points="340,844 390,420 440,844" fill="url(#st3)"/><rect x="0" y="680" width="390" height="164" fill="url(#sfog)"/></svg></div>
 
@@ -257,7 +273,7 @@ function loadNotes() {
       <div style="margin-top:6px;text-align:center;font-size:.6rem;color:rgba(255,255,255,.12);letter-spacing:.06em">长按删除</div>
     `;
     let timer;
-    const press=()=>{item.classList.add('pressing');timer=setTimeout(()=>{item.classList.remove('pressing');if(confirm('删除这条记录？'))deleteNote(n.id)},700)};
+    const press=()=>{item.classList.add('pressing');timer=setTimeout(()=>{item.classList.remove('pressing');deleteNote(n.id)},700)};
     const cancel=()=>{clearTimeout(timer);item.classList.remove('pressing')};
     item.addEventListener('touchstart',press,{passive:true});
     item.addEventListener('touchend',cancel,{passive:true});
@@ -271,12 +287,19 @@ function loadNotes() {
 
 function deleteNote(id) {
   const scrollY = window.scrollY;
-  let notes = JSON.parse(localStorage.getItem('lin_self_notes') || '[]');
-  notes = notes.filter(n => n.id !== id);
-  localStorage.setItem('lin_self_notes', JSON.stringify(notes));
-  loadNotes();
-  requestAnimationFrame(()=>requestAnimationFrame(()=>window.scrollTo(0, scrollY)));
+  showConfirm().then(ok=>{
+    if(!ok)return;
+    let notes = JSON.parse(localStorage.getItem('lin_self_notes') || '[]');
+    notes = notes.filter(n => n.id !== id);
+    localStorage.setItem('lin_self_notes', JSON.stringify(notes));
+    loadNotes();
+    window.scrollTo(0, scrollY);
+  });
 }
+
+let _confirmResolve=null;
+function showConfirm(){return new Promise(r=>{_confirmResolve=r;document.getElementById('confirmMask').style.display='flex'})}
+function confirmResolve(v){document.getElementById('confirmMask').style.display='none';if(_confirmResolve){_confirmResolve(v);_confirmResolve=null}}
 
 function escapeHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
