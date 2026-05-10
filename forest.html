@@ -124,78 +124,73 @@ canvas {
   z-index: 10;
 }
 
+/* 手机端专用导航：默认隐藏 */
+#mobile-nav { display: none; }
+
 /* 手机端：竖排列表布局 */
 @media (max-width: 640px) {
-  .entry-label {
-    position: static !important;
-    transform: none !important;
-    left: auto !important; top: auto !important;
-    bottom: auto !important; right: auto !important;
-    opacity: 1;
-    display: flex;
-    align-items: center;
-    padding: 15px 28px;
-    border-top: 1px solid rgba(255,255,255,0.05);
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-    text-align: left;
-  }
-  .entry-label:active { background: rgba(255,255,255,0.04); }
+  /* 隐藏桌面端入口（JS会操作这些，手机端不用） */
+  #mobile-entries { display: none !important; }
 
-  /* 竖线改为横向左侧竖线 */
-  .entry-stem {
-    width: 1px !important;
-    height: 32px !important;
-    margin: 0 20px 0 0 !important;
-    flex-shrink: 0;
-    background: rgba(255,255,255,0.15) !important;
-  }
-  .entry-primary .entry-stem {
-    height: 40px !important;
-    background: rgba(255,248,200,0.4) !important;
-  }
-
-  .entry-name {
-    font-size: 15px;
-    letter-spacing: 3px;
-    white-space: normal;
-    color: rgba(255,255,255,0.72);
-  }
-  .entry-primary .entry-name {
-    font-size: 16px;
-    color: rgba(255,248,220,0.92);
-  }
-  .entry-desc {
-    font-size: 11px;
-    white-space: normal;
-    margin-top: 4px;
-    color: rgba(255,255,255,0.26);
-  }
-
-  /* 入口容器：固定在屏幕中下方 */
-  #mobile-entries {
+  /* 显示手机端专用导航 */
+  #mobile-nav {
+    display: block;
     position: fixed;
     bottom: 80px;
     left: 0;
     right: 0;
     z-index: 20;
-    display: block;
+  }
+  .m-entry {
+    display: flex;
+    align-items: center;
+    padding: 15px 28px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .m-entry:active { background: rgba(255,255,255,0.04); }
+  .m-line {
+    width: 1px;
+    height: 32px;
+    background: rgba(255,255,255,0.15);
+    margin-right: 20px;
+    flex-shrink: 0;
+  }
+  .m-primary .m-line {
+    height: 40px;
+    background: rgba(255,248,200,0.4);
+  }
+  .m-name {
+    font-size: 15px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.72);
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 300;
+  }
+  .m-primary .m-name {
+    font-size: 16px;
+    color: rgba(255,248,220,0.92);
+    font-weight: 400;
+  }
+  .m-desc {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.26);
+    margin-top: 4px;
+    font-family: sans-serif;
   }
 
   /* 标题下移 */
-  .title {
-    top: 30% !important;
-  }
+  .title { top: 30% !important; }
   .title-main { font-size: 80px !important; }
 
-  /* 顶部小字 */
+  /* hint移到顶部 */
   .hint {
     bottom: auto !important;
     top: 14% !important;
-    font-size: 10px;
-    letter-spacing: 4px;
     color: rgba(255,255,255,0.1) !important;
-    pointer-events: none;
   }
 }
 </style>
@@ -243,6 +238,26 @@ canvas {
 </div>
 
 <div class="hint">走进去，而不是点击进去</div>
+
+<!-- 手机端专用入口（桌面端隐藏，JS不操作） -->
+<div id="mobile-nav">
+  <div class="m-entry m-primary" onclick="window.location.href='index.html'">
+    <div class="m-line"></div>
+    <div class="m-text"><div class="m-name">新的连接</div><div class="m-desc">开始频率测试</div></div>
+  </div>
+  <div class="m-entry m-primary" onclick="window.location.href='card.html'">
+    <div class="m-line"></div>
+    <div class="m-text"><div class="m-name">今日对话</div><div class="m-desc">抽一张卡</div></div>
+  </div>
+  <div class="m-entry" onclick="window.location.href='archive.html'">
+    <div class="m-line"></div>
+    <div class="m-text"><div class="m-name">已有的树</div><div class="m-desc">重测 · 看变化</div></div>
+  </div>
+  <div class="m-entry" onclick="window.location.href='self.html'">
+    <div class="m-line"></div>
+    <div class="m-text"><div class="m-name">和自己</div><div class="m-desc">抽卡记录 · 内心轨迹</div></div>
+  </div>
+</div>
 
 <script>
 const canvas = document.getElementById('forest');
