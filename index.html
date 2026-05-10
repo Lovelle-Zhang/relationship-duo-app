@@ -1193,6 +1193,17 @@ p {
   width: 100% !important;
 }
 
+/* ===== tab按钮手机端优化 ===== */
+.tab {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
 /* ===== 总分卡样式锁定，不受tab切换影响 ===== */
 .score-card {
   padding: 28px 24px !important;
@@ -2141,11 +2152,17 @@ show('result');
 }
 
 function switchTab(n){
-document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['radar','compare','insight'][i]===n));
-document.getElementById('tab-radar').style.display='none';
-document.getElementById('tab-compare').style.display='none';
-document.getElementById('tab-insight').style.display='none';
-document.getElementById('tab-'+n).style.display='block';
+  // 只操作结果页内的tab按钮，避免选中其他页面的.tab元素
+  const resultEl = document.getElementById('result');
+  resultEl.querySelectorAll('.tab').forEach((t,i)=>{
+    t.classList.toggle('active',['radar','compare','insight'][i]===n);
+  });
+  ['radar','compare','insight'].forEach(id=>{
+    const el = document.getElementById('tab-'+id);
+    if(el) el.style.cssText = (id===n)
+      ? 'display:block!important;width:100%;visibility:visible;opacity:1'
+      : 'display:none!important;width:100%';
+  });
 }
 
 function drawRadar(sA,sB,sz){
