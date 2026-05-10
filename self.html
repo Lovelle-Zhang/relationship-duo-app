@@ -140,7 +140,7 @@ body::before {
   transition: opacity .15s;
   cursor: pointer;
 }
-.note-item.pressing { opacity: 0.5; }
+.note-item.pressing { opacity: 0.5 !important; background: rgba(200,80,80,.06); border-radius: 8px; }
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
