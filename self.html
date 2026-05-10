@@ -275,7 +275,7 @@ function deleteNote(id) {
   notes = notes.filter(n => n.id !== id);
   localStorage.setItem('lin_self_notes', JSON.stringify(notes));
   loadNotes();
-  requestAnimationFrame(()=>window.scrollTo(0, scrollY));
+  requestAnimationFrame(()=>requestAnimationFrame(()=>window.scrollTo(0, scrollY)));
 }
 
 function escapeHtml(str) {
