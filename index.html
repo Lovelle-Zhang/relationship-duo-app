@@ -1241,6 +1241,16 @@ p {
 /* 全局按钮按压感 */
 
 button:focus{outline:none!important;box-shadow:none!important}
+
+/* 手机端：选项更大点击区域 + 间距优化 */
+@media(max-width:640px){
+  .opt{padding:14px 16px;border-radius:12px;margin-bottom:10px}
+  .opt-txt{font-size:.85rem}
+  .btn-next{padding:16px 0;font-size:.9rem;border-radius:10px}
+  .btn-back{padding:14px 16px;border-radius:10px}
+  .nav-row{margin-top:20px;gap:8px}
+  .q-title{font-size:1rem;line-height:1.6}
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
