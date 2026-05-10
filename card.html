@@ -25,16 +25,17 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 /* 顶部返回 */
 .back {
   position: fixed;
-  top: 32px; left: 24px;
-  font-size: 14px;
-  letter-spacing: 2px;
-  color: rgba(255,255,255,0.5);
+  top: 28px; left: 24px;
+  font-size: 11px;
+  letter-spacing: .18em;
+  color: rgba(255,255,255,0.32);
   cursor: pointer;
   pointer-events: auto;
-  transition: color 0.2s;
+  transition: color 0.3s;
   z-index: 50;
+  text-decoration: none;
 }
-.back:hover { color: rgba(255,255,255,0.8); }
+.back:hover { color: rgba(255,255,255,0.78); }
 
 /* 顶部标签 */
 .top-label {
@@ -380,7 +381,7 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 
 <canvas id="bg"></canvas>
 
-<div class="back" onclick="window.location.href='forest.html'">← 林</div>
+<a class="back" href="forest.html">← zenfix</a>
 <div class="top-label" id="topLabel">今 日 对 话</div>
 <div class="mode-toggle" id="modeToggle" onclick="toggleMode()">双人 ⇄</div>
 
