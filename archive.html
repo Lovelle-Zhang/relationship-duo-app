@@ -203,7 +203,7 @@ function renderRecords(records){
     const statusTag=done?'<span class="tag tag-done">双方已完成</span>':'<span class="tag tag-waiting">等待对方</span>';
     const unlockedTag=r.unlocked?'<span class="tag tag-unlocked">已解锁</span>':'';
     const scoresHtml=(done||r.unlocked)&&r.scoresA?renderScores(r.scoresA,r.scoresB,nA,nB):'';
-    const viewBtn=done?'<button class="btn-view" onclick="viewReport(\''+r.code+'\')">'+( r.unlocked?'查看报告':'解锁报告')+'</button>':'';
+    const viewBtn=done?'<button class="btn-view" onclick="viewReport(\''+r.code+'\')">'+( r.unlocked?'查看报告':'解锁报告 ¥29')+'</button>':'';
     const retestBtn='<button class="btn-retest" onclick="retest(\''+r.code+'\')">重新测试</button>';
     const deleteBtn='<button class="btn-retest" onclick="deleteRecord(\''+r.code+'\')" style="color:rgba(200,100,100,.6);border-color:rgba(200,100,100,.2)">删除</button>';
     const scoreId='scores-'+r.code;

@@ -1610,6 +1610,7 @@ button:focus{outline:none!important;box-shadow:none!important}
 
 <div id="result" class="screen hidden">
 <div style="padding:20px 0;width:100%;overflow:hidden">
+<div id="result-back" style="display:none;margin-bottom:8px"><button onclick="history.back()" style="background:none;border:none;color:rgba(90,122,90,.6);font-size:.8rem;cursor:pointer;padding:0;font-family:inherit">← 返回档案</button></div>
 
 <!-- 总分卡片 -->
 <div id="wait-notice"></div>
@@ -3018,9 +3019,10 @@ function showTestResult() {
         if(!rA||!rB||!rA.scores||!rB.scores)return;
         R='A';
         myS=rA.scores;theirS=rB.scores;
-        myName=rA.user1_name||'';theirName=rB.user1_name||'';
+        myName=rA.user1_name||'深林';theirName=rB.user1_name||'幽兰';
         const unlocked=data.some(r=>r.unlocked);
         renderResult(unlocked);
+        document.getElementById('result-back').style.display='block';
       }catch(e){}
     })();
   }
