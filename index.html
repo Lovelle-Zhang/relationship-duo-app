@@ -2989,11 +2989,33 @@ function showTestResult() {
 
 // ?test=1 快速预览结果页
 (function(){
-  if(new URLSearchParams(location.search).get('test')==='1'){
+  const p=new URLSearchParams(location.search);
+  if(p.get('test')==='1'){
     R='A';C='TEST01';
     myS=[78,85,72,88,58,82,76];
     theirS=[82,88,88,79,96,85,80];
     setTimeout(()=>renderResult(false),100);
+    return;
+  }
+  if(p.get('view')==='result'){
+    const code=p.get('code');
+    if(!code)return;
+    C=code.toUpperCase();
+    // 从数据库拉两条记录，渲染结果页
+    (async()=>{
+      try{
+        const res=await fetch(SB+'/rest/v1/pairs?code=eq.'+C,{headers:H});
+        const data=await res.json();
+        if(!data||data.length<2)return;
+        const rA=data.find(r=>r.role==='A'),rB=data.find(r=>r.role==='B');
+        if(!rA||!rB||!rA.scores||!rB.scores)return;
+        R='A';
+        myS=rA.scores;theirS=rB.scores;
+        myName=rA.user1_name||'';theirName=rB.user1_name||'';
+        const unlocked=data.some(r=>r.unlocked);
+        renderResult(unlocked);
+      }catch(e){}
+    })();
   }
 })();
 </script>
