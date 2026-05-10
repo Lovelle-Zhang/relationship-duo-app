@@ -45,6 +45,8 @@ h1{font-size:1.5rem;font-weight:400;letter-spacing:.12em;color:rgba(255,255,255,
 
 /* 手机端SVG背景 */
 #mobile-bg{display:none}
+@keyframes pageFadeIn{from{opacity:0}to{opacity:1}}
+body{animation:pageFadeIn 0.3s ease-out}
 @media(max-width:640px){
   canvas{display:none!important}
   #mobile-bg{display:block;position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;background:#0d1a14}

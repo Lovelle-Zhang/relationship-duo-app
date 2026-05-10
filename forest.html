@@ -110,8 +110,11 @@ canvas {
 .entry-primary:hover .entry-stem { background: rgba(255,248,235,0.7); }
 .entry-primary:hover .entry-name { color: #fff; }
 
-/* 底部提示 */
-.hint {
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+body { animation: pageFadeIn 0.3s ease-out; }
   position: fixed;
   bottom: 28px;
   left: 50%;
