@@ -112,6 +112,128 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 }
 .btn-another:hover { color: rgba(255,255,255,0.75); }
 
+/* 底部感受输入区 */
+.note-panel {
+  display: none;
+}
+.note-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.18);
+  margin-bottom: 10px;
+}
+.note-input-wrap {
+  width: 200px;
+}
+.note-textarea {
+  width: 100%;
+  min-height: 36px;
+  max-height: 100px;
+  background: rgba(255,255,255,0.04);
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0;
+  color: rgba(255,255,255,0.6);
+  font-size: 12px;
+  line-height: 1.8;
+  padding: 6px 4px;
+  resize: none;
+  outline: none;
+  font-family: 'Noto Serif SC', serif;
+  letter-spacing: 0.05em;
+  transition: border-color 0.25s;
+  box-sizing: border-box;
+  text-align: center;
+}
+.note-textarea::placeholder {
+  color: rgba(255,255,255,0.18);
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+.note-textarea:focus {
+  border-color: rgba(255,255,255,0.25);
+}
+
+/* 记录触发点 */
+.note-trigger {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  pointer-events: auto;
+  margin-top: 8px;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.note-trigger.visible { opacity: 1; }
+.note-trigger-line {
+  width: 32px;
+  height: 1px;
+  background: rgba(255,255,255,0.25);
+}
+.note-trigger-text {
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.4);
+}
+.note-trigger:hover .note-trigger-line { background: rgba(255,255,255,0.5); }
+.note-trigger:hover .note-trigger-text { color: rgba(255,255,255,0.7); }
+
+/* 右侧滑入输入面板 */
+.note-drawer {
+  position: fixed;
+  top: 0; right: 0;
+  width: min(340px, 85vw);
+  height: 100%;
+  background: rgba(15, 22, 32, 0.96);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border-left: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  flex-direction: column;
+  padding: 60px 32px 40px;
+  box-sizing: border-box;
+  z-index: 100;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: auto;
+}
+.note-drawer.open { transform: translateX(0); }
+.note-drawer-label {
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 28px;
+}
+.note-drawer-textarea {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: rgba(255,255,255,0.85);
+  font-size: 16px;
+  line-height: 2;
+  font-family: 'Noto Serif SC', serif;
+  letter-spacing: 0.08em;
+  resize: none;
+  padding: 0;
+}
+.note-drawer-textarea::placeholder {
+  color: rgba(255,255,255,0.2);
+  font-size: 14px;
+}
+.note-drawer-close {
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.3);
+  cursor: pointer;
+  text-align: center;
+  margin-top: 20px;
+  transition: color 0.2s;
+}
+.note-drawer-close:hover { color: rgba(255,255,255,0.6); }
+
 /* 模式切换按钮 */
 .mode-toggle {
   position: fixed;
@@ -225,7 +347,7 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 
 <!-- 单人模式 -->
 <div class="ui" id="soloUI" style="display:flex">
-  <div class="card-container" id="cardWrap">
+  <div class="card-container" id="cardWrap" onclick="drawCard()">
     <div class="card-inner" id="cardInner">
       <div class="card-face" id="cardFace"></div>
     </div>
@@ -262,8 +384,18 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 </div>
 
 <div class="actions" id="soloActions" style="display:none">
-  <div class="card-type-label" id="typeLabel"></div>
-  <button class="btn-another" onclick="drawCard()">再抽一张</button>
+  <div class="note-trigger" id="noteTrigger" onclick="openNoteDrawer()">
+    <div class="note-trigger-line"></div>
+    <div class="note-trigger-text">记 录</div>
+  </div>
+  <div style="font-size:12px;letter-spacing:2px;color:rgba(255,255,255,0.2);margin-top:14px">点击牌面抽下一张</div>
+</div>
+
+<!-- 右侧滑入输入面板 -->
+<div class="note-drawer" id="noteDrawer">
+  <div class="note-drawer-label">此 刻 感 受</div>
+  <textarea class="note-drawer-textarea" id="noteDrawerText" placeholder="写下此刻的感受&#10;&#10;不必完整，只是此刻..."></textarea>
+  <div class="note-drawer-close" onclick="closeNoteDrawer()">收 起</div>
 </div>
 
 <div class="actions" id="duoActions" style="display:none">
@@ -588,19 +720,20 @@ function drawCard() {
 
   const inner = document.getElementById('cardInner');
   const face = document.getElementById('cardFace');
-  const typeLabel = document.getElementById('typeLabel');
 
   // 翻出去
   inner.classList.add('flipping');
 
   setTimeout(() => {
-    // 换内容（在翻转中途，用户看不见）
     let idx;
     do { idx = Math.floor(Math.random() * SOLO_CARDS.length); } while (idx === lastIndex && SOLO_CARDS.length > 1);
     lastIndex = idx;
     const card = SOLO_CARDS[idx];
     face.innerHTML = makeCardSVG(card);
-    typeLabel.textContent = card.type;
+
+    // 抽牌后显示"记录"触发点
+    const trigger = document.getElementById('noteTrigger');
+    if (trigger) trigger.classList.add('visible');
 
     // 翻回来
     inner.classList.remove('flipping');
@@ -705,6 +838,24 @@ function toggleMode() {
     duoInit();
   }
 }
+
+function openNoteDrawer() {
+  document.getElementById('noteDrawer').classList.add('open');
+  setTimeout(() => document.getElementById('noteDrawerText').focus(), 350);
+}
+
+function closeNoteDrawer() {
+  document.getElementById('noteDrawer').classList.remove('open');
+}
+
+// 点击 drawer 外部关闭
+document.addEventListener('click', (e) => {
+  const drawer = document.getElementById('noteDrawer');
+  if (drawer && drawer.classList.contains('open') && !drawer.contains(e.target)) {
+    const trigger = document.getElementById('noteTrigger');
+    if (!trigger || !trigger.contains(e.target)) closeNoteDrawer();
+  }
+});
 
 // 页面加载时直接进单人模式
 window.addEventListener('DOMContentLoaded', () => {
