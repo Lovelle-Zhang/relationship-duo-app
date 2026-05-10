@@ -160,8 +160,6 @@ async function searchRecord(){
   }catch(e){resEl.innerHTML='<div class="error-msg">查找失败，请稍后重试</div>'}
 }
 function formatDate(s){if(!s)return'';const d=new Date(s);return d.getFullYear()+'/'+(d.getMonth()+1).toString().padStart(2,'0')+'/'+d.getDate().toString().padStart(2,'0')}
-function renderScores(scores){
-  if(!Array.isArray(scores)||scores.length<7)return'';
 function renderScores(sA,sB,nameA,nameB){
   if(!Array.isArray(sA)||sA.length<7)return'';
   const dims=['深度沟通','修复能力','共同体验','价值契合','情绪支持','爱意表达','整体契合'];
