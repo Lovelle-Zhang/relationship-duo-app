@@ -416,8 +416,9 @@ function drawTree(tree, time) {
     const layerW = treeW * (1.0 - progress * 0.5) * (1 + Math.sin(time * 0.3 + l) * 0.01);
     const layerH = treeH * 0.28;
     const alpha = tree.far ? 0.5 + progress * 0.3 : 0.7 + progress * 0.2;
+    const mobileAlpha = W <= 640 ? 0.55 : 1.0;
 
-    ctx.globalAlpha = alpha;
+    ctx.globalAlpha = alpha * mobileAlpha;
     ctx.fillStyle = tree.color;
     ctx.beginPath();
     ctx.moveTo(x + sway * (0.3 + progress * 0.7), layerY - layerH);
