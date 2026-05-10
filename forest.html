@@ -126,81 +126,158 @@ canvas {
 
 /* 手机端专用导航：默认隐藏 */
 #mobile-nav { display: none; }
+#mobile-forest-bg { display: none; }
 
-/* 手机端：竖排列表布局 */
+/* 手机端 */
 @media (max-width: 640px) {
-  /* 隐藏桌面端入口（JS会操作这些，手机端不用） */
+  /* 隐藏桌面端 canvas 和入口 */
+  canvas { display: none !important; }
   #mobile-entries { display: none !important; }
+  .hint { display: none !important; }
+  .title { display: none !important; }
 
-  /* 显示手机端专用导航 */
-  #mobile-nav {
+  /* 手机端全屏背景 */
+  #mobile-forest-bg {
     display: block;
     position: fixed;
-    bottom: 60px;
-    left: 16px;
-    right: 16px;
-    z-index: 20;
-    background: rgba(5,12,8,0.55);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
     overflow: hidden;
+    background: #0d1a14;
   }
-  .m-entry {
-    display: flex;
-    align-items: center;
-    padding: 16px 24px;
-    cursor: pointer;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    transition: background 0.15s;
+  #mobile-forest-bg svg {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 100%;
   }
-  .m-entry:last-child { border-bottom: none; }
-  .m-entry:active { background: rgba(255,255,255,0.06); }
-  .m-entry:active .m-line { background: rgba(255,255,255,0.5) !important; }
-  .m-entry:active .m-name { color: rgba(255,255,255,0.95); }
-  .m-line {
-    width: 1px;
-    height: 32px;
-    background: rgba(255,255,255,0.15);
-    margin-right: 20px;
-    flex-shrink: 0;
+
+  /* 手机端顶部标题 */
+  #mobile-header {
+    display: block !important;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 10;
+    text-align: center;
+    padding: 52px 20px 24px;
   }
-  .m-primary .m-line {
-    height: 40px;
-    background: rgba(255,248,200,0.4);
-  }
-  .m-name {
-    font-size: 15px;
-    letter-spacing: 3px;
-    color: rgba(255,255,255,0.72);
-    font-family: 'Noto Serif SC', serif;
-    font-weight: 300;
-  }
-  .m-primary .m-name {
-    font-size: 16px;
-    color: rgba(255,248,220,0.92);
+  #mobile-header .mh-main {
+    font-size: 36px;
     font-weight: 400;
+    letter-spacing: 6px;
+    color: rgba(232,240,232,0.88);
+    font-family: 'Noto Serif SC', serif;
   }
-  .m-desc {
+  #mobile-header .mh-sub {
     font-size: 11px;
-    letter-spacing: 2px;
-    color: rgba(255,255,255,0.26);
-    margin-top: 4px;
+    letter-spacing: 6px;
+    color: rgba(138,154,138,0.7);
+    margin-top: 6px;
     font-family: sans-serif;
   }
 
-  /* 标题下移 */
-  .title { top: 22% !important; }
-  .title-main { font-size: 80px !important; }
+  /* 手机端主内容 */
+  #mobile-nav {
+    display: block;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 20;
+    padding: 0 20px 40px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
 
-  /* hint移到顶部 */
-  .hint {
-    bottom: auto !important;
-    top: 14% !important;
-    color: rgba(255,255,255,0.1) !important;
+  /* 主卡片 */
+  .m-card {
+    padding: 28px 24px;
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    overflow: hidden;
+    margin-bottom: 14px;
+    position: relative;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .m-card.green {
+    background: linear-gradient(135deg, rgba(45,74,58,0.45) 0%, rgba(30,52,40,0.3) 100%);
+  }
+  .m-card.purple {
+    background: linear-gradient(135deg, rgba(107,90,122,0.35) 0%, rgba(58,45,74,0.25) 100%);
+  }
+  .m-card:active { transform: scale(0.97); }
+  .m-card-title {
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    color: rgba(232,240,232,0.92);
+    margin-bottom: 6px;
+    font-family: 'Noto Serif SC', serif;
+  }
+  .m-card-desc {
+    font-size: 13px;
+    color: rgba(138,154,138,0.8);
+    letter-spacing: 1px;
+    font-family: sans-serif;
+  }
+
+  /* 次要入口 */
+  .m-secondary {
+    display: flex;
+    gap: 12px;
+  }
+  .m-link {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 18px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.2s;
+  }
+  .m-link:active { background: rgba(255,255,255,0.08); transform: scale(0.97); }
+  .m-link-title {
+    font-size: 15px;
+    color: rgba(232,240,232,0.75);
+    font-family: 'Noto Serif SC', serif;
+    letter-spacing: 1px;
+  }
+  .m-link-desc {
+    font-size: 11px;
+    color: rgba(138,154,138,0.6);
+    margin-top: 3px;
+    font-family: sans-serif;
+  }
+  .m-link-arrow {
+    font-size: 16px;
+    color: rgba(255,255,255,0.2);
+    margin-left: 8px;
+  }
+
+  /* 底部 slogan */
+  #mobile-footer {
+    display: block !important;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 5;
+    text-align: center;
+    padding: 0 20px 16px;
+    background: linear-gradient(to top, rgba(13,26,20,0.9) 0%, transparent 100%);
+    pointer-events: none;
+  }
+  #mobile-footer .mf-text {
+    font-size: 11px;
+    color: rgba(106,122,106,0.5);
+    letter-spacing: 2px;
+    font-family: sans-serif;
   }
 }
 </style>
@@ -249,24 +326,98 @@ canvas {
 
 <div class="hint">走进去，而不是点击进去</div>
 
-<!-- 手机端专用入口（桌面端隐藏，JS不操作） -->
+<!-- 手机端SVG森林背景 -->
+<div id="mobile-forest-bg">
+  <svg viewBox="0 0 390 844" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:#0d1a14;stop-opacity:1"/>
+        <stop offset="100%" style="stop-color:#1a2d24;stop-opacity:1"/>
+      </linearGradient>
+      <linearGradient id="t1" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:#3d5a4a;stop-opacity:0.35"/>
+        <stop offset="100%" style="stop-color:#1e3428;stop-opacity:0.5"/>
+      </linearGradient>
+      <linearGradient id="t2" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:#4a6a5a;stop-opacity:0.5"/>
+        <stop offset="100%" style="stop-color:#2d4a3a;stop-opacity:0.7"/>
+      </linearGradient>
+      <linearGradient id="t3" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:#5a8a6a;stop-opacity:0.65"/>
+        <stop offset="100%" style="stop-color:#3d5a4a;stop-opacity:0.85"/>
+      </linearGradient>
+    </defs>
+    <rect width="390" height="844" fill="url(#sky)"/>
+    <!-- 星星 -->
+    <circle cx="80" cy="60" r="1" fill="rgba(232,240,232,0.5)"/>
+    <circle cx="200" cy="40" r="1.2" fill="rgba(232,240,232,0.4)"/>
+    <circle cx="310" cy="80" r="0.8" fill="rgba(232,240,232,0.6)"/>
+    <circle cx="150" cy="100" r="1" fill="rgba(232,240,232,0.3)"/>
+    <circle cx="340" cy="50" r="1.2" fill="rgba(232,240,232,0.45)"/>
+    <!-- 远景树 -->
+    <polygon points="40,844 80,580 120,844" fill="url(#t1)"/>
+    <polygon points="160,844 200,560 240,844" fill="url(#t1)"/>
+    <polygon points="270,844 310,590 350,844" fill="url(#t1)"/>
+    <!-- 中景树 -->
+    <polygon points="10,844 60,500 110,844" fill="url(#t2)"/>
+    <polygon points="140,844 185,480 230,844" fill="url(#t2)"/>
+    <polygon points="260,844 310,510 360,844" fill="url(#t2)"/>
+    <!-- 前景树 -->
+    <polygon points="0,844 55,400 110,844" fill="url(#t3)"/>
+    <polygon points="130,844 180,380 230,844" fill="url(#t3)"/>
+    <polygon points="260,844 315,390 370,844" fill="url(#t3)"/>
+    <polygon points="340,844 390,420 440,844" fill="url(#t3)"/>
+    <!-- 底部雾气 -->
+    <rect x="0" y="680" width="390" height="164" fill="url(#fog)" opacity="0.8"/>
+    <defs>
+      <linearGradient id="fog" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:#0d1a14;stop-opacity:0"/>
+        <stop offset="100%" style="stop-color:#0d1a14;stop-opacity:0.95"/>
+      </linearGradient>
+    </defs>
+  </svg>
+</div>
+
+<!-- 手机端标题 -->
+<div id="mobile-header" style="display:none">
+  <div class="mh-main">林</div>
+  <div class="mh-sub">L I N K</div>
+</div>
+
+<!-- 手机端导航 -->
 <div id="mobile-nav">
-  <div class="m-entry m-primary" onclick="window.location.href='index.html'">
-    <div class="m-line"></div>
-    <div class="m-text"><div class="m-name">新的连接</div><div class="m-desc">开始频率测试</div></div>
+  <!-- 主卡片：新的连接 -->
+  <div class="m-card green" onclick="window.location.href='index.html'">
+    <div class="m-card-title">新的连接</div>
+    <div class="m-card-desc">开始频率测试</div>
   </div>
-  <div class="m-entry m-primary" onclick="window.location.href='card.html'">
-    <div class="m-line"></div>
-    <div class="m-text"><div class="m-name">今日对话</div><div class="m-desc">抽一张卡</div></div>
+  <!-- 主卡片：今日对话 -->
+  <div class="m-card purple" onclick="window.location.href='card.html'">
+    <div class="m-card-title">今日对话</div>
+    <div class="m-card-desc">抽一张卡</div>
   </div>
-  <div class="m-entry" onclick="window.location.href='archive.html'">
-    <div class="m-line"></div>
-    <div class="m-text"><div class="m-name">已有的树</div><div class="m-desc">重测 · 看变化</div></div>
+  <!-- 次要入口 -->
+  <div class="m-secondary">
+    <div class="m-link" onclick="window.location.href='archive.html'">
+      <div>
+        <div class="m-link-title">已有的树</div>
+        <div class="m-link-desc">重测 · 看变化</div>
+      </div>
+      <div class="m-link-arrow">→</div>
+    </div>
+    <div class="m-link" onclick="window.location.href='self.html'">
+      <div>
+        <div class="m-link-title">和自己</div>
+        <div class="m-link-desc">内心轨迹</div>
+      </div>
+      <div class="m-link-arrow">→</div>
+    </div>
   </div>
-  <div class="m-entry" onclick="window.location.href='self.html'">
-    <div class="m-line"></div>
-    <div class="m-text"><div class="m-name">和自己</div><div class="m-desc">抽卡记录 · 内心轨迹</div></div>
-  </div>
+</div>
+
+<!-- 手机端底部 -->
+<div id="mobile-footer" style="display:none">
+  <div class="mf-text">走进去，而不是点击进去</div>
 </div>
 
 <script>
@@ -540,18 +691,16 @@ function draw() {
 window.addEventListener('resize', resize);
 resize();
 
-// 手机端入口触摸反馈
-document.querySelectorAll('.m-entry').forEach(el => {
+// 手机端触摸反馈（iOS Safari :active 不可靠）
+document.querySelectorAll('.m-card, .m-link').forEach(el => {
   el.addEventListener('touchstart', () => {
-    el.style.background = 'rgba(255,255,255,0.10)';
-    el.querySelector('.m-line').style.background = 'rgba(255,248,200,0.8)';
-    el.querySelector('.m-name').style.color = 'rgba(255,255,255,1)';
+    el.style.transform = 'scale(0.97)';
+    el.style.opacity = '0.85';
   }, { passive: true });
   el.addEventListener('touchend', () => {
     setTimeout(() => {
-      el.style.background = '';
-      el.querySelector('.m-line').style.background = '';
-      el.querySelector('.m-name').style.color = '';
+      el.style.transform = '';
+      el.style.opacity = '';
     }, 150);
   });
 });
