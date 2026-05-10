@@ -1856,7 +1856,7 @@ return Array.isArray(d)&&d.length?d[0].scores:null;
 async function dbWrite(code,role,scores){
   await fetch(SB+'/rest/v1/pairs',{method:'POST',headers:{...H,'Prefer':'resolution=merge-duplicates'},body:JSON.stringify({code,role,scores})});
   if(role==='B'){
-    await fetch(SB+'/rest/v1/pairs?code=eq.'+code,{method:'PATCH',headers:H,body:JSON.stringify({used:true})});
+    await fetch(SB+'/rest/v1/pairs?code=eq.'+code,{method:'PATCH',headers:H,body:JSON.stringify({used:true,status:'paired'})});
   }
 }
 
