@@ -26,15 +26,15 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 .back {
   position: fixed;
   top: 32px; left: 24px;
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 2px;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.5);
   cursor: pointer;
   pointer-events: auto;
   transition: color 0.2s;
   z-index: 50;
 }
-.back:hover { color: rgba(255,255,255,0.6); }
+.back:hover { color: rgba(255,255,255,0.8); }
 
 /* 顶部标签 */
 .top-label {
@@ -44,7 +44,7 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
   transform: translateX(-50%);
   font-size: 15px;
   letter-spacing: 4px;
-  color: rgba(255,255,255,0.65);
+  color: rgba(255,255,255,0.7);
   white-space: nowrap;
   z-index: 50;
 }
@@ -159,26 +159,42 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
   cursor: pointer;
   pointer-events: auto;
-  margin-top: 8px;
+  margin-top: 16px;
   opacity: 0;
-  transition: opacity 0.4s;
+  transition: opacity 0.5s;
 }
 .note-trigger.visible { opacity: 1; }
-.note-trigger-line {
-  width: 32px;
-  height: 1px;
+.note-trigger-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.note-trigger-dots span {
+  display: block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
   background: rgba(255,255,255,0.25);
+  transition: background 0.2s;
+}
+.note-trigger-dots span:nth-child(2) {
+  width: 4px;
+  height: 4px;
+  background: rgba(255,255,255,0.35);
 }
 .note-trigger-text {
-  font-size: 13px;
-  letter-spacing: 3px;
+  font-size: 12px;
+  letter-spacing: 4px;
   color: rgba(255,255,255,0.4);
+  font-family: 'Noto Serif SC', serif;
+  transition: color 0.2s;
 }
-.note-trigger:hover .note-trigger-line { background: rgba(255,255,255,0.5); }
-.note-trigger:hover .note-trigger-text { color: rgba(255,255,255,0.7); }
+.note-trigger:hover .note-trigger-dots span { background: rgba(255,255,255,0.6); }
+.note-trigger:hover .note-trigger-dots span:nth-child(2) { background: rgba(255,255,255,0.75); }
+.note-trigger:hover .note-trigger-text { color: rgba(255,255,255,0.75); }
 
 /* 右侧滑入输入面板 */
 .note-drawer {
@@ -186,53 +202,76 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
   top: 0; right: 0;
   width: min(340px, 85vw);
   height: 100%;
-  background: rgba(15, 22, 32, 0.96);
+  background: rgba(12, 18, 28, 0.97);
   backdrop-filter: blur(32px);
   -webkit-backdrop-filter: blur(32px);
-  border-left: 1px solid rgba(255,255,255,0.1);
+  border-left: 1px solid rgba(255,255,255,0.07);
   display: flex;
   flex-direction: column;
-  padding: 60px 32px 40px;
+  padding: 72px 36px 44px;
   box-sizing: border-box;
   z-index: 100;
   transform: translateX(100%);
-  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: auto;
 }
 .note-drawer.open { transform: translateX(0); }
 .note-drawer-label {
   font-size: 11px;
-  letter-spacing: 4px;
+  letter-spacing: 5px;
   color: rgba(255,255,255,0.35);
-  margin-bottom: 28px;
+  margin-bottom: 6px;
+  font-family: 'Noto Serif SC', serif;
+}
+.note-drawer-sublabel {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.18);
+  margin-bottom: 36px;
 }
 .note-drawer-textarea {
   flex: 1;
   background: transparent;
   border: none;
+  border-top: 1px solid rgba(255,255,255,0.06);
   outline: none;
-  color: rgba(255,255,255,0.85);
+  color: rgba(255,255,255,0.88);
   font-size: 16px;
-  line-height: 2;
+  line-height: 2.1;
   font-family: 'Noto Serif SC', serif;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   resize: none;
-  padding: 0;
+  padding: 24px 0 0;
 }
 .note-drawer-textarea::placeholder {
   color: rgba(255,255,255,0.2);
   font-size: 14px;
+  line-height: 2.1;
+}
+.note-drawer-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
 }
 .note-drawer-close {
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 3px;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.35);
   cursor: pointer;
-  text-align: center;
-  margin-top: 20px;
   transition: color 0.2s;
 }
-.note-drawer-close:hover { color: rgba(255,255,255,0.6); }
+.note-drawer-close:hover { color: rgba(255,255,255,0.65); }
+.note-drawer-view {
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.3);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.note-drawer-view:hover { color: rgba(255,255,255,0.6); }
 
 /* 模式切换按钮 */
 .mode-toggle {
@@ -385,26 +424,29 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 
 <div class="actions" id="soloActions" style="display:none">
   <div class="note-trigger" id="noteTrigger" onclick="openNoteDrawer()">
-    <div class="note-trigger-line"></div>
+    <div class="note-trigger-dots">
+      <span></span><span></span><span></span>
+    </div>
     <div class="note-trigger-text">记 录</div>
   </div>
-  <div style="font-size:12px;letter-spacing:2px;color:rgba(255,255,255,0.2);margin-top:14px">点击牌面抽下一张</div>
+  <div style="font-size:13px;letter-spacing:2px;color:rgba(255,255,255,0.3);margin-top:14px">点击牌面抽下一张</div>
 </div>
 
 <!-- 右侧滑入输入面板 -->
 <div class="note-drawer" id="noteDrawer">
   <div class="note-drawer-label">此 刻 感 受</div>
+  <div class="note-drawer-sublabel">收起时自动保存</div>
   <textarea class="note-drawer-textarea" id="noteDrawerText" placeholder="写下此刻的感受&#10;&#10;不必完整，只是此刻..."></textarea>
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px">
-    <div class="note-drawer-close" onclick="closeNoteDrawer()" style="margin-top:0">收 起</div>
-    <span style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.12)">or</span>
-    <a href="self.html" style="font-size:11px;letter-spacing:3px;color:rgba(255,255,255,0.18);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='rgba(255,255,255,0.45)'" onmouseout="this.style.color='rgba(255,255,255,0.18)'">查看记录 →</a>
+  <div class="note-drawer-footer">
+    <div class="note-drawer-close" onclick="closeNoteDrawer()">收 起</div>
+    <span style="font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.15)">or</span>
+    <a class="note-drawer-view" href="self.html">查看记录 →</a>
   </div>
 </div>
 
 <div class="actions" id="duoActions" style="display:none">
   <div class="card-type-label" id="duoTurnLabel"></div>
-  <div style="font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.2);margin-top:8px">点击对方的牌面翻牌</div>
+  <div style="font-size:13px;letter-spacing:2px;color:rgba(255,255,255,0.3);margin-top:8px">点击对方的牌面翻牌</div>
 </div>
 
 <script>
