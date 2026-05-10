@@ -234,7 +234,7 @@ function renderRecords(records){
   // 长按删除
   el.querySelectorAll('.record-card').forEach(card=>{
     let timer;
-    const press=()=>{card.classList.add('pressing');timer=setTimeout(()=>{card.classList.remove('pressing');deleteRecord(card.dataset.code)},700)};
+    const press=()=>{card.classList.add('pressing');timer=setTimeout(()=>{card.classList.remove('pressing');deleteRecord(card.dataset.code,card)},700)};
     const cancel=()=>{clearTimeout(timer);card.classList.remove('pressing')};
     card.addEventListener('touchstart',press,{passive:true});
     card.addEventListener('touchend',cancel,{passive:true});
@@ -255,12 +255,12 @@ let _confirmResolve=null;
 function showConfirm(){return new Promise(r=>{_confirmResolve=r;document.getElementById('confirmMask').style.display='flex'})}
 function confirmResolve(v){document.getElementById('confirmMask').style.display='none';if(_confirmResolve){_confirmResolve(v);_confirmResolve=null}}
 
-function deleteRecord(code){
+function deleteRecord(code, el){
   showConfirm().then(ok=>{
     if(!ok)return;
     const codes=getSavedCodes().filter(c=>c!==code);
     localStorage.setItem(STORAGE_KEY,JSON.stringify(codes));
-    location.reload();
+    el.remove();
   });
 }
 function viewReport(code){window.location.href='index.html?code='+code+'&view=result'}

@@ -1515,7 +1515,7 @@ button:focus{outline:none!important;box-shadow:none!important}
 
 <!-- A 发起测试 - 适当缩小 -->
 <div style="max-width:340px;margin:0 auto 14px">
-  <input id="nameA" placeholder="你的名字（选填）" maxlength="10" style="width:100%;padding:10px 16px;border:1.5px solid rgba(90,122,90,.2);border-radius:8px;font-size:.88rem;text-align:center;background:rgba(255,255,255,.7);margin-bottom:8px;box-sizing:border-box;font-family:inherit">
+  <input id="nameA" placeholder="你的名字（选填）" maxlength="10" style="width:100%;padding:10px 16px;border:1.5px solid rgba(90,122,90,.2);border-radius:8px;font-size:.85rem;text-align:center;background:rgba(255,255,255,.06);color:rgba(255,255,255,.8);margin-bottom:8px;box-sizing:border-box;font-family:'Noto Serif SC',serif;letter-spacing:.04em;outline:none" onfocus="this.style.borderColor='rgba(90,122,90,.5)'" onblur="this.style.borderColor='rgba(90,122,90,.2)'"  >
   <button class="btn-main" onclick="startA()" style="width:100%;padding:14px;font-size:.88rem;font-weight:500;letter-spacing:-0.005em;background:#5a7a5a;color:white;border:none;border-radius:8px;cursor:pointer;transition:all .2s">
     开始测试
   </button>
@@ -1525,7 +1525,7 @@ button:focus{outline:none!important;box-shadow:none!important}
 
 <!-- B 加入测试 - 更轻盈 -->
 <div style="max-width:340px;margin:0 auto">
-  <input id="nameB" placeholder="你的名字（选填）" maxlength="10" style="width:100%;padding:10px 16px;border:1.5px solid rgba(122,90,122,.2);border-radius:8px;font-size:.88rem;text-align:center;background:rgba(255,255,255,.7);margin-bottom:8px;box-sizing:border-box;font-family:inherit">
+  <input id="nameB" placeholder="你的名字（选填）" maxlength="10" style="width:100%;padding:10px 16px;border:1.5px solid rgba(122,90,122,.2);border-radius:8px;font-size:.85rem;text-align:center;background:rgba(255,255,255,.06);color:rgba(255,255,255,.8);margin-bottom:8px;box-sizing:border-box;font-family:'Noto Serif SC',serif;letter-spacing:.04em;outline:none" onfocus="this.style.borderColor='rgba(122,90,122,.5)'" onblur="this.style.borderColor='rgba(122,90,122,.2)'"  >
   <input class="code-input" id="ci" placeholder="输入6位邀请码" maxlength="6" oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter')joinB()" style="width:100%;padding:12px 16px;border:1.5px solid rgba(90,122,90,.25);border-radius:8px;font-size:1rem;letter-spacing:3px;text-align:center;font-weight:600;transition:all .2s;background:rgba(255,255,255,.8)">
   <button class="btn-join" onclick="joinB()" style="width:100%;margin-top:10px;padding:12px;background:transparent;color:#5a7a5a;border:1.5px solid rgba(90,122,90,.35);border-radius:8px;font-size:.8rem;font-weight:500;letter-spacing:0.02em;transition:all .2s;cursor:pointer;font-weight:500">
     加入测试 →
@@ -3014,9 +3014,9 @@ function showTestResult() {
       try{
         const res=await fetch(SB+'/rest/v1/pairs?code=eq.'+C,{headers:H});
         const data=await res.json();
-        if(!data||data.length<2)return;
+        if(!data||data.length<2){showScreen('intro');alert('对方还没有完成测试');return;}
         const rA=data.find(r=>r.role==='A'),rB=data.find(r=>r.role==='B');
-        if(!rA||!rB||!rA.scores||!rB.scores)return;
+        if(!rA||!rB||!rA.scores||!rB.scores){showScreen('intro');alert('数据不完整，请双方完成测试后再查看');return;}
         R='A';
         myS=rA.scores;theirS=rB.scores;
         myName=rA.user1_name||'深林';theirName=rB.user1_name||'幽兰';
