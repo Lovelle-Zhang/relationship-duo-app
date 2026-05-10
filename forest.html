@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>林 Link</title>
 <link rel="icon" type="image/png" href="images/lin-watermark-green.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -12,8 +14,8 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #0a0f0a;
-  font-family: sans-serif;
+  background: #060c06;
+  font-family: 'Noto Serif SC', serif;
 }
 
 canvas {
@@ -22,33 +24,30 @@ canvas {
   width: 100%; height: 100%;
 }
 
-.ui-layer {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
-}
-
 /* 顶部标题 */
 .title {
   position: fixed;
-  top: 48px;
+  top: 52px;
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
   pointer-events: none;
+  z-index: 10;
 }
 .title-main {
-  font-size: 32px;
-  letter-spacing: 10px;
-  color: rgba(255,255,255,0.75);
+  font-size: 38px;
+  letter-spacing: 12px;
+  color: rgba(255,255,255,0.82);
   font-weight: 300;
+  font-family: 'Noto Serif SC', serif;
 }
 .title-sub {
-  font-size: 14px;
-  letter-spacing: 4px;
-  color: rgba(255,255,255,0.4);
-  margin-top: 6px;
+  font-size: 11px;
+  letter-spacing: 7px;
+  color: rgba(255,255,255,0.28);
+  margin-top: 10px;
+  font-family: sans-serif;
+  font-weight: 300;
 }
 
 /* 入口标签 */
@@ -57,71 +56,72 @@ canvas {
   pointer-events: auto;
   cursor: pointer;
   text-align: center;
-  transition: opacity 0.3s;
+  z-index: 10;
+  transition: opacity 0.35s;
+  opacity: 0.9;
 }
-.entry-label:hover { opacity: 0.85; }
+.entry-label:hover { opacity: 1; }
+.entry-label:hover .entry-name { color: rgba(255,255,255,0.95); }
+.entry-label:hover .entry-stem { background: rgba(255,255,255,0.35); }
 
-.entry-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  margin: 0 auto 8px;
-  animation: pulse 2.5s ease-in-out infinite;
+/* 竖线茎 */
+.entry-stem {
+  width: 1px;
+  height: 28px;
+  background: rgba(255,255,255,0.15);
+  margin: 0 auto 12px;
+  transition: background 0.3s;
 }
+
 .entry-name {
   font-size: 15px;
-  letter-spacing: 2px;
-  color: rgba(255,255,255,0.7);
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.75);
   white-space: nowrap;
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 300;
+  transition: color 0.3s;
 }
 .entry-desc {
-  font-size: 12px;
-  letter-spacing: 1px;
-  color: rgba(255,255,255,0.38);
-  margin-top: 4px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.3);
+  margin-top: 6px;
   white-space: nowrap;
+  font-family: sans-serif;
 }
 
-/* 四个入口位置 */
-.entry-new {
-  bottom: 22%;
-  left: 18%;
+/* 主要入口（今日对话 + 新的连接）权重更高 */
+.entry-primary .entry-stem {
+  height: 40px;
+  background: rgba(255,248,235,0.4);
 }
-.entry-new .entry-dot { background: rgba(120,180,120,0.8); box-shadow: 0 0 12px rgba(120,180,120,0.5); }
-
-.entry-archive {
-  bottom: 42%;
-  right: 16%;
+.entry-primary .entry-name {
+  font-size: 18px;
+  letter-spacing: 4px;
+  color: rgba(255,248,225,0.95);
+  font-weight: 400;
 }
-.entry-archive .entry-dot { background: rgba(160,200,140,0.7); box-shadow: 0 0 12px rgba(160,200,140,0.4); animation-delay: 0.8s; }
-
-.entry-card {
-  bottom: 30%;
-  left: 50%;
-  transform: translateX(-50%);
+.entry-primary .entry-desc {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: rgba(255,240,200,0.45);
 }
-.entry-card .entry-dot { background: rgba(200,220,160,0.6); box-shadow: 0 0 10px rgba(200,220,160,0.35); animation-delay: 1.4s; }
-
-.entry-map {
-  top: 28%;
-  right: 20%;
-}
-.entry-map .entry-dot { background: rgba(100,160,120,0.65); box-shadow: 0 0 14px rgba(100,160,120,0.4); animation-delay: 0.4s; }
-
-@keyframes pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.6); opacity: 0.6; }
-}
+.entry-primary:hover .entry-stem { background: rgba(255,248,235,0.7); }
+.entry-primary:hover .entry-name { color: #fff; }
 
 /* 底部提示 */
 .hint {
   position: fixed;
-  bottom: 32px;
+  bottom: 28px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 12px;
-  letter-spacing: 3px;
-  color: rgba(255,255,255,0.18);
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: rgba(255,255,255,0.12);
   pointer-events: none;
+  font-family: sans-serif;
+  z-index: 10;
 }
 </style>
 </head>
@@ -135,29 +135,29 @@ canvas {
 </div>
 
 <!-- 入口1：新测试 -->
-<div class="entry-label entry-new" onclick="window.location.href='index.html'">
-  <div class="entry-dot"></div>
+<div class="entry-label entry-new entry-primary" onclick="window.location.href='index.html'">
+  <div class="entry-stem"></div>
   <div class="entry-name">新的连接</div>
   <div class="entry-desc">开始频率测试</div>
 </div>
 
 <!-- 入口2：关系档案 -->
 <div class="entry-label entry-archive" onclick="window.location.href='archive.html'">
-  <div class="entry-dot"></div>
+  <div class="entry-stem"></div>
   <div class="entry-name">已有的树</div>
   <div class="entry-desc">重测 · 看变化</div>
 </div>
 
 <!-- 入口3：今日卡牌 -->
-<div class="entry-label entry-card" onclick="window.location.href='card.html'">
-  <div class="entry-dot"></div>
+<div class="entry-label entry-card entry-primary" onclick="window.location.href='card.html'">
+  <div class="entry-stem"></div>
   <div class="entry-name">今日对话</div>
   <div class="entry-desc">抽一张卡</div>
 </div>
 
 <!-- 入口4：和自己 -->
 <div class="entry-label entry-map" onclick="window.location.href='self.html'">
-  <div class="entry-dot"></div>
+  <div class="entry-stem"></div>
   <div class="entry-name">和自己</div>
   <div class="entry-desc">抽卡记录 · 内心轨迹</div>
 </div>
@@ -174,6 +174,30 @@ function resize() {
   W = canvas.width = window.innerWidth;
   H = canvas.height = window.innerHeight;
   initForest();
+  positionEntries();
+}
+
+// 把入口标签定位到对应树的树顶上方
+function positionEntries() {
+  // 对应 bigTrees[4](x:0.20,h:0.62), bigTrees[5](x:0.82,h:0.68),
+  //         midTrees[2](x:0.50,y:0.78,h:0.32), midTrees[1](x:0.35,y:0.80,h:0.30)
+  const anchors = [
+    { el: '.entry-new',     tx: 0.20, ty: 1.0 - 0.62, offsetY: -48 },
+    { el: '.entry-map',     tx: 0.82, ty: 1.0 - 0.68, offsetY: -48 },
+    { el: '.entry-card',    tx: 0.50, ty: 0.78 - 0.32, offsetY: -48 },
+    { el: '.entry-archive', tx: 0.35, ty: 0.80 - 0.30, offsetY: -48 },
+  ];
+  anchors.forEach(({ el, tx, ty, offsetY }) => {
+    const node = document.querySelector(el);
+    if (!node) return;
+    const px = tx * W;
+    const py = ty * H + offsetY;
+    node.style.left = px + 'px';
+    node.style.top  = py + 'px';
+    node.style.transform = 'translateX(-50%)';
+    node.style.bottom = 'auto';
+    node.style.right  = 'auto';
+  });
 }
 
 // 树的数据
