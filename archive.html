@@ -163,27 +163,37 @@ function formatDate(s){if(!s)return'';const d=new Date(s);return d.getFullYear()
 function renderScores(sA,sB,nameA,nameB){
   if(!Array.isArray(sA)||sA.length<7)return'';
   const dims=['深度沟通','修复能力','共同体验','价值契合','情绪支持','爱意表达','整体契合'];
-  const max=100;
   const nA=nameA||'深林';const nB=nameB||'幽兰';
   const bars=dims.map((label,i)=>{
     const a=sA[i]||0,b=sB?sB[i]||0:null;
-    return '<div class="score-bar-row" style="margin-bottom:12px">'
-      +'<div class="score-bar-label">'+label+'</div>'
-      +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">'
-      +'<div style="width:36px;font-size:.68rem;color:rgba(180,220,180,.6)">'+nA+'</div>'
-      +'<div class="score-bar-track"><div class="score-bar-fill" style="width:'+a+'%;background:#5a7a5a"></div></div>'
-      +'<div class="score-bar-val">'+a+'</div></div>'
+    const diff=b!==null?Math.abs(a-b):0;
+    const isGap=diff>25;
+    return '<div style="margin-bottom:10px">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">'
+      +'<span style="font-size:.75rem;color:rgba(200,230,200,.7)">'+label+'</span>'
+      +(isGap?'<span style="font-size:.62rem;color:rgba(230,160,80,.7)">差距 '+diff+'</span>':'')
+      +'</div>'
+      +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">'
+      +'<div style="width:42px;font-size:.65rem;color:rgba(160,210,160,.55);text-align:right;flex-shrink:0">'+nA+'</div>'
+      +'<div style="flex:1;height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden"><div style="height:100%;width:'+a+'%;background:#5a7a5a;border-radius:3px"></div></div>'
+      +'<div style="width:24px;font-size:.72rem;font-weight:600;color:#5a9a5a;text-align:right">'+a+'</div>'
+      +'</div>'
       +(b!==null?'<div style="display:flex;align-items:center;gap:6px">'
-      +'<div style="width:36px;font-size:.68rem;color:rgba(180,160,200,.6)">'+nB+'</div>'
-      +'<div class="score-bar-track"><div class="score-bar-fill" style="width:'+b+'%;background:#7a5a7a"></div></div>'
-      +'<div class="score-bar-val">'+b+'</div></div>':'')
+      +'<div style="width:42px;font-size:.65rem;color:rgba(180,150,210,.55);text-align:right;flex-shrink:0">'+nB+'</div>'
+      +'<div style="flex:1;height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden"><div style="height:100%;width:'+b+'%;background:#7a5a7a;border-radius:3px"></div></div>'
+      +'<div style="width:24px;font-size:.72rem;font-weight:600;color:#9a7aba;text-align:right">'+b+'</div>'
+      +'</div>':'')
       +'</div>';
   }).join('');
-  const avgA=Math.round(sA.slice(0,7).reduce((a,b)=>a+b,0)/7);
-  const avgB=sB?Math.round(sB.slice(0,7).reduce((a,b)=>a+b,0)/7):null;
-  return '<div class="score-bar-wrap">'+bars
-    +'<div class="score-total"><span class="score-total-num">'+avgA+(avgB!==null?' · '+avgB:'')+'</span><span class="score-total-label">/ 100 · 频率均分</span></div>'
-    +'</div>';
+  const avgA=Math.round(sA.slice(0,7).reduce((s,v)=>s+v,0)/7);
+  const avgB=sB?Math.round(sB.slice(0,7).reduce((s,v)=>s+v,0)/7):null;
+  return '<div class="score-bar-wrap" style="padding:14px 0 4px">'+bars
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06)">'
+    +'<span style="font-size:.68rem;color:rgba(200,220,200,.4)">频率均分</span>'
+    +'<span style="font-size:.85rem;font-weight:600;color:rgba(200,230,200,.8)">'
+    +'<span style="color:#5a9a5a">'+avgA+'</span>'+(avgB!==null?'<span style="color:rgba(200,220,200,.3);margin:0 4px">·</span><span style="color:#9a7aba">'+avgB+'</span>':'')
+    +' <span style="font-size:.65rem;font-weight:400;color:rgba(200,220,200,.3)">/ 100</span></span>'
+    +'</div></div>';
 }
 function renderRecords(records){
   const el=document.getElementById('results');
