@@ -605,13 +605,13 @@ const CARDS = [
   { type: '绿牌·亲密', color: 'green', prompt: '说真的——', text: '你觉得，我知道\n你爱我吗？', id: 'I·06' },
   { type: '绿牌·亲密', color: 'green', prompt: '随便——', text: '牵手的时候，\n你在想什么？', id: 'I·07' },
   // 绿牌·日常
-  { type: '绿牌·日常', color: 'green', prompt: '随便一件——', text: '今天我做了什么，\n你没说但心里记了一下？', id: 'D·01' },
-  { type: '绿牌·日常', color: 'green', prompt: '说说——', text: '和我在一起，你最容\n易忘记时间是什么时候？', id: 'D·06' },
+  { type: '绿牌·日常', color: 'green', prompt: '随便一件——', text: '今天我做了什么，\n你没说但心里\n记了一下？', id: 'D·01' },
+  { type: '绿牌·日常', color: 'green', prompt: '说说——', text: '和我在一起，\n你最容易忘记时间\n是什么时候？', id: 'D·06' },
   { type: '绿牌·日常', color: 'green', prompt: '说说——', text: '你有没有注意过\n我睡着的样子？', id: 'D·07' },
   // 绿牌·沟通
   { type: '绿牌·沟通', color: 'green', prompt: '说个场景——', text: '你什么时候最不想\n和我说话？', id: 'C·04' },
   { type: '绿牌·沟通', color: 'green', prompt: '说实话——', text: '我说「没事」的时候，\n你信吗？', id: 'C·06' },
-  { type: '绿牌·沟通', color: 'green', prompt: '问吧——', text: '现在可以问我一个问题，\n我保证说实话', id: 'C·07' },
+  { type: '绿牌·沟通', color: 'green', prompt: '问吧——', text: '现在可以问我\n一个问题，\n我保证说实话', id: 'C·07' },
   // 绿牌·修复
   { type: '绿牌·修复', color: 'green', prompt: '说清楚——', text: '你生气的时候，需要\n我消失还是在场？', id: 'R·04' },
   { type: '绿牌·修复', color: 'green', prompt: '慢慢说——', text: '我们之间，有没有一\n件事一直没说清楚？', id: 'R·06' },
@@ -648,35 +648,51 @@ const SOLO_CARDS = [
   { type: '绿牌·模式', color: 'green', prompt: '说实话——', text: '你上次说「没事」，\n真的没事吗？', id: 'M·01' },
   { type: '绿牌·模式', color: 'green', prompt: '想一想——', text: '你在关系里，\n最常扮演什么角色？', id: 'M·02' },
   { type: '绿牌·模式', color: 'green', prompt: '说实话——', text: '你有没有在等\n对方先开口？', id: 'M·03' },
-  { type: '绿牌·模式', color: 'green', prompt: '问自己——', text: '你上次主动关心别人，\n是真的想，还是不安？', id: 'M·04' },
+  { type: '绿牌·模式', color: 'green', prompt: '问自己——', text: '你上次主动关心别人，\n是真的想，\n还是不安？', id: 'M·04' },
   { type: '绿牌·模式', color: 'green', prompt: '说实话——', text: '你愿意让别人看见\n你软弱的那面吗？', id: 'M·05' },
   { type: '绿牌·模式', color: 'green', prompt: '想一想——', text: '你最容易在什么时候\n从关系里消失？', id: 'M·06' },
   { type: '绿牌·模式', color: 'green', prompt: '说实话——', text: '你上次道歉，\n是真的觉得错了吗？', id: 'M·07' },
   { type: '绿牌·模式', color: 'green', prompt: '问自己——', text: '你有没有一段关系，\n是你在单方面维持？', id: 'M·08' },
-  { type: '绿牌·模式', color: 'green', prompt: '说实话——', text: '你在关系里，\n更怕被抛弃还是被困住？', id: 'M·09' },
+  { type: '绿牌·模式', color: 'green', prompt: '说实话——', text: '你在关系里，\n更怕被抛弃\n还是被困住？', id: 'M·09' },
   { type: '绿牌·模式', color: 'green', prompt: '想一想——', text: '你有没有用忙碌\n来回避某段关系？', id: 'M·10' },
   { type: '绿牌·模式', color: 'green', prompt: '说实话——', text: '你最近有没有\n对谁感到愧疚？', id: 'M·11' },
   { type: '绿牌·模式', color: 'green', prompt: '问自己——', text: '你有没有把某人\n当成情绪垃圾桶？', id: 'M·12' },
-  { type: '绿牌·模式', color: 'green', prompt: '说实话——', text: '你在关系里，\n有没有一直没说出口的话？', id: 'M·13' },
+  { type: '绿牌·模式', color: 'green', prompt: '说实话——', text: '你在关系里，\n有没有一直\n没说出口的话？', id: 'M·13' },
   { type: '绿牌·模式', color: 'green', prompt: '想一想——', text: '你有没有因为怕麻烦\n而假装自己不在乎？', id: 'M·14' },
-  { type: '绿牌·模式', color: 'green', prompt: '说实话——', text: '你上次真正\n需要帮助时，开口了吗？', id: 'M·15' },
+  { type: '绿牌·模式', color: 'green', prompt: '说实话——', text: '你上次真正需要\n帮助时，\n开口了吗？', id: 'M·15' },
   // 紫牌·内心（你自己的状态）
   { type: '紫牌·内心', color: 'purple', prompt: '问自己——', text: '你现在最需要什么，\n却没有开口要？', id: 'N·01' },
   { type: '紫牌·内心', color: 'purple', prompt: '说实话——', text: '你最近在\n回避什么？', id: 'N·02' },
   { type: '紫牌·内心', color: 'purple', prompt: '想一想——', text: '你觉得自己\n值得被好好对待吗？', id: 'N·03' },
   { type: '紫牌·内心', color: 'purple', prompt: '说实话——', text: '你现在的孤独，\n是哪种孤独？', id: 'N·04' },
   { type: '紫牌·内心', color: 'purple', prompt: '问自己——', text: '有没有一段关系，\n让你觉得不像自己？', id: 'N·05' },
-  { type: '紫牌·内心', color: 'purple', prompt: '说实话——', text: '你有没有一个秘密，\n觉得说出来会吓跑对方？', id: 'N·06' },
+  { type: '紫牌·内心', color: 'purple', prompt: '说实话——', text: '你有没有一个秘密，\n觉得说出来\n会吓跑对方？', id: 'N·06' },
   { type: '紫牌·内心', color: 'purple', prompt: '想一想——', text: '你上次哭，\n是因为什么？', id: 'N·07' },
   { type: '紫牌·内心', color: 'purple', prompt: '问自己——', text: '你现在最想\n被谁看见？', id: 'N·08' },
   { type: '紫牌·内心', color: 'purple', prompt: '说实话——', text: '你有没有在\n假装自己还好？', id: 'N·09' },
-  { type: '紫牌·内心', color: 'purple', prompt: '想一想——', text: '你最近有没有\n一件事让自己失望了？', id: 'N·10' },
-  { type: '紫牌·内心', color: 'purple', prompt: '问自己——', text: '你现在的状态，\n你愿意让最亲近的人看见吗？', id: 'N·11' },
-  { type: '紫牌·内心', color: 'purple', prompt: '说实话——', text: '你有没有一种情绪，\n你不知道该怎么处理？', id: 'N·12' },
+  { type: '紫牌·内心', color: 'purple', prompt: '想一想——', text: '你最近有没有\n一件事让自己\n失望了？', id: 'N·10' },
+  { type: '紫牌·内心', color: 'purple', prompt: '问自己——', text: '你现在的状态，\n你愿意让最亲近\n的人看见吗？', id: 'N·11' },
+  { type: '紫牌·内心', color: 'purple', prompt: '说实话——', text: '你有没有一种情绪，\n你不知道该\n怎么处理？', id: 'N·12' },
   { type: '紫牌·内心', color: 'purple', prompt: '想一想——', text: '你最近有没有\n做一件只为自己的事？', id: 'N·13' },
   { type: '紫牌·内心', color: 'purple', prompt: '问自己——', text: '你现在最害怕的，\n是什么？', id: 'N·14' },
   { type: '紫牌·内心', color: 'purple', prompt: '说实话——', text: '你有没有一个人，\n你一直没有好好道别？', id: 'N·15' },
 ];
+
+function wrapSVGText(text, maxCharsPerLine) {
+  // 先按 \n 分段，再对每段按字数截断
+  const lines = [];
+  text.split('\n').forEach(seg => {
+    if (seg.length <= maxCharsPerLine) {
+      lines.push(seg);
+    } else {
+      // 按字截断
+      for (let i = 0; i < seg.length; i += maxCharsPerLine) {
+        lines.push(seg.slice(i, i + maxCharsPerLine));
+      }
+    }
+  });
+  return lines;
+}
 
 function makeCardSVG(card) {
   const uid = Math.random().toString(36).slice(2, 7);
@@ -699,13 +715,13 @@ function makeCardSVG(card) {
   <ellipse cx="26" cy="222" rx="30" ry="26" fill="#5a7a6a" opacity="0.12"/>
   <line x1="186" y1="18" x2="222" y2="18" stroke="rgba(255,255,255,.06)" stroke-width="0.6"/>
   <line x1="222" y1="18" x2="222" y2="46" stroke="rgba(255,255,255,.06)" stroke-width="0.6"/>
-  <text x="22" y="28" font-family="sans-serif" font-size="10" letter-spacing="2" fill="#6a8a7a" opacity="0.9">绿牌</text>
-  <text x="218" y="24" text-anchor="end" font-family="sans-serif" font-size="9" fill="#8a9a8a" opacity="0.8">${card.type.split('·')[1]}</text>
-  <text x="218" y="36" text-anchor="end" font-family="sans-serif" font-size="9" fill="#8a9a8a" opacity="0.9">${card.id}</text>
-  <line x1="22" y1="42" x2="64" y2="42" stroke="#6a8a7a" stroke-width="0.8" opacity="0.5"/>
-  <text x="22" y="74" font-family="serif" font-style="italic" font-size="13" fill="rgba(232,240,232,.35)" letter-spacing="0.5">${card.prompt}</text>
-  ${card.text.split('\n').map((line, i) => `<text x="22" y="${118 + i*34}" font-size="20" letter-spacing="0.5" fill="#e8f0e8" font-family="sans-serif">${line}</text>`).join('')}
-  <image href="images/lin-watermark-green.png" x="190" y="296" width="30" height="30" opacity="0.35"/>
+  <text x="28" y="28" font-family="sans-serif" font-size="10" letter-spacing="2" fill="#6a8a7a" opacity="0.9">绿牌</text>
+  <text x="212" y="24" text-anchor="end" font-family="sans-serif" font-size="9" fill="#8a9a8a" opacity="0.8">${card.type.split('·')[1]}</text>
+  <text x="212" y="36" text-anchor="end" font-family="sans-serif" font-size="9" fill="#8a9a8a" opacity="0.9">${card.id}</text>
+  <line x1="28" y1="42" x2="70" y2="42" stroke="#6a8a7a" stroke-width="0.8" opacity="0.5"/>
+  <text x="28" y="74" font-family="serif" font-style="italic" font-size="13" fill="rgba(232,240,232,.35)" letter-spacing="0.5">${card.prompt}</text>
+  ${wrapSVGText(card.text, 9).map((line, i) => `<text x="28" y="${118 + i*34}" font-size="20" letter-spacing="0.5" fill="#e8f0e8" font-family="sans-serif">${line}</text>`).join('')}
+  <image href="images/lin-watermark-green.png" x="184" y="296" width="30" height="30" opacity="0.35"/>
 </svg>`;
   } else if (card.color === 'purple') {
     return `<svg width="220" height="308" viewBox="0 0 240 336" xmlns="http://www.w3.org/2000/svg">
@@ -726,12 +742,12 @@ function makeCardSVG(card) {
   <ellipse cx="214" cy="222" rx="30" ry="26" fill="#7a5a8a" opacity="0.12"/>
   <line x1="186" y1="18" x2="222" y2="18" stroke="rgba(255,255,255,.06)" stroke-width="0.6"/>
   <line x1="222" y1="18" x2="222" y2="46" stroke="rgba(255,255,255,.06)" stroke-width="0.6"/>
-  <text x="22" y="28" font-family="sans-serif" font-size="10" letter-spacing="2" fill="#7a6a8a" opacity="0.9">紫牌</text>
-  <text x="218" y="24" text-anchor="end" font-family="sans-serif" font-size="9" fill="#9a8a9a" opacity="0.8">${card.type.split('·')[1]}</text>
-  <text x="218" y="36" text-anchor="end" font-family="sans-serif" font-size="9" fill="#9a8a9a" opacity="0.9">${card.id}</text>
-  <line x1="22" y1="42" x2="64" y2="42" stroke="#7a6a8a" stroke-width="0.8" opacity="0.5"/>
-  <text x="22" y="74" font-family="serif" font-style="italic" font-size="13" fill="rgba(240,232,240,.35)" letter-spacing="0.5">${card.prompt}</text>
-  ${card.text.split('\n').map((line, i) => `<text x="22" y="${118 + i*34}" font-size="20" letter-spacing="0.5" fill="#f0e8f0" font-family="sans-serif">${line}</text>`).join('')}
+  <text x="28" y="28" font-family="sans-serif" font-size="10" letter-spacing="2" fill="#7a6a8a" opacity="0.9">紫牌</text>
+  <text x="212" y="24" text-anchor="end" font-family="sans-serif" font-size="9" fill="#9a8a9a" opacity="0.8">${card.type.split('·')[1]}</text>
+  <text x="212" y="36" text-anchor="end" font-family="sans-serif" font-size="9" fill="#9a8a9a" opacity="0.9">${card.id}</text>
+  <line x1="28" y1="42" x2="70" y2="42" stroke="#7a6a8a" stroke-width="0.8" opacity="0.5"/>
+  <text x="28" y="74" font-family="serif" font-style="italic" font-size="13" fill="rgba(240,232,240,.35)" letter-spacing="0.5">${card.prompt}</text>
+  ${wrapSVGText(card.text, 9).map((line, i) => `<text x="28" y="${118 + i*34}" font-size="20" letter-spacing="0.5" fill="#f0e8f0" font-family="sans-serif">${line}</text>`).join('')}
   <image href="images/lin-watermark-green.png" x="20" y="296" width="30" height="30" opacity="0.3" style="filter:invert(1)"/>
 </svg>`;
   } else {
