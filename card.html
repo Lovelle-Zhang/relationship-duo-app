@@ -112,46 +112,20 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 }
 .btn-another:hover { color: rgba(255,255,255,0.75); }
 
-/* 模式选择覆盖层 */
-.mode-overlay {
+/* 模式切换按钮 */
+.mode-toggle {
   position: fixed;
-  inset: 0;
-  background: rgba(8,14,10,0.96);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  gap: 12px;
-}
-.mode-title {
-  font-size: 13px;
-  letter-spacing: 4px;
-  color: rgba(255,255,255,0.35);
-  margin-bottom: 24px;
-}
-.mode-btn {
-  width: 220px;
-  padding: 18px 0;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.04);
-  color: rgba(255,255,255,0.75);
-  font-size: 16px;
+  top: 30px; right: 24px;
+  font-size: 11px;
   letter-spacing: 2px;
+  color: rgba(255,255,255,0.28);
   cursor: pointer;
-  transition: all 0.2s;
-  font-family: 'Noto Serif SC', serif;
+  pointer-events: auto;
+  transition: color 0.2s;
+  z-index: 50;
+  user-select: none;
 }
-.mode-btn:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.2);
-  color: rgba(255,255,255,0.95);
-}
-.mode-btn.green { border-color: rgba(120,200,100,0.2); }
-.mode-btn.green:hover { background: rgba(90,160,80,0.12); border-color: rgba(120,200,100,0.4); }
-.mode-btn.purple { border-color: rgba(160,120,200,0.2); }
-.mode-btn.purple:hover { background: rgba(120,80,160,0.12); border-color: rgba(160,120,200,0.4); }
+.mode-toggle:hover { color: rgba(255,255,255,0.6); }
 
 /* 卡片正反面 */
 .card-back {
@@ -247,16 +221,10 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 
 <div class="back" onclick="window.location.href='forest.html'">← 林</div>
 <div class="top-label" id="topLabel">今 日 对 话</div>
-
-<!-- 模式选择 -->
-<div class="mode-overlay" id="modeOverlay">
-  <div class="mode-title">选择模式</div>
-  <button class="mode-btn green" onclick="startMode('solo')">单人探索</button>
-  <button class="mode-btn purple" onclick="startMode('duo')">双人对话</button>
-</div>
+<div class="mode-toggle" id="modeToggle" onclick="toggleMode()">双人 ⇄</div>
 
 <!-- 单人模式 -->
-<div class="ui" id="soloUI" style="display:none">
+<div class="ui" id="soloUI" style="display:flex">
   <div class="card-container" id="cardWrap">
     <div class="card-inner" id="cardInner">
       <div class="card-face" id="cardFace"></div>
@@ -713,20 +681,35 @@ function makeBackSVG(color) {
 </svg>`;
 }
 
-function startMode(mode) {
-  document.getElementById('modeOverlay').style.display = 'none';
-  if (mode === 'solo') {
+let currentMode = 'solo';
+
+function toggleMode() {
+  currentMode = currentMode === 'solo' ? 'duo' : 'solo';
+  const toggle = document.getElementById('modeToggle');
+  if (currentMode === 'solo') {
     document.getElementById('soloUI').style.display = 'flex';
     document.getElementById('soloActions').style.display = 'flex';
+    document.getElementById('duoUI').style.display = 'none';
+    document.getElementById('duoActions').style.display = 'none';
     document.getElementById('topLabel').textContent = '今 日 对 话';
+    toggle.textContent = '双人 ⇄';
     drawCard();
   } else {
+    document.getElementById('soloUI').style.display = 'none';
+    document.getElementById('soloActions').style.display = 'none';
     document.getElementById('duoUI').style.display = 'flex';
     document.getElementById('duoActions').style.display = 'flex';
     document.getElementById('topLabel').textContent = '双 人 对 话';
+    toggle.textContent = '单人 ⇄';
     duoInit();
   }
 }
+
+// 页面加载时直接进单人模式
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('soloActions').style.display = 'flex';
+  drawCard();
+});
 
 function duoInit() {
   // 预填内容（背面不可见，但内容已就绪）
