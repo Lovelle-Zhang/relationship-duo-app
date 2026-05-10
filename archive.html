@@ -152,7 +152,7 @@ function renderRecords(records){
     const done=r.status==='paired'||r.status==='complete';
     const statusTag=done?'<span class="tag tag-done">双方已完成</span>':'<span class="tag tag-waiting">等待对方</span>';
     const unlockedTag=r.unlocked?'<span class="tag tag-unlocked">已解锁</span>':'';
-    const scoresHtml=done&&r.scores?renderScores(r.scores):'';
+    const scoresHtml=(done||r.unlocked)&&r.scores?renderScores(r.scores):'';
     const viewBtn=done?'<button class="btn-view" onclick="viewReport(\''+r.code+'\')">'+( r.unlocked?'查看报告':'解锁报告')+'</button>':'';
     const retestBtn='<button class="btn-retest" onclick="retest(\''+r.code+'\')">重新测试</button>';
     return '<div class="record-card">'
