@@ -249,8 +249,14 @@ function loadNotes() {
         ${n.cardText ? `<div class="note-card-text">${n.cardText}</div>` : ''}
         <div class="note-content">${escapeHtml(n.note)}</div>
       </div>
-      <div class="note-delete" onclick="deleteNote(${n.id})">删除</div>
+      <div style="margin-top:6px;text-align:center;font-size:.6rem;color:rgba(255,255,255,.12);letter-spacing:.06em">长按删除</div>
     `;
+    let timer;
+    item.addEventListener('touchstart',()=>{timer=setTimeout(()=>{if(confirm('删除这条记录？'))deleteNote(n.id)},700)},{passive:true});
+    item.addEventListener('touchend',()=>clearTimeout(timer),{passive:true});
+    item.addEventListener('touchmove',()=>clearTimeout(timer),{passive:true});
+    item.addEventListener('mousedown',()=>{timer=setTimeout(()=>{if(confirm('删除这条记录？'))deleteNote(n.id)},700)});
+    item.addEventListener('mouseup',()=>clearTimeout(timer));
     timeline.appendChild(item);
   });
 }
