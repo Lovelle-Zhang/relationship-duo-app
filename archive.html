@@ -75,7 +75,7 @@ body{animation:pageFadeIn 0.3s ease-out}
 <div class="top-label">关 系 档 案</div>
 <div class="page">
   <h1>已有的树</h1>
-  <div class="sub">输入配对码，找回你们的记录</div>
+  <div class="sub" id="subText">输入配对码，找回你们的记录</div>
   <div class="search-box">
     <input class="search-input" id="codeInput" placeholder="配对码（6位）" maxlength="6" oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter')searchRecord()">
     <button class="search-btn" onclick="searchRecord()">查找</button>
@@ -87,8 +87,52 @@ body{animation:pageFadeIn 0.3s ease-out}
 const SB='https://esfuazchkbbtccxtamwp.supabase.co';
 const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVzZnVhemNoa2JidGNjeHRhbXdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3OTg2ODUsImV4cCI6MjA5MjM3NDY4NX0.xV6Vvv4P0W4ky853yC9OvqOaSAyDErZVTM9UfCUidpQ';
 const H={'apikey':SK,'Authorization':'Bearer '+SK,'Content-Type':'application/json'};
+
+// 本地存储：记住查过的配对码
+const STORAGE_KEY='lin_archive_codes';
+function getSavedCodes(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch{return[]}}
+function saveCode(code){const codes=getSavedCodes();if(!codes.includes(code)){codes.unshift(code);if(codes.length>10)codes.pop();localStorage.setItem(STORAGE_KEY,JSON.stringify(codes))}}
+
 const urlCode=new URLSearchParams(location.search).get('code');
 if(urlCode){document.getElementById('codeInput').value=urlCode.toUpperCase();setTimeout(searchRecord,100)}
+
+// 页面加载时显示历史记录
+window.addEventListener('DOMContentLoaded',()=>{
+  const saved=getSavedCodes();
+  if(saved.length>0){
+    document.getElementById('subText').textContent='你的关系记录';
+    loadSavedRecords(saved);
+  }
+});
+
+async function loadSavedRecords(codes){
+  const resEl=document.getElementById('results');
+  resEl.innerHTML='<div class="loading">加载中...</div>';
+  try{
+    const all=[];
+    for(const code of codes){
+      const res=await fetch(SB+'/rest/v1/pairs?code=eq.'+code,{headers:H});
+      const data=await res.json();
+      if(data&&data.length>0){
+        const merged={};
+        data.forEach(r=>{
+          if(!merged[r.code])merged[r.code]=Object.assign({},r);
+          else{
+            const m=merged[r.code];
+            if(!m.user1_name&&r.user1_name)m.user1_name=r.user1_name;
+            if(!m.user2_name&&r.user2_name)m.user2_name=r.user2_name;
+            if(r.unlocked)m.unlocked=true;
+            if(r.status==='paired'||r.status==='complete')m.status=r.status;
+            if(r.scores)m.scores=r.scores;
+          }
+        });
+        all.push(...Object.values(merged));
+      }
+    }
+    if(all.length>0)renderRecords(all);
+    else resEl.innerHTML='<div class="empty">暂无记录</div>';
+  }catch(e){resEl.innerHTML=''}
+}
 async function searchRecord(){
   const code=document.getElementById('codeInput').value.trim().toUpperCase();
   const errEl=document.getElementById('errorMsg');
@@ -113,6 +157,7 @@ async function searchRecord(){
       }
     });
     renderRecords(Object.values(merged));
+    saveCode(code);
   }catch(e){resEl.innerHTML='<div class="error-msg">查找失败，请稍后重试</div>'}
 }
 function formatDate(s){if(!s)return'';const d=new Date(s);return d.getFullYear()+'/'+(d.getMonth()+1).toString().padStart(2,'0')+'/'+d.getDate().toString().padStart(2,'0')}
