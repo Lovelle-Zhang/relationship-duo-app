@@ -321,10 +321,12 @@ function initForest() {
   // 前景树（大，底部）
   const bigTrees = W <= 640 ? [
     // 手机端：左右各两棵，中间留空
-    { x: 0.08, y: 1.0, h: 0.50 * hScale, w: 0.06, layers: 5, color: '#2a4a2a', glow: false },
-    { x: 0.22, y: 1.0, h: 0.58 * hScale, w: 0.065, layers: 6, color: '#3a6a3a', glow: true, glowColor: 'rgba(120,200,100,0.12)' },
-    { x: 0.78, y: 1.0, h: 0.60 * hScale, w: 0.07, layers: 6, color: '#2e5a2e', glow: true, glowColor: 'rgba(140,200,120,0.10)' },
-    { x: 0.92, y: 1.0, h: 0.44 * hScale, w: 0.05, layers: 4, color: '#1a301a', glow: false },
+    { x: 0.05, y: 1.0, h: 0.45 * hScale, w: 0.055, layers: 4, color: '#1e3a1e', glow: false },
+    { x: 0.18, y: 1.0, h: 0.58 * hScale, w: 0.065, layers: 6, color: '#3a6a3a', glow: true, glowColor: 'rgba(120,200,100,0.12)' },
+    { x: 0.30, y: 1.0, h: 0.42 * hScale, w: 0.05, layers: 4, color: '#2a4a2a', glow: false },
+    { x: 0.70, y: 1.0, h: 0.44 * hScale, w: 0.05, layers: 4, color: '#243824', glow: false },
+    { x: 0.82, y: 1.0, h: 0.60 * hScale, w: 0.07, layers: 6, color: '#2e5a2e', glow: true, glowColor: 'rgba(140,200,120,0.10)' },
+    { x: 0.94, y: 1.0, h: 0.40 * hScale, w: 0.048, layers: 4, color: '#1a301a', glow: false },
   ] : [
     { x: 0.12, y: 1.0, h: 0.55 * hScale, w: 0.06, layers: 5, color: '#2a4a2a', glow: false },
     { x: 0.28, y: 1.0, h: 0.46 * hScale, w: 0.05, layers: 4, color: '#1e3a1e', glow: false },
@@ -386,9 +388,9 @@ function initForest() {
   }
   trees = [...ultraFar, ...farTrees, ...midFarTrees, ...midTrees, ...bigTrees];
 
-  // 手机端：只保留前景大树 + 少量中景，去掉密集远景
+  // 手机端：保留前景大树 + 4棵中景，去掉密集远景
   if (W <= 640) {
-    trees = [...midTrees.slice(0, 2), ...bigTrees];
+    trees = [...midTrees.slice(0, 4), ...bigTrees];
   }
 
   // 粒子（萤火虫）
@@ -437,7 +439,7 @@ function drawTree(tree, time) {
     const layerW = treeW * (1.0 - progress * 0.5) * (1 + Math.sin(time * 0.3 + l) * 0.01);
     const layerH = treeH * 0.28;
     const alpha = tree.far ? 0.5 + progress * 0.3 : 0.7 + progress * 0.2;
-    const mobileAlpha = W <= 640 ? 0.55 : 1.0;
+    const mobileAlpha = W <= 640 ? 0.75 : 1.0;
 
     ctx.globalAlpha = alpha * mobileAlpha;
     ctx.fillStyle = tree.color;
