@@ -136,19 +136,28 @@ canvas {
   #mobile-nav {
     display: block;
     position: fixed;
-    bottom: 80px;
-    left: 0;
-    right: 0;
+    bottom: 60px;
+    left: 16px;
+    right: 16px;
     z-index: 20;
+    background: rgba(5,12,8,0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    overflow: hidden;
   }
   .m-entry {
     display: flex;
     align-items: center;
-    padding: 15px 28px;
+    padding: 16px 24px;
     cursor: pointer;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: background 0.15s;
   }
+  .m-entry:last-child { border-bottom: none; }
   .m-entry:active { background: rgba(255,255,255,0.06); }
   .m-entry:active .m-line { background: rgba(255,255,255,0.5) !important; }
   .m-entry:active .m-name { color: rgba(255,255,255,0.95); }
@@ -310,7 +319,13 @@ function initForest() {
   const hScale = W <= 640 ? 0.55 : 1.0;
 
   // 前景树（大，底部）
-  const bigTrees = [
+  const bigTrees = W <= 640 ? [
+    // 手机端：左右各两棵，中间留空
+    { x: 0.08, y: 1.0, h: 0.50 * hScale, w: 0.06, layers: 5, color: '#2a4a2a', glow: false },
+    { x: 0.22, y: 1.0, h: 0.58 * hScale, w: 0.065, layers: 6, color: '#3a6a3a', glow: true, glowColor: 'rgba(120,200,100,0.12)' },
+    { x: 0.78, y: 1.0, h: 0.60 * hScale, w: 0.07, layers: 6, color: '#2e5a2e', glow: true, glowColor: 'rgba(140,200,120,0.10)' },
+    { x: 0.92, y: 1.0, h: 0.44 * hScale, w: 0.05, layers: 4, color: '#1a301a', glow: false },
+  ] : [
     { x: 0.12, y: 1.0, h: 0.55 * hScale, w: 0.06, layers: 5, color: '#2a4a2a', glow: false },
     { x: 0.28, y: 1.0, h: 0.46 * hScale, w: 0.05, layers: 4, color: '#1e3a1e', glow: false },
     { x: 0.72, y: 1.0, h: 0.50 * hScale, w: 0.055, layers: 5, color: '#243824', glow: false },
@@ -522,6 +537,22 @@ function draw() {
 
 window.addEventListener('resize', resize);
 resize();
+
+// 手机端入口触摸反馈
+document.querySelectorAll('.m-entry').forEach(el => {
+  el.addEventListener('touchstart', () => {
+    el.style.background = 'rgba(255,255,255,0.10)';
+    el.querySelector('.m-line').style.background = 'rgba(255,248,200,0.8)';
+    el.querySelector('.m-name').style.color = 'rgba(255,255,255,1)';
+  }, { passive: true });
+  el.addEventListener('touchend', () => {
+    setTimeout(() => {
+      el.style.background = '';
+      el.querySelector('.m-line').style.background = '';
+      el.querySelector('.m-name').style.color = '';
+    }, 150);
+  });
+});
 
 function showComingSoon(name) {
   const el = document.createElement('div');
