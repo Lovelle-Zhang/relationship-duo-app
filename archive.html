@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>关系档案 · 林 Link</title>
 <link rel="icon" type="image/png" href="images/lin-watermark-green.png">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100%;min-height:100%;background:#0a0f0a;font-family:'Noto Serif SC',serif;color:rgba(255,255,255,.85)}
@@ -36,6 +36,17 @@ h1{font-size:1.5rem;font-weight:400;letter-spacing:.12em;color:rgba(255,255,255,
 .tag-unlocked{color:rgba(200,160,255,.6);border-color:rgba(180,120,255,.15);background:rgba(150,90,255,.06)}
 .record-date{font-size:.68rem;color:rgba(255,255,255,.2);letter-spacing:.04em}
 .record-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* 频率分数条 */
+.score-bar-wrap{margin:12px 0 14px;display:flex;flex-direction:column;gap:6px}
+.score-bar-row{display:flex;align-items:center;gap:8px}
+.score-bar-label{font-size:.62rem;letter-spacing:.06em;color:rgba(255,255,255,.3);width:52px;flex-shrink:0;text-align:right}
+.score-bar-track{flex:1;height:3px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden}
+.score-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,rgba(90,180,90,.5),rgba(140,220,120,.7));transition:width .6s ease}
+.score-bar-val{font-size:.62rem;color:rgba(180,230,140,.5);width:24px;text-align:right;flex-shrink:0}
+.score-total{display:flex;align-items:baseline;gap:6px;margin-top:4px}
+.score-total-num{font-size:1.4rem;font-weight:300;color:rgba(180,230,140,.75);font-family:'Noto Serif SC',serif;letter-spacing:.04em}
+.score-total-label{font-size:.62rem;color:rgba(255,255,255,.25);letter-spacing:.06em}
 .btn-view{padding:8px 18px;background:linear-gradient(135deg,rgba(90,122,90,.3),rgba(122,90,122,.3));border:1px solid rgba(120,180,120,.2);border-radius:8px;color:rgba(200,230,180,.8);font-size:.76rem;letter-spacing:.06em;cursor:pointer;font-family:inherit}
 .btn-view:hover{background:linear-gradient(135deg,rgba(90,122,90,.5),rgba(122,90,122,.5))}
 .btn-retest{padding:8px 18px;background:transparent;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:rgba(255,255,255,.35);font-size:.76rem;letter-spacing:.06em;cursor:pointer;font-family:inherit}
@@ -105,17 +116,49 @@ async function searchRecord(){
   }catch(e){resEl.innerHTML='<div class="error-msg">查找失败，请稍后重试</div>'}
 }
 function formatDate(s){if(!s)return'';const d=new Date(s);return d.getFullYear()+'/'+(d.getMonth()+1).toString().padStart(2,'0')+'/'+d.getDate().toString().padStart(2,'0')}
+function renderScores(scores){
+  if(!scores||typeof scores!=='object')return'';
+  const dims=[
+    {key:'connection',label:'连接'},
+    {key:'communication',label:'沟通'},
+    {key:'trust',label:'信任'},
+    {key:'growth',label:'成长'},
+    {key:'space',label:'空间'},
+    {key:'conflict',label:'冲突'},
+    {key:'vision',label:'愿景'}
+  ];
+  // 兼容两种数据格式：直接分数对象 或 {user1,user2} 结构
+  const s1=scores.user1||scores;
+  const s2=scores.user2||null;
+  const bars=dims.map(d=>{
+    const v1=s1[d.key]||0;
+    const v2=s2?s2[d.key]||0:null;
+    const avg=v2!==null?Math.round((v1+v2)/2):v1;
+    const pct=Math.round(avg/7*100);
+    return '<div class="score-bar-row">'
+      +'<div class="score-bar-label">'+d.label+'</div>'
+      +'<div class="score-bar-track"><div class="score-bar-fill" style="width:'+pct+'%"></div></div>'
+      +'<div class="score-bar-val">'+avg+'</div>'
+      +'</div>';
+  }).join('');
+  const total=dims.reduce((sum,d)=>{const v1=s1[d.key]||0;const v2=s2?s2[d.key]||0:null;return sum+(v2!==null?Math.round((v1+v2)/2):v1)},0);
+  return '<div class="score-bar-wrap">'+bars
+    +'<div class="score-total"><span class="score-total-num">'+total+'</span><span class="score-total-label">/ 49 · 频率总分</span></div>'
+    +'</div>';
+}
 function renderRecords(records){
   const el=document.getElementById('results');
   el.innerHTML=records.map(r=>{
     const done=r.status==='paired'||r.status==='complete';
     const statusTag=done?'<span class="tag tag-done">双方已完成</span>':'<span class="tag tag-waiting">等待对方</span>';
     const unlockedTag=r.unlocked?'<span class="tag tag-unlocked">已解锁</span>':'';
+    const scoresHtml=done&&r.scores?renderScores(r.scores):'';
     const viewBtn=done?'<button class="btn-view" onclick="viewReport(\''+r.code+'\')">'+( r.unlocked?'查看报告':'解锁报告')+'</button>':'';
     const retestBtn='<button class="btn-retest" onclick="retest(\''+r.code+'\')">重新测试</button>';
     return '<div class="record-card">'
       +'<div class="record-header"><div class="record-names">'+(r.user1_name||'—')+'<span>×</span>'+(r.user2_name||'等待中')+'</div><div class="record-code">'+r.code+'</div></div>'
       +'<div class="record-meta">'+statusTag+unlockedTag+'<span class="record-date">'+formatDate(r.created_at)+'</span></div>'
+      +scoresHtml
       +'<div class="record-actions">'+viewBtn+retestBtn+'</div>'
       +'</div>';
   }).join('');
