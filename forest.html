@@ -149,7 +149,9 @@ canvas {
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
   }
-  .m-entry:active { background: rgba(255,255,255,0.04); }
+  .m-entry:active { background: rgba(255,255,255,0.06); }
+  .m-entry:active .m-line { background: rgba(255,255,255,0.5) !important; }
+  .m-entry:active .m-name { color: rgba(255,255,255,0.95); }
   .m-line {
     width: 1px;
     height: 32px;
@@ -368,6 +370,11 @@ function initForest() {
     });
   }
   trees = [...ultraFar, ...farTrees, ...midFarTrees, ...midTrees, ...bigTrees];
+
+  // 手机端：只保留前景大树 + 少量中景，去掉密集远景
+  if (W <= 640) {
+    trees = [...midTrees.slice(0, 2), ...bigTrees];
+  }
 
   // 粒子（萤火虫）
   particles = [];
