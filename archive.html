@@ -129,10 +129,10 @@ function renderScores(scores){
       +'<div class="score-bar-val">'+v+'</div>'
       +'</div>';
   }).join('');
-  const total=scores.slice(0,7).reduce((a,b)=>a+b,0);
-  const maxTotal=max*7;
+  const total=Math.round(scores.slice(0,7).reduce((a,b)=>a+b,0)/7);
+  const maxTotal=100;
   return '<div class="score-bar-wrap">'+bars
-    +'<div class="score-total"><span class="score-total-num">'+total+'</span><span class="score-total-label">/ '+maxTotal+' · 频率总分</span></div>'
+    +'<div class="score-total"><span class="score-total-num">'+total+'</span><span class="score-total-label">/ 100 · 频率均分</span></div>'
     +'</div>';
 }
 function renderRecords(records){
