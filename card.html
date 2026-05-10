@@ -395,7 +395,11 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
 <div class="note-drawer" id="noteDrawer">
   <div class="note-drawer-label">此 刻 感 受</div>
   <textarea class="note-drawer-textarea" id="noteDrawerText" placeholder="写下此刻的感受&#10;&#10;不必完整，只是此刻..."></textarea>
-  <div class="note-drawer-close" onclick="closeNoteDrawer()">收 起</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px">
+    <div class="note-drawer-close" onclick="closeNoteDrawer()" style="margin-top:0">收 起</div>
+    <span style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.12)">or</span>
+    <a href="self.html" style="font-size:11px;letter-spacing:3px;color:rgba(255,255,255,0.18);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='rgba(255,255,255,0.45)'" onmouseout="this.style.color='rgba(255,255,255,0.18)'">查看记录 →</a>
+  </div>
 </div>
 
 <div class="actions" id="duoActions" style="display:none">
