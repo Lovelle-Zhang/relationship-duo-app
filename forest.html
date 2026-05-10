@@ -123,6 +123,81 @@ canvas {
   font-family: sans-serif;
   z-index: 10;
 }
+
+/* 手机端：竖排列表布局 */
+@media (max-width: 640px) {
+  .entry-label {
+    position: static !important;
+    transform: none !important;
+    left: auto !important; top: auto !important;
+    bottom: auto !important; right: auto !important;
+    opacity: 1;
+    display: flex;
+    align-items: center;
+    padding: 15px 28px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    text-align: left;
+  }
+  .entry-label:active { background: rgba(255,255,255,0.04); }
+
+  /* 竖线改为横向左侧竖线 */
+  .entry-stem {
+    width: 1px !important;
+    height: 32px !important;
+    margin: 0 20px 0 0 !important;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.15) !important;
+  }
+  .entry-primary .entry-stem {
+    height: 40px !important;
+    background: rgba(255,248,200,0.4) !important;
+  }
+
+  .entry-name {
+    font-size: 15px;
+    letter-spacing: 3px;
+    white-space: normal;
+    color: rgba(255,255,255,0.72);
+  }
+  .entry-primary .entry-name {
+    font-size: 16px;
+    color: rgba(255,248,220,0.92);
+  }
+  .entry-desc {
+    font-size: 11px;
+    white-space: normal;
+    margin-top: 4px;
+    color: rgba(255,255,255,0.26);
+  }
+
+  /* 入口容器：固定在屏幕中下方 */
+  #mobile-entries {
+    position: fixed;
+    bottom: 80px;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    display: block;
+  }
+
+  /* 标题下移 */
+  .title {
+    top: 30% !important;
+  }
+  .title-main { font-size: 80px !important; }
+
+  /* 顶部小字 */
+  .hint {
+    bottom: auto !important;
+    top: 14% !important;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(255,255,255,0.1) !important;
+    pointer-events: none;
+  }
+}
 </style>
 </head>
 <body>
@@ -137,7 +212,8 @@ canvas {
   <div class="title-sub">L I N K</div>
 </div>
 
-<!-- 入口1：新测试 -->
+<!-- 入口容器（手机端用网格，桌面端用绝对定位） -->
+<div id="mobile-entries">
 <div class="entry-label entry-new entry-primary" onclick="window.location.href='index.html'">
   <div class="entry-stem"></div>
   <div class="entry-name">新的连接</div>
@@ -164,6 +240,7 @@ canvas {
   <div class="entry-name">和自己</div>
   <div class="entry-desc">抽卡记录 · 内心轨迹</div>
 </div>
+</div>
 
 <div class="hint">走进去，而不是点击进去</div>
 
@@ -174,16 +251,23 @@ const ctx = canvas.getContext('2d');
 let W, H, trees = [], particles = [], t = 0;
 
 function resize() {
-  W = canvas.width = window.innerWidth;
-  H = canvas.height = window.innerHeight;
+  const dpr = window.devicePixelRatio || 1;
+  W = window.innerWidth;
+  H = window.innerHeight;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   initForest();
   positionEntries();
 }
 
 // 把入口标签定位到对应树的树顶上方
 function positionEntries() {
-  // 对应 bigTrees[4](x:0.20,h:0.62), bigTrees[5](x:0.82,h:0.68),
-  //         midTrees[2](x:0.50,y:0.78,h:0.32), midTrees[1](x:0.35,y:0.80,h:0.30)
+  // 手机端用CSS网格，不需要JS定位
+  if (window.innerWidth <= 640) return;
+
   const anchors = [
     { el: '.entry-new',     tx: 0.20, ty: 1.0 - 0.62, offsetY: -48 },
     { el: '.entry-map',     tx: 0.82, ty: 1.0 - 0.68, offsetY: -48 },
