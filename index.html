@@ -1514,14 +1514,18 @@ button:focus{outline:none!important;box-shadow:none!important}
 </div>
 
 <!-- A 发起测试 - 适当缩小 -->
-<button class="btn-main" onclick="startA()" style="width:100%;max-width:340px;margin:0 auto 14px;display:block;padding:14px;font-size:.88rem;font-weight:500;letter-spacing:-0.005em;background:#5a7a5a;color:white;border:none;border-radius:8px;cursor:pointer;transition:all .2s;font-weight:500">
-  开始测试
-</button>
+<div style="max-width:340px;margin:0 auto 14px">
+  <input id="nameA" placeholder="你的名字（选填）" maxlength="10" style="width:100%;padding:10px 16px;border:1.5px solid rgba(90,122,90,.2);border-radius:8px;font-size:.88rem;text-align:center;background:rgba(255,255,255,.7);margin-bottom:8px;box-sizing:border-box;font-family:inherit">
+  <button class="btn-main" onclick="startA()" style="width:100%;padding:14px;font-size:.88rem;font-weight:500;letter-spacing:-0.005em;background:#5a7a5a;color:white;border:none;border-radius:8px;cursor:pointer;transition:all .2s">
+    开始测试
+  </button>
+</div>
 
 <p style="text-align:center;color:rgba(122,82,82,.5);margin:18px 0;font-size:.8rem">或</p>
 
 <!-- B 加入测试 - 更轻盈 -->
 <div style="max-width:340px;margin:0 auto">
+  <input id="nameB" placeholder="你的名字（选填）" maxlength="10" style="width:100%;padding:10px 16px;border:1.5px solid rgba(122,90,122,.2);border-radius:8px;font-size:.88rem;text-align:center;background:rgba(255,255,255,.7);margin-bottom:8px;box-sizing:border-box;font-family:inherit">
   <input class="code-input" id="ci" placeholder="输入6位邀请码" maxlength="6" oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter')joinB()" style="width:100%;padding:12px 16px;border:1.5px solid rgba(90,122,90,.25);border-radius:8px;font-size:1rem;letter-spacing:3px;text-align:center;font-weight:600;transition:all .2s;background:rgba(255,255,255,.8)">
   <button class="btn-join" onclick="joinB()" style="width:100%;margin-top:10px;padding:12px;background:transparent;color:#5a7a5a;border:1.5px solid rgba(90,122,90,.35);border-radius:8px;font-size:.8rem;font-weight:500;letter-spacing:0.02em;transition:all .2s;cursor:pointer;font-weight:500">
     加入测试 →
@@ -1854,7 +1858,8 @@ const d=await r.json();
 return Array.isArray(d)&&d.length?d[0].scores:null;
 }
 async function dbWrite(code,role,scores){
-  await fetch(SB+'/rest/v1/pairs',{method:'POST',headers:{...H,'Prefer':'resolution=merge-duplicates'},body:JSON.stringify({code,role,scores})});
+  const nameField=role==='A'?{user1_name:myName}:{user2_name:myName};
+  await fetch(SB+'/rest/v1/pairs',{method:'POST',headers:{...H,'Prefer':'resolution=merge-duplicates'},body:JSON.stringify({code,role,scores,...nameField})});
   if(role==='B'){
     await fetch(SB+'/rest/v1/pairs?code=eq.'+code,{method:'PATCH',headers:H,body:JSON.stringify({used:true,status:'paired'})});
   }
@@ -1873,6 +1878,7 @@ function err(m){const e=document.getElementById('err');e.textContent=m;setTimeou
 
 function startA(){
 R='A';C=mkCode();ans=Array(QS.length).fill(null);qi=0;sv=0;
+myName=document.getElementById('nameA').value.trim()||'深林';
 document.getElementById('rd').style.background='#5a7a5a';
 document.getElementById('rl').innerHTML='<svg width="10" height="14" viewBox="0 0 10 14" style="vertical-align:middle;margin-right:4px"><polygon points="5,0 0,6 10,6" fill="#5a7a5a" opacity="0.7"/><polygon points="5,3 0,9 10,9" fill="#5a7a5a" opacity="0.8"/><rect x="4" y="9" width="2" height="5" rx="1" fill="#5a7a5a" opacity="0.5"/></svg>深林（发起方）';
 document.getElementById('bn').className='btn-next rose ml-auto';
@@ -1898,6 +1904,7 @@ if(ba){
   return;
 }
 R='B';C=c;ans=Array(QS.length).fill(null);qi=0;sv=0;
+myName=document.getElementById('nameB').value.trim()||'幽兰';
 document.getElementById('rd').style.background='#7a5a7a';
 document.getElementById('rl').innerHTML='<svg width="10" height="14" viewBox="0 0 10 14" style="vertical-align:middle;margin-right:4px"><polygon points="5,0 0,6 10,6" fill="#7a5a7a" opacity="0.7"/><polygon points="5,3 0,9 10,9" fill="#7a5a7a" opacity="0.8"/><rect x="4" y="9" width="2" height="5" rx="1" fill="#7a5a7a" opacity="0.5"/></svg>幽兰（受邀方）';
 document.getElementById('bn').className='btn-next purple ml-auto';
