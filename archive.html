@@ -117,33 +117,20 @@ async function searchRecord(){
 }
 function formatDate(s){if(!s)return'';const d=new Date(s);return d.getFullYear()+'/'+(d.getMonth()+1).toString().padStart(2,'0')+'/'+d.getDate().toString().padStart(2,'0')}
 function renderScores(scores){
-  if(!scores||typeof scores!=='object')return'';
-  const dims=[
-    {key:'connection',label:'连接'},
-    {key:'communication',label:'沟通'},
-    {key:'trust',label:'信任'},
-    {key:'growth',label:'成长'},
-    {key:'space',label:'空间'},
-    {key:'conflict',label:'冲突'},
-    {key:'vision',label:'愿景'}
-  ];
-  // 兼容两种数据格式：直接分数对象 或 {user1,user2} 结构
-  const s1=scores.user1||scores;
-  const s2=scores.user2||null;
-  const bars=dims.map(d=>{
-    const v1=s1[d.key]||0;
-    const v2=s2?s2[d.key]||0:null;
-    const avg=v2!==null?Math.round((v1+v2)/2):v1;
-    const pct=Math.round(avg/7*100);
+  if(!Array.isArray(scores)||scores.length<7)return'';
+  const dims=['连接','沟通','信任','成长','空间','冲突','愿景'];
+  const bars=dims.map((label,i)=>{
+    const v=scores[i]||0;
+    const pct=Math.round(v/10*100);
     return '<div class="score-bar-row">'
-      +'<div class="score-bar-label">'+d.label+'</div>'
+      +'<div class="score-bar-label">'+label+'</div>'
       +'<div class="score-bar-track"><div class="score-bar-fill" style="width:'+pct+'%"></div></div>'
-      +'<div class="score-bar-val">'+avg+'</div>'
+      +'<div class="score-bar-val">'+v+'</div>'
       +'</div>';
   }).join('');
-  const total=dims.reduce((sum,d)=>{const v1=s1[d.key]||0;const v2=s2?s2[d.key]||0:null;return sum+(v2!==null?Math.round((v1+v2)/2):v1)},0);
+  const total=scores.slice(0,7).reduce((a,b)=>a+b,0);
   return '<div class="score-bar-wrap">'+bars
-    +'<div class="score-total"><span class="score-total-num">'+total+'</span><span class="score-total-label">/ 49 · 频率总分</span></div>'
+    +'<div class="score-total"><span class="score-total-num">'+total+'</span><span class="score-total-label">/ 70 · 频率总分</span></div>'
     +'</div>';
 }
 function renderRecords(records){
@@ -167,10 +154,10 @@ function viewReport(code){window.location.href='index.html?code='+code+'&view=re
 function retest(code){if(confirm('重新测试会保留原配对码，双方需要重新答题。继续吗？')){window.location.href='index.html?code='+code+'&retest=1'}}
 </script>
 <script>
-const canvas=document.getElementById('bg');const ctx=canvas.getContext('2d');let W,H,t=0,trees=[],particles=[];
-function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;initBg()}
+const canvas=document.getElementById('bg');const ctx=canvas.getContext('2d');let CW,CH,t=0,trees=[],particles=[];
+function resize(){CW=canvas.width=window.innerWidth;CH=canvas.height=window.innerHeight;initBg()}
 function initBg(){trees=[];for(let i=0;i<14;i++){trees.push({x:Math.random(),y:.55+Math.random()*.45,h:.12+Math.random()*.22,w:.018+Math.random()*.014,layers:2+Math.floor(Math.random()*2),color:'#0f2010'})}particles=[];for(let i=0;i<25;i++){particles.push({x:Math.random(),y:.3+Math.random()*.6,r:.4+Math.random()*.8,sp:.0002+Math.random()*.0002,ph:Math.random()*Math.PI*2,dr:(Math.random()-.5)*.00008,col:Math.random()>.5?'rgba(180,230,140,':'rgba(140,210,160,'})}}
-function drawBg(){t+=.008;ctx.fillStyle='#0a0f0a';ctx.fillRect(0,0,W,H);trees.forEach(tr=>{const x=tr.x*W,bY=tr.y*H,tH=tr.h*H,tW=tr.w*Math.min(W,H),sw=Math.sin(t*.4+tr.x*10)*1.2;ctx.globalAlpha=.45;ctx.fillStyle=tr.color;ctx.fillRect(x-tW*.08+sw*.3,bY-tH*.18,tW*.16,tH*.2);for(let l=0;l<tr.layers;l++){const p=l/tr.layers,lY=bY-tH*(.15+p*.85),lW=tW*(1-p*.5),lH=tH*.28;ctx.globalAlpha=.4+p*.25;ctx.beginPath();ctx.moveTo(x+sw*(.3+p*.7),lY-lH);ctx.lineTo(x-lW+sw*.2,lY+lH*.3);ctx.lineTo(x+lW+sw*.2,lY+lH*.3);ctx.closePath();ctx.fill()}ctx.globalAlpha=1});particles.forEach(p=>{p.x+=p.dr+Math.sin(t*p.sp*100+p.ph)*.0002;p.y+=Math.cos(t*p.sp*80+p.ph)*.0001;if(p.x<0)p.x=1;if(p.x>1)p.x=0;if(p.y<0.2)p.y=0.9;if(p.y>0.95)p.y=0.2;const fl=.3+Math.sin(t*1.8+p.ph)*.3;ctx.beginPath();ctx.arc(p.x*W,p.y*H,p.r,0,Math.PI*2);ctx.fillStyle=p.col+fl+')';ctx.fill()});requestAnimationFrame(drawBg)}
+function drawBg(){t+=.008;ctx.fillStyle='#0a0f0a';ctx.fillRect(0,0,CW,CH);trees.forEach(tr=>{const x=tr.x*CW,bY=tr.y*CH,tH=tr.h*CH,tW=tr.w*Math.min(CW,CH),sw=Math.sin(t*.4+tr.x*10)*1.2;ctx.globalAlpha=.45;ctx.fillStyle=tr.color;ctx.fillRect(x-tW*.08+sw*.3,bY-tH*.18,tW*.16,tH*.2);for(let l=0;l<tr.layers;l++){const p=l/tr.layers,lY=bY-tH*(.15+p*.85),lW=tW*(1-p*.5),lH=tH*.28;ctx.globalAlpha=.4+p*.25;ctx.beginPath();ctx.moveTo(x+sw*(.3+p*.7),lY-lH);ctx.lineTo(x-lW+sw*.2,lY+lH*.3);ctx.lineTo(x+lW+sw*.2,lY+lH*.3);ctx.closePath();ctx.fill()}ctx.globalAlpha=1});particles.forEach(p=>{p.x+=p.dr+Math.sin(t*p.sp*100+p.ph)*.0002;p.y+=Math.cos(t*p.sp*80+p.ph)*.0001;if(p.x<0)p.x=1;if(p.x>1)p.x=0;if(p.y<0.2)p.y=0.9;if(p.y>0.95)p.y=0.2;const fl=.3+Math.sin(t*1.8+p.ph)*.3;ctx.beginPath();ctx.arc(p.x*CW,p.y*CH,p.r,0,Math.PI*2);ctx.fillStyle=p.col+fl+')';ctx.fill()});requestAnimationFrame(drawBg)}
 window.addEventListener('resize',resize);resize();drawBg();
 </script>
 </body>
