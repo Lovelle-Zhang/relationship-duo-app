@@ -116,15 +116,14 @@ async function loadSavedRecords(codes){
       if(data&&data.length>0){
         const merged={};
         data.forEach(r=>{
-          if(!merged[r.code])merged[r.code]=Object.assign({},r);
-          else{
-            const m=merged[r.code];
-            if(!m.user1_name&&r.user1_name)m.user1_name=r.user1_name;
-            if(!m.user2_name&&r.user2_name)m.user2_name=r.user2_name;
-            if(r.unlocked)m.unlocked=true;
-            if(r.status==='paired'||r.status==='complete')m.status=r.status;
-            if(r.scores)m.scores=r.scores;
-          }
+          if(!merged[r.code]){merged[r.code]=Object.assign({},r);merged[r.code].scoresA=null;merged[r.code].scoresB=null;}
+          const m=merged[r.code];
+          if(!m.user1_name&&r.user1_name)m.user1_name=r.user1_name;
+          if(!m.user2_name&&r.user2_name)m.user2_name=r.user2_name;
+          if(r.unlocked)m.unlocked=true;
+          if(r.status==='paired'||r.status==='complete')m.status=r.status;
+          if(r.role==='A'&&r.scores)m.scoresA=r.scores;
+          if(r.role==='B'&&r.scores)m.scoresB=r.scores;
         });
         all.push(...Object.values(merged));
       }
@@ -147,14 +146,14 @@ async function searchRecord(){
     // 合并同一 code 的两条记录为一条
     const merged={};
     data.forEach(r=>{
-      if(!merged[r.code]){merged[r.code]=Object.assign({},r)}
-      else{
-        const m=merged[r.code];
-        if(!m.user1_name&&r.user1_name)m.user1_name=r.user1_name;
-        if(!m.user2_name&&r.user2_name)m.user2_name=r.user2_name;
-        if(r.unlocked)m.unlocked=true;
-        if(r.status==='paired'||r.status==='complete')m.status=r.status;
-      }
+      if(!merged[r.code]){merged[r.code]=Object.assign({},r);merged[r.code].scoresA=null;merged[r.code].scoresB=null;}
+      const m=merged[r.code];
+      if(!m.user1_name&&r.user1_name)m.user1_name=r.user1_name;
+      if(!m.user2_name&&r.user2_name)m.user2_name=r.user2_name;
+      if(r.unlocked)m.unlocked=true;
+      if(r.status==='paired'||r.status==='complete')m.status=r.status;
+      if(r.role==='A'&&r.scores)m.scoresA=r.scores;
+      if(r.role==='B'&&r.scores)m.scoresB=r.scores;
     });
     renderRecords(Object.values(merged));
     saveCode(code);
@@ -163,21 +162,29 @@ async function searchRecord(){
 function formatDate(s){if(!s)return'';const d=new Date(s);return d.getFullYear()+'/'+(d.getMonth()+1).toString().padStart(2,'0')+'/'+d.getDate().toString().padStart(2,'0')}
 function renderScores(scores){
   if(!Array.isArray(scores)||scores.length<7)return'';
+function renderScores(sA,sB,nameA,nameB){
+  if(!Array.isArray(sA)||sA.length<7)return'';
   const dims=['深度沟通','修复能力','共同体验','价值契合','情绪支持','爱意表达','整体契合'];
-  const max=scores[0]>10?100:10;
+  const max=100;
+  const nA=nameA||'深林';const nB=nameB||'幽兰';
   const bars=dims.map((label,i)=>{
-    const v=scores[i]||0;
-    const pct=Math.round(v/max*100);
-    return '<div class="score-bar-row">'
+    const a=sA[i]||0,b=sB?sB[i]||0:null;
+    return '<div class="score-bar-row" style="margin-bottom:12px">'
       +'<div class="score-bar-label">'+label+'</div>'
-      +'<div class="score-bar-track"><div class="score-bar-fill" style="width:'+pct+'%"></div></div>'
-      +'<div class="score-bar-val">'+v+'</div>'
+      +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">'
+      +'<div style="width:36px;font-size:.68rem;color:rgba(180,220,180,.6)">'+nA+'</div>'
+      +'<div class="score-bar-track"><div class="score-bar-fill" style="width:'+a+'%;background:#5a7a5a"></div></div>'
+      +'<div class="score-bar-val">'+a+'</div></div>'
+      +(b!==null?'<div style="display:flex;align-items:center;gap:6px">'
+      +'<div style="width:36px;font-size:.68rem;color:rgba(180,160,200,.6)">'+nB+'</div>'
+      +'<div class="score-bar-track"><div class="score-bar-fill" style="width:'+b+'%;background:#7a5a7a"></div></div>'
+      +'<div class="score-bar-val">'+b+'</div></div>':'')
       +'</div>';
   }).join('');
-  const total=Math.round(scores.slice(0,7).reduce((a,b)=>a+b,0)/7);
-  const maxTotal=100;
+  const avgA=Math.round(sA.slice(0,7).reduce((a,b)=>a+b,0)/7);
+  const avgB=sB?Math.round(sB.slice(0,7).reduce((a,b)=>a+b,0)/7):null;
   return '<div class="score-bar-wrap">'+bars
-    +'<div class="score-total"><span class="score-total-num">'+total+'</span><span class="score-total-label">/ 100 · 频率均分</span></div>'
+    +'<div class="score-total"><span class="score-total-num">'+avgA+(avgB!==null?' · '+avgB:'')+'</span><span class="score-total-label">/ 100 · 频率均分</span></div>'
     +'</div>';
 }
 function renderRecords(records){
@@ -186,7 +193,7 @@ function renderRecords(records){
     const done=r.status==='paired'||r.status==='complete';
     const statusTag=done?'<span class="tag tag-done">双方已完成</span>':'<span class="tag tag-waiting">等待对方</span>';
     const unlockedTag=r.unlocked?'<span class="tag tag-unlocked">已解锁</span>':'';
-    const scoresHtml=(done||r.unlocked)&&r.scores?renderScores(r.scores):'';
+    const scoresHtml=(done||r.unlocked)&&r.scoresA?renderScores(r.scoresA,r.scoresB,r.user1_name,r.user2_name):'';
     const viewBtn=done?'<button class="btn-view" onclick="viewReport(\''+r.code+'\')">'+( r.unlocked?'查看报告':'解锁报告')+'</button>':'';
     const retestBtn='<button class="btn-retest" onclick="retest(\''+r.code+'\')">重新测试</button>';
     return '<div class="record-card">'
