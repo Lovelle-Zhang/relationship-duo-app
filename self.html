@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>和自己 · 林</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%; height: 100%;
+  background: #0a0f18;
+  color: rgba(255,255,255,0.75);
+  font-family: 'Noto Serif SC', serif;
+  overflow-x: hidden;
+}
+
+/* 背景渐变 */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 30%, rgba(40,60,80,0.35) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 80% 70%, rgba(30,45,65,0.25) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 顶部导航 */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  z-index: 50;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.nav-back {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.3);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-back:hover { color: rgba(255,255,255,0.6); }
+.nav-title {
+  font-size: 12px;
+  letter-spacing: 5px;
+  color: rgba(255,255,255,0.35);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.nav-count {
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.18);
+}
+
+/* 主内容区 */
+.content {
+  position: relative;
+  z-index: 1;
+  padding: 96px 0 80px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 20px;
+  padding: 0 40px;
+  text-align: center;
+}
+.empty-icon {
+  width: 48px;
+  height: 1px;
+  background: rgba(255,255,255,0.1);
+  margin-bottom: 8px;
+}
+.empty-text {
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.2);
+  line-height: 2;
+}
+.empty-link {
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.25);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 2px;
+  transition: color 0.2s, border-color 0.2s;
+  margin-top: 8px;
+  display: inline-block;
+}
+.empty-link:hover {
+  color: rgba(255,255,255,0.5);
+  border-color: rgba(255,255,255,0.3);
+}
+
+/* 时间轴 */
+.timeline {
+  padding: 0 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.note-item {
+  display: flex;
+  gap: 20px;
+  padding: 28px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  position: relative;
+  animation: fadeIn 0.4s ease both;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.note-date {
+  flex-shrink: 0;
+  width: 52px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.18);
+  padding-top: 3px;
+  line-height: 1.6;
+}
+
+.note-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.note-card-text {
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.22);
+  line-height: 1.7;
+  font-style: italic;
+  padding-left: 10px;
+  border-left: 1px solid rgba(255,255,255,0.1);
+}
+
+.note-content {
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.9;
+  white-space: pre-wrap;
+}
+
+.note-delete {
+  position: absolute;
+  top: 28px; right: 0;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.1);
+  cursor: pointer;
+  transition: color 0.2s;
+  opacity: 0;
+}
+.note-item:hover .note-delete { opacity: 1; }
+.note-delete:hover { color: rgba(255,100,100,0.4); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-back" href="forest.html">← 林</a>
+  <div class="nav-title">和 自 己</div>
+  <div class="nav-count" id="noteCount"></div>
+</nav>
+
+<div class="content">
+  <div class="empty-state" id="emptyState" style="display:none">
+    <div class="empty-icon"></div>
+    <div class="empty-text">还没有记录<br>去抽一张牌，写下此刻的感受</div>
+    <a class="empty-link" href="card.html">去抽卡 →</a>
+  </div>
+  <div class="timeline" id="timeline"></div>
+</div>
+
+<script>
+function loadNotes() {
+  const notes = JSON.parse(localStorage.getItem('lin_self_notes') || '[]');
+  const timeline = document.getElementById('timeline');
+  const emptyState = document.getElementById('emptyState');
+  const noteCount = document.getElementById('noteCount');
+
+  if (notes.length === 0) {
+    emptyState.style.display = 'flex';
+    noteCount.textContent = '';
+    return;
+  }
+
+  emptyState.style.display = 'none';
+  noteCount.textContent = notes.length + ' 条';
+  timeline.innerHTML = '';
+
+  notes.forEach((n, i) => {
+    const item = document.createElement('div');
+    item.className = 'note-item';
+    item.style.animationDelay = (i * 0.04) + 's';
+    item.innerHTML = `
+      <div class="note-date">${n.date || ''}</div>
+      <div class="note-body">
+        ${n.cardText ? `<div class="note-card-text">${n.cardText}</div>` : ''}
+        <div class="note-content">${escapeHtml(n.note)}</div>
+      </div>
+      <div class="note-delete" onclick="deleteNote(${n.id})">删除</div>
+    `;
+    timeline.appendChild(item);
+  });
+}
+
+function deleteNote(id) {
+  let notes = JSON.parse(localStorage.getItem('lin_self_notes') || '[]');
+  notes = notes.filter(n => n.id !== id);
+  localStorage.setItem('lin_self_notes', JSON.stringify(notes));
+  loadNotes();
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+loadNotes();
+</script>
+</body>
+</html>

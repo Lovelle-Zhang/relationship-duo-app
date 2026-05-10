@@ -713,6 +713,7 @@ function makeCardSVG(card) {
 
 let lastIndex = -1;
 let isAnimating = false;
+let currentCardText = '';
 
 function drawCard() {
   if (isAnimating) return;
@@ -729,6 +730,7 @@ function drawCard() {
     do { idx = Math.floor(Math.random() * SOLO_CARDS.length); } while (idx === lastIndex && SOLO_CARDS.length > 1);
     lastIndex = idx;
     const card = SOLO_CARDS[idx];
+    currentCardText = card.text.replace(/\n/g, ' ');
     face.innerHTML = makeCardSVG(card);
 
     // 抽牌后显示"记录"触发点
@@ -841,10 +843,24 @@ function toggleMode() {
 
 function openNoteDrawer() {
   document.getElementById('noteDrawer').classList.add('open');
+  // 记录当前卡牌内容，供保存时使用
   setTimeout(() => document.getElementById('noteDrawerText').focus(), 350);
 }
 
 function closeNoteDrawer() {
+  const text = document.getElementById('noteDrawerText').value.trim();
+  if (text) {
+    // 保存到 localStorage
+    const notes = JSON.parse(localStorage.getItem('lin_self_notes') || '[]');
+    notes.unshift({
+      id: Date.now(),
+      date: new Date().toLocaleDateString('zh-CN', { month: 'long', day: 'numeric' }),
+      cardText: currentCardText || '',
+      note: text
+    });
+    localStorage.setItem('lin_self_notes', JSON.stringify(notes.slice(0, 200)));
+    document.getElementById('noteDrawerText').value = '';
+  }
   document.getElementById('noteDrawer').classList.remove('open');
 }
 
