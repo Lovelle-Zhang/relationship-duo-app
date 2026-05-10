@@ -440,7 +440,7 @@ canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
   <div class="note-drawer-footer">
     <div class="note-drawer-close" onclick="closeNoteDrawer()">收 起</div>
     <span style="font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.15)">or</span>
-    <a class="note-drawer-view" href="self.html">查看记录 →</a>
+    <a class="note-drawer-view" href="#" onclick="saveAndGo(event)">查看记录 →</a>
   </div>
 </div>
 
@@ -909,10 +909,9 @@ function openNoteDrawer() {
   setTimeout(() => document.getElementById('noteDrawerText').focus(), 350);
 }
 
-function closeNoteDrawer() {
+function saveNote() {
   const text = document.getElementById('noteDrawerText').value.trim();
   if (text) {
-    // 保存到 localStorage
     const notes = JSON.parse(localStorage.getItem('lin_self_notes') || '[]');
     notes.unshift({
       id: Date.now(),
@@ -923,7 +922,17 @@ function closeNoteDrawer() {
     localStorage.setItem('lin_self_notes', JSON.stringify(notes.slice(0, 200)));
     document.getElementById('noteDrawerText').value = '';
   }
+}
+
+function closeNoteDrawer() {
+  saveNote();
   document.getElementById('noteDrawer').classList.remove('open');
+}
+
+function saveAndGo(e) {
+  e.preventDefault();
+  saveNote();
+  window.location.href = 'self.html';
 }
 
 // 点击 drawer 外部关闭
