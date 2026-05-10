@@ -34,7 +34,7 @@ ng7OxuqVlBChAmW1FqxmL04wcBl4ssg15P5LQy1BpSboIvbPBy73r1vOOoSlf7kz
 +X8FeTKTpLhll/UyWwcl4VrXA9o9vhZxYSuBUN9SXeHtG50Zn0SLuCyUU1mnp89R
 0omwnGNxoi1IPIVhxmiMSA+oDQ==
 -----END PRIVATE KEY-----`,
-  NOTIFY_URL: 'https://relationship-duo-app-nu.vercel.app/api/notify'
+  NOTIFY_URL: 'https://lin.zenfit.art/api/notify'
 };
 
 function sign(method, url, timestamp, nonce, body) {
