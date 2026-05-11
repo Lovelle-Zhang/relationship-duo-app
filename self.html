@@ -205,6 +205,7 @@ body{animation:pageFadeIn 0.3s ease-out}
   #mobile-bg svg{width:100%;height:100%;position:absolute;bottom:0;left:0}
   .nav{background:rgba(13,26,20,0.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.05)}
   .content{padding-top:80px}
+  .note-delete{display:none !important}
 }
 .confirm-mask{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:999;display:flex;align-items:center;justify-content:center}
 .confirm-box{background:#1a2a1e;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:24px 20px;width:260px;text-align:center}
@@ -270,7 +271,7 @@ function loadNotes() {
         ${n.cardText ? `<div class="note-card-text">${n.cardText}</div>` : ''}
         <div class="note-content">${escapeHtml(n.note)}</div>
       </div>
-      <div style="margin-top:6px;text-align:center;font-size:.6rem;color:rgba(255,255,255,.12);letter-spacing:.06em">长按删除</div>
+      <div class="note-delete" title="删除">✕</div>
     `;
     let timer;
     const press=()=>{item.classList.add('pressing');timer=setTimeout(()=>{item.classList.remove('pressing');deleteNote(n.id, item)},700)};
@@ -281,6 +282,17 @@ function loadNotes() {
     item.addEventListener('mousedown',press);
     item.addEventListener('mouseup',cancel);
     item.addEventListener('mouseleave',cancel);
+    // 桌面端：hover 显示的删除按钮，点击直接删除
+    const delBtn = item.querySelector('.note-delete');
+    if (delBtn) {
+      delBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        clearTimeout(timer);
+        item.classList.remove('pressing');
+        deleteNote(n.id, item);
+      });
+      delBtn.addEventListener('mousedown', (e) => e.stopPropagation());
+    }
     timeline.appendChild(item);
   });
 }
