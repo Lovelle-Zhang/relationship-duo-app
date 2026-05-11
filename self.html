@@ -207,22 +207,63 @@ body{animation:pageFadeIn 0.3s ease-out}
   .content{padding-top:80px}
   .note-delete{display:none !important}
 }
-.confirm-mask{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:999;display:flex;align-items:center;justify-content:center}
-.confirm-box{background:#1a2a1e;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:24px 20px;width:260px;text-align:center}
-.confirm-box p{font-size:.88rem;color:rgba(255,255,255,.7);margin-bottom:20px;line-height:1.6}
-.confirm-btns{display:flex;gap:10px}
-.confirm-btns button{flex:1;padding:10px;border-radius:10px;border:none;font-size:.82rem;cursor:pointer;font-family:inherit}
-.confirm-cancel{background:rgba(255,255,255,.08);color:rgba(255,255,255,.5)}
-.confirm-ok{background:rgba(200,80,80,.3);color:rgba(255,150,150,.9)}
+.confirm-mask{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.45);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  z-index:999;
+  display:flex;align-items:center;justify-content:center;
+  animation:maskIn .18s ease;
+}
+@keyframes maskIn{from{opacity:0}to{opacity:1}}
+.confirm-box{
+  background:rgba(18,26,20,.92);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;
+  padding:32px 28px 24px;
+  width:240px;
+  text-align:center;
+  box-shadow:0 24px 64px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04);
+  animation:boxIn .22s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes boxIn{from{opacity:0;transform:scale(.92) translateY(8px)}to{opacity:1;transform:none}}
+.confirm-box p{
+  font-size:.82rem;
+  letter-spacing:.08em;
+  color:rgba(255,255,255,.45);
+  margin-bottom:28px;
+  line-height:1.8;
+}
+.confirm-btns{display:flex;flex-direction:column;gap:10px}
+.confirm-btns button{
+  width:100%;padding:11px;
+  border-radius:10px;border:none;
+  font-size:.8rem;letter-spacing:.1em;
+  cursor:pointer;font-family:inherit;
+  transition:all .18s;
+}
+.confirm-cancel{
+  background:rgba(255,255,255,.05);
+  color:rgba(255,255,255,.35);
+  border:1px solid rgba(255,255,255,.07) !important;
+}
+.confirm-cancel:hover{background:rgba(255,255,255,.09);color:rgba(255,255,255,.55)}
+.confirm-ok{
+  background:rgba(180,60,60,.18);
+  color:rgba(255,120,120,.75);
+  border:1px solid rgba(180,60,60,.2) !important;
+}
+.confirm-ok:hover{background:rgba(180,60,60,.28);color:rgba(255,140,140,.9)}
 </style>
 </head>
 <body>
 <div id="confirmMask" class="confirm-mask" style="display:none">
   <div class="confirm-box">
-    <p>删除这条记录？</p>
+    <p>这条记录<br>将从林中消失</p>
     <div class="confirm-btns">
-      <button class="confirm-cancel" onclick="confirmResolve(false)">取消</button>
-      <button class="confirm-ok" onclick="confirmResolve(true)">删除</button>
+      <button class="confirm-ok" onclick="confirmResolve(true)">放 手</button>
+      <button class="confirm-cancel" onclick="confirmResolve(false)">留 下</button>
     </div>
   </div>
 </div>
