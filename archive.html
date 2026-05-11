@@ -51,37 +51,112 @@ h1{font-size:1.5rem;font-weight:400;letter-spacing:.12em;color:rgba(255,255,255,
 .btn-view:hover{background:linear-gradient(135deg,rgba(90,122,90,.5),rgba(122,90,122,.5))}
 .btn-retest{padding:8px 18px;background:transparent;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:rgba(255,255,255,.35);font-size:.76rem;letter-spacing:.06em;cursor:pointer;font-family:inherit}
 .btn-retest:hover{border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.6)}
-.loading{text-align:center;padding:40px 0;color:rgba(255,255,255,.2);font-size:.8rem;letter-spacing:.08em}
-.error-msg{background:rgba(200,80,80,.08);border:1px solid rgba(200,80,80,.15);border-radius:10px;padding:12px 16px;color:rgba(255,160,140,.6);font-size:.78rem;margin-bottom:16px}
+.record-delete{
+  position:absolute;
+  top:16px;right:16px;
+  font-size:10px;
+  letter-spacing:1px;
+  color:rgba(255,255,255,.1);
+  cursor:pointer;
+  transition:color .2s;
+  opacity:0;
+}
+.record-card{position:relative}
+.record-card:hover .record-delete{opacity:1}
+.record-delete:hover{color:rgba(255,100,100,.4)}
+@media(max-width:640px){.record-delete{display:none!important}}
 
 /* 手机端SVG背景 */
 #mobile-bg{display:none}
 @keyframes pageFadeIn{from{opacity:0}to{opacity:1}}
 body{animation:pageFadeIn 0.3s ease-out}
+
+/* 删除确认弹窗（电脑+手机通用） */
+.confirm-mask{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.6);
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  z-index:999;
+  display:flex;align-items:center;justify-content:center;
+  animation:maskIn .3s ease;
+}
+@keyframes maskIn{from{opacity:0}to{opacity:1}}
+.confirm-box{
+  background:linear-gradient(145deg,rgba(30,52,40,.85) 0%,rgba(20,38,28,.95) 100%);
+  border:1px solid rgba(90,138,106,.15);
+  border-radius:24px;
+  padding:36px 28px 28px;
+  width:300px;
+  max-width:90vw;
+  backdrop-filter:blur(30px);
+  -webkit-backdrop-filter:blur(30px);
+  box-shadow:0 8px 32px rgba(0,0,0,.4);
+  animation:boxIn .4s cubic-bezier(.4,0,.2,1);
+}
+@keyframes boxIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.confirm-box p{
+  text-align:center;
+  color:#e8f0e8;
+  font-size:17px;
+  font-weight:500;
+  letter-spacing:1.5px;
+  margin-bottom:6px;
+}
+.confirm-sub{
+  text-align:center;
+  color:#8a9a8a;
+  font-size:13px;
+  margin-bottom:28px;
+  opacity:.7;
+  line-height:1.5;
+}
+.confirm-btns{display:flex;flex-direction:column;gap:12px}
+.confirm-btns button{
+  width:100%;padding:16px;
+  border-radius:14px;
+  font-size:15px;letter-spacing:.5px;
+  cursor:pointer;font-family:inherit;
+  border:none;
+  transition:all .3s cubic-bezier(.4,0,.2,1);
+  -webkit-tap-highlight-color:transparent;
+}
+.confirm-cancel{
+  background:linear-gradient(135deg,rgba(90,138,106,.25) 0%,rgba(61,90,74,.3) 100%);
+  border:1.5px solid rgba(90,138,106,.4) !important;
+  color:#c8e0d8;
+  font-weight:500;
+}
+.confirm-cancel:hover{background:linear-gradient(135deg,rgba(90,138,106,.35) 0%,rgba(61,90,74,.4) 100%)}
+.confirm-cancel:active{transform:scale(.97)}
+.confirm-ok{
+  background:transparent;
+  border:1px solid rgba(138,154,138,.2) !important;
+  color:#8a9a8a;
+  font-size:14px;
+}
+.confirm-ok:hover{background:rgba(255,255,255,.03)}
+.confirm-ok:active{transform:scale(.97)}
+
 @media(max-width:640px){
   canvas{display:none!important}
   #mobile-bg{display:block;position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;background:#0d1a14}
   #mobile-bg svg{width:100%;height:100%;position:absolute;bottom:0;left:0}
   .page{padding-top:72px}
   .record-card{border-radius:16px;padding:18px;background:rgba(255,255,255,0.04);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);user-select:none;-webkit-user-select:none;transition:transform .15s,background .15s;cursor:pointer}
-.record-card.pressing{background:rgba(200,80,80,.08);transform:scale(0.98)}
-.confirm-mask{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:999;display:flex;align-items:center;justify-content:center}
-.confirm-box{background:#1a2a1e;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:24px 20px;width:260px;text-align:center}
-.confirm-box p{font-size:.88rem;color:rgba(255,255,255,.7);margin-bottom:20px;line-height:1.6}
-.confirm-btns{display:flex;gap:10px}
-.confirm-btns button{flex:1;padding:10px;border-radius:10px;border:none;font-size:.82rem;cursor:pointer;font-family:inherit}
-.confirm-cancel{background:rgba(255,255,255,.08);color:rgba(255,255,255,.5)}
-.confirm-ok{background:rgba(200,80,80,.3);color:rgba(255,150,150,.9)}
+  .record-card.pressing{background:rgba(200,80,80,.08);transform:scale(0.98)}
+}
 </style>
 </head>
 <body>
 <canvas id="bg"></canvas>
 <div id="confirmMask" class="confirm-mask" style="display:none">
   <div class="confirm-box">
-    <p>从本地记录中移除？</p>
+    <p>这条记录</p>
+    <div class="confirm-sub">将从林中消失</div>
     <div class="confirm-btns">
-      <button class="confirm-cancel" onclick="confirmResolve(false)">取消</button>
-      <button class="confirm-ok" onclick="confirmResolve(true)">删除</button>
+      <button class="confirm-cancel" onclick="confirmResolve(false)">留 下</button>
+      <button class="confirm-ok" onclick="confirmResolve(true)">放 手</button>
     </div>
   </div>
 </div>
@@ -228,7 +303,7 @@ function renderRecords(records){
       +'<div class="record-meta">'+statusTag+unlockedTag+'<span class="record-date">'+formatDate(r.created_at)+'</span></div>'
       +(scoresHtml?'<div id="'+scoreId+'" style="display:none">'+scoresHtml+'</div>':'')
       +'<div class="record-actions">'+viewBtn+toggleBtn+retestBtn+'</div>'
-      +'<div style="margin-top:8px;text-align:center;font-size:.6rem;color:rgba(255,255,255,.12);letter-spacing:.06em">长按删除</div>'
+      +'<div class="record-delete" title="删除">✕</div>'
       +'</div>';
   }).join('');
   // 长按删除
@@ -242,6 +317,17 @@ function renderRecords(records){
     card.addEventListener('mousedown',press);
     card.addEventListener('mouseup',cancel);
     card.addEventListener('mouseleave',cancel);
+    // 桌面端 hover 删除按钮
+    const delBtn = card.querySelector('.record-delete');
+    if (delBtn) {
+      delBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        clearTimeout(timer);
+        card.classList.remove('pressing');
+        deleteRecord(card.dataset.code, card);
+      });
+      delBtn.addEventListener('mousedown', (e) => e.stopPropagation());
+    }
   });
 }
 function toggleScores(id,btn){
