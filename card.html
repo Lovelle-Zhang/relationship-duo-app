@@ -774,6 +774,7 @@ const SOLO_CARDS = [
 ];
 
 function wrapSVGText(text, maxCharsPerLine) {
+  const PUNCT_START = /^[，。？！、；：…—·「」『』【】〔〕]/;
   // 先按 \n 分段，再对每段按字数截断
   const lines = [];
   text.split('\n').forEach(seg => {
@@ -786,6 +787,14 @@ function wrapSVGText(text, maxCharsPerLine) {
       }
     }
   });
+  // 标点不能出现在行首：把行首标点并回上一行
+  for (let i = 1; i < lines.length; i++) {
+    if (PUNCT_START.test(lines[i])) {
+      lines[i - 1] += lines[i][0];
+      lines[i] = lines[i].slice(1);
+      if (lines[i] === '') { lines.splice(i, 1); i--; }
+    }
+  }
   return lines;
 }
 
