@@ -64,7 +64,11 @@ h1{font-size:1.5rem;font-weight:400;letter-spacing:.12em;color:rgba(255,255,255,
   transition:all .2s;
 }
 .record-delete:hover{border-color:rgba(200,80,80,.35);color:rgba(255,120,120,.7)}
-@media(max-width:640px){.record-delete{display:none!important}}
+.mobile-hint{display:none}
+@media(max-width:640px){
+  .record-delete{display:none!important}
+  .mobile-hint{display:block;margin-top:8px;text-align:center;font-size:.6rem;color:rgba(255,255,255,.12);letter-spacing:.06em}
+}
 
 /* 手机端SVG背景 */
 #mobile-bg{display:none}
@@ -303,6 +307,7 @@ function renderRecords(records){
       +'<div class="record-meta">'+statusTag+unlockedTag+'<span class="record-date">'+formatDate(r.created_at)+'</span></div>'
       +(scoresHtml?'<div id="'+scoreId+'" style="display:none">'+scoresHtml+'</div>':'')
       +'<div class="record-actions">'+viewBtn+toggleBtn+retestBtn+'<button class="record-delete" title="移除记录">移 除</button></div>'
+      +'<div class="mobile-hint">长按删除</div>'
       +'</div>';
   }).join('');
   // 长按删除
