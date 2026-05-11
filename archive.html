@@ -52,18 +52,18 @@ h1{font-size:1.5rem;font-weight:400;letter-spacing:.12em;color:rgba(255,255,255,
 .btn-retest{padding:8px 18px;background:transparent;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:rgba(255,255,255,.35);font-size:.76rem;letter-spacing:.06em;cursor:pointer;font-family:inherit}
 .btn-retest:hover{border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.6)}
 .record-delete{
-  position:absolute;
-  top:16px;right:16px;
-  font-size:10px;
-  letter-spacing:1px;
-  color:rgba(255,255,255,.1);
+  padding:8px 18px;
+  background:transparent;
+  border:1px solid rgba(200,80,80,.15);
+  border-radius:8px;
+  color:rgba(255,120,120,.3);
+  font-size:.76rem;
+  letter-spacing:.06em;
   cursor:pointer;
-  transition:color .2s;
-  opacity:0;
+  font-family:inherit;
+  transition:all .2s;
 }
-.record-card{position:relative}
-.record-card:hover .record-delete{opacity:1}
-.record-delete:hover{color:rgba(255,100,100,.4)}
+.record-delete:hover{border-color:rgba(200,80,80,.35);color:rgba(255,120,120,.7)}
 @media(max-width:640px){.record-delete{display:none!important}}
 
 /* 手机端SVG背景 */
@@ -302,8 +302,7 @@ function renderRecords(records){
       +'<div class="record-header"><div class="record-names">'+nA+'<span>×</span>'+nB+'</div><div class="record-code">'+r.code+'</div></div>'
       +'<div class="record-meta">'+statusTag+unlockedTag+'<span class="record-date">'+formatDate(r.created_at)+'</span></div>'
       +(scoresHtml?'<div id="'+scoreId+'" style="display:none">'+scoresHtml+'</div>':'')
-      +'<div class="record-actions">'+viewBtn+toggleBtn+retestBtn+'</div>'
-      +'<div class="record-delete" title="删除">✕</div>'
+      +'<div class="record-actions">'+viewBtn+toggleBtn+retestBtn+'<button class="record-delete" title="移除记录">移 除</button></div>'
       +'</div>';
   }).join('');
   // 长按删除
